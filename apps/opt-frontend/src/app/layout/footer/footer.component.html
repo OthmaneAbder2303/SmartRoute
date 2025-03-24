@@ -1,50 +1,60 @@
-<footer class="footer bg-secondary border-2 border-t text-base-content p-10">
-  <nav>
-    <h6 class="footer-title">Aide</h6>
-    <a href="#" class="link link-hover">Livraison</a>
-    <a href="#" class="link link-hover">Retours & Echanges</a>
-    <a href="#" class="link link-hover">Questions Fréquentes</a>
-    <a href="#" class="link link-hover">Comparer</a>
-  </nav>
-  <nav>
-    <h6 class="footer-title">Entreprise</h6>
-    <a href="#" class="link link-hover">A propos de Nous</a>
-    <a href="#" class="link link-hover">Contact</a>
-    <a href="#" class="link link-hover">Emplois</a>
-    <a href="#" class="link link-hover">Presse</a>
-  </nav>
-  <nav>
-    <h6 class="footer-title">Mentions légales</h6>
-    <a href="#" class="link link-hover">Terms of Use</a>
-    <a href="#" class="link link-hover">Privacy Policy</a>
-    <a href="#" class="link link-hover">Cookie Policy</a>
-  </nav>
-</footer>
+<footer class="bg-gray-100 text-black py-10 px-20">
+  <div class="grid grid-cols-3 gap-10">
+    <nav>
+      <h6 class="text-gray-600 font-semibold text-lg mb-3">AIDE</h6>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:underline">Livraison</a></li>
+        <li><a href="#" class="hover:underline">Retours & Échanges</a></li>
+        <li><a href="#" class="hover:underline">FAQ - Questions Fréquentes</a></li>
+        <li><a href="#" class="hover:underline">Comparer</a></li>
+      </ul>
+    </nav>
 
+    <nav>
+      <h6 class="text-gray-600 font-semibold text-lg mb-3">ENTREPRISE</h6>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:underline">À propos de Nous</a></li>
+        <li><a href="#" class="hover:underline">Contact</a></li>
+        <li><a href="#" class="hover:underline">Emplois</a></li>
+        <li><a href="#" class="hover:underline">Presse</a></li>
+      </ul>
+    </nav>
 
-<footer class="footer bg-secondary border-2 border-t text-base-content px-10 py-4">
-  <aside class="grid-flow-col items-center">
-    <fa-icon class="ui-menu-icon pe-3" [icon]="['fas','truck-fast']" size="3x"></fa-icon>
-    <p>
-      ZHO Ltd.
-      <br/>
-      Providing Route Solutions
-    </p>
-  </aside>
-  <nav class="md:place-self-center md:justify-self-end">
-    <div class="grid grid-flow-col gap-4">
-      <a href="#" aria-label="Instagram Shop">
-        <fa-icon class="ui-menu-icon" [icon]="['fab','instagram']" size="2x" style="color: #c61118;"></fa-icon>
+    <nav>
+      <h6 class="text-gray-600 font-semibold text-lg mb-3">MENTIONS LÉGALES</h6>
+      <ul class="space-y-2">
+        <li><a href="#" class="hover:underline">Conditions d'utilisation</a></li>
+        <li><a href="#" class="hover:underline">Politique de confidentialité</a></li>
+        <li><a href="#" class="hover:underline">Politique des cookies</a></li>
+      </ul>
+    </nav>
+  </div>
+
+<!-- Bottom Footer -->
+  <div class="border-t border-gray-700 mt-6 pt-4 flex flex-col md:flex-row justify-between items-center">
+    <div class="flex items-center gap-3">
+      <fa-icon class="text-primary" [icon]="['fas','route']" size="3x"></fa-icon>
+      <p>
+        <strong>OptiRoute</strong> <br />
+        Optimisation intelligente des trajets
+      </p>
+    </div>
+
+    <div class="flex gap-4 mt-4 md:mt-0">
+      <a href="#" aria-label="Instagram">
+        <fa-icon [icon]="['fab','instagram']" size="2x" class="hover:text-purple-500"></fa-icon>
       </a>
-      <a href="#" aria-label="Twitter Shop">
-        <fa-icon class="ui-menu-icon" [icon]="['fab','x-twitter']" size="2x"></fa-icon>
+      <a href="#" aria-label="Twitter">
+        <fa-icon [icon]="['fab','x-twitter']" size="2x" class="hover:text-gray-400"></fa-icon>
       </a>
-      <a href="#" aria-label="Facebook Shop">
-        <fa-icon class="ui-menu-icon" [icon]="['fab','facebook']" size="2x" style="color: #3b5998;"></fa-icon>
+      <a href="#" aria-label="Facebook">
+        <fa-icon [icon]="['fab','facebook']" size="2x" class="hover:text-blue-500"></fa-icon>
       </a>
-      <a href="#" aria-label="Youtube Shop">
-        <fa-icon class="ui-menu-icon" [icon]="['fab','youtube']" size="2x" style="color: #ed302f;"></fa-icon>
+      <a href="#" aria-label="YouTube">
+        <fa-icon [icon]="['fab','youtube']" size="2x" class="hover:text-red-500"></fa-icon>
       </a>
     </div>
-  </nav>
+  </div>
+
 </footer>
+
