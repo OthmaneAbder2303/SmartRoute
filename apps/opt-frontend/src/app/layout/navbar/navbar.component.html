@@ -1,0 +1,54 @@
+<div class="navbar bg -base-100">
+  <div class="navbar-start">
+    <div class="dropdown">
+      <a class="btn btn-ghost text-xl">
+        <div class="border-1 bg-secondary logo p-2 rounded-xl" routerLink="/">
+          <img src="../../../assets/opt.jpg" alt="EC" class="h-10 w-auto">
+        </div>
+      </a>
+    </div>
+  </div>
+  <div class="navbar-center flex">
+    <div class="menu menu-sm sm:menu-lg menu-horizontal px-1">
+      <li><a href="/">Home</a></li>
+      <li>
+        <details #productsMenu>
+          <summary>Products</summary>
+          <ul class="z-30">
+            <li>
+              <a href="/products">All</a>
+            </li>
+          </ul>
+        </details>
+      </li>
+      <li>
+        <details #adminMenu>
+          <summary>Admin</summary>
+          <ul class="z-30">
+            <li>
+              <a href="/admin">All</a>
+            </li>
+          </ul>
+        </details>
+      </li>
+    </div>
+  </div>
+  <div class="navbar-end pe-4 flex align-items-center">
+    <div class="dropdown dropdown-end pe-4" routerLink="/">
+      <div tabindex="0" role="button">
+        <fa-icon [icon]="['fas', 'user']" class="ui-menu-icon"></fa-icon>
+      </div>
+      <ul class="dropdown-content menu menu-lg bg-base-100 rounded-box z-10 w-52 p-2 shadow">
+        <li>
+          <button class="Link">Login</button>
+        </li>
+      </ul>
+    </div>
+    <div class="dropdown dropdown-end me-2" routerLink="/home">
+      <div tabindex="0" role="button">
+        <fa-icon [icon]="['fas', 'cart-shopping']" class="ui-menu-icon"></fa-icon>
+      </div>
+    </div>
+  </div>
+</div>
+
