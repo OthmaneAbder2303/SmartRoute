@@ -14,25 +14,24 @@
       <li><a routerLink="/">Accueil</a></li>
       <li>
         <details>
-          <summary>Produits</summary>
+          <summary>Services</summary>
           <ul class="z-30 bg-white shadow-md rounded-md p-2">
             <li><a routerLink="/products">Tous</a></li>
           </ul>
         </details>
       </li>
-      <li>
-        <details>
-          <summary>Admin</summary>
-          <ul class="z-30 bg-white shadow-md rounded-md p-2">
-            <li><a routerLink="/admin">Gestion</a></li>
-          </ul>
-        </details>
-      </li>
+
     </ul>
   </div>
 
+
+
   <!-- End: User & Cart Icons -->
   <div class="navbar-end flex items-center space-x-4">
+    <button (click)="toggleTheme()" class="p-2 rounded-md bg-gray-200 dark:bg-gray-800">
+      <fa-icon *ngIf="isDarkMode" [icon]="['fas', 'sun']" size="lg" class="text-yellow-400"></fa-icon>
+      <fa-icon *ngIf="!isDarkMode" [icon]="['fas', 'moon']" size="lg" class="text-blue-400"></fa-icon>
+    </button>
     <!-- User Dropdown -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="cursor-pointer">

@@ -7,7 +7,7 @@ module.exports = {
     join(__dirname, 'src/**/!(*.stories|*.spec).{ts,html}'),
     ...createGlobPatternsForDependencies(__dirname),
   ],
-  // media: false,
+  darkMode: 'class',
   theme: {
     fontFamily: {
       'sans': 'Inter var, ui-sans-serif, system-ui',
