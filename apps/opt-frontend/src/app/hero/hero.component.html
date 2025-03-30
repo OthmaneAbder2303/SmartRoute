@@ -1,12 +1,15 @@
 <section class="hero bg-cover bg-center text-white py-24 px-6" style="background-image: url('/assets/sr_logo_tp_bckg.png');">
   <div class="container mx-auto text-center relative z-10">
-    <h1 class="text-4xl md:text-5xl font-extrabold mb-6 leading-tight text-orange-600">
+    <!-- Animation du titre au survol -->
+    <h1 class="text-4xl md:text-5xl font-extrabold mb-6 leading-tight text-orange-600 transform hover:scale-105 transition duration-500">
       Bienvenue sur SmartRoute
     </h1>
-    <p class="text-lg md:text-xl mb-8 mx-auto max-w-3xl">
+    <!-- Animation du texte avec un effet de défilement -->
+    <p class="text-lg md:text-xl mb-8 mx-auto max-w-3xl opacity-0 animate-fadeIn delay-500">
       Planifiez vos trajets rapidement et efficacement avec SmartRoute. Obtenez des suggestions de trajets précises en temps réel, optimisées pour le temps, la distance et le trafic. Commencez à planifier votre voyage dès maintenant !
     </p>
-    <a href="/route-planner" class="bg-white text-orange-600 py-3 px-8 rounded-full text-xl font-semibold hover:bg-gray-200 transition duration-300">
+    <!-- Animation du bouton avec un léger mouvement -->
+    <a href="/route-planner" class="bg-white text-orange-600 py-3 px-8 rounded-full text-xl font-semibold hover:bg-gray-200 hover:translate-y-1 transition-all duration-300">
       Commencer
     </a>
   </div>

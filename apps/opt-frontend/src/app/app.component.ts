@@ -4,9 +4,17 @@ import { FaConfig, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fontAwesomeIcons } from './shared/font-awesome-icons';
 import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer/footer.component';
+import { FeaturesComponent } from './features/features.component';
+import { HeroComponent } from './hero/hero.component';
 
 @Component({
-  imports: [RouterModule, NavbarComponent, FooterComponent],
+  imports: [
+    RouterModule,
+    NavbarComponent,
+    FooterComponent,
+    FeaturesComponent,
+    HeroComponent,
+  ],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
