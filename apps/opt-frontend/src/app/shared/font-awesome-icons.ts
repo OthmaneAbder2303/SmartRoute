@@ -14,8 +14,8 @@ export const fontAwesomeIcons: IconDefinition[] = [
   // User & Authentication
   faUser, faSignInAlt, faSignOutAlt, faUserPlus, faCog,
 
-  // Shopping & Payment
-  faCartShopping, faShoppingCart, faCreditCard,
+  // Payment
+  faCreditCard,
 
   // Navigation & Transport
   faHome, faInfoCircle, faTruckFast, faMapMarkerAlt, faRoute, faMap,

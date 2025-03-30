@@ -10,28 +10,36 @@ module.exports = {
   darkMode: 'class',
   theme: {
     fontFamily: {
-      'sans': 'Inter var, ui-sans-serif, system-ui',
-      'serif': 'Inter var, ui-sans-serif, system-ui',
+      sans: ['Poppins', 'Inter', 'Roboto', 'ui-sans-serif', 'system-ui'],
+      serif: ['Merriweather', 'Georgia', 'serif'],
     },
     fontSize: {
       sm: '0.875rem',
-      base: '1.3rem',
-      xl: '1.55rem',
-      '2xl': '1.563rem',
-      '3xl': '1.953rem',
-      '4xl': '2.441rem',
-      '5xl': '3.052rem',
+      base: '1.2rem',
+      xl: '1.5rem',
+      '2xl': '1.75rem',
+      '3xl': '2rem',
+      '4xl': '2.5rem',
+      '5xl': '3rem',
     },
-    extend: {},
+    extend: {
+      colors: {
+        primary: '#FF8000', // Orange : primary color
+        secondary: '#ffffff', // White : backgrounds
+        textBlack: '#222222', // Dark text : contrast
+      },
+    },
   },
   daisyui: {
     themes: [
       {
-        fantasy: {
-          primary: '#0000ff',
+        smartroute: {
+          primary: '#FF8000',
           'primary-content': 'white',
-          secondary: '#f6f6f6',
-          neutral: '#e8e8e8',
+          secondary: '#ffffff',
+          neutral: '#f6f6f6',
+          'base-100': '#ffffff',
+          'base-content': '#222222',
         },
       },
     ],
