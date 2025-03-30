@@ -1,10 +1,9 @@
-<div class="navbar bg-base-100 shadow-md py-4 px-3">
+<div class="navbar bg-orange-50 shadow-md px-3">
   <!-- Start: Logo -->
   <div class="navbar-start">
-    <a class="btn btn-ghost text-xl" routerLink="/">
-      <div class="border bg-secondary p-1 rounded-xl overflow-hidden w-20 h-20">
-        <img ngSrc="/assets/logo_backg.png" alt="SmartRoute" class="w-full h-full object-cover" height="500" width="500">
-      </div>
+    <a href="/" class="block">
+      <img ngSrc="/assets/logo_backg.png" alt="SmartRoute Logo" class="w-20 h-20 object-contain" height="500"
+           width="500" />
     </a>
   </div>
 
@@ -14,37 +13,37 @@
 
       <!-- Accueil -->
       <li>
-        <a href="/" class=" hover:text-primary">Accueil</a>
+        <a href="/" class="text-gray-950 hover:text-primary">Accueil</a>
       </li>
 
       <!-- Services -->
       <li class="relative">
         <details class="group">
-          <summary class="hover:text-primary cursor-pointer">
+          <summary class="text-gray-950 hover:text-primary cursor-pointer">
             Services
           </summary>
-          <ul class="z-30 bg-white shadow-md rounded-md p-2 group-focus:block hidden absolute top-full left-0 w-full">
-            <li><a href="/services" class="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">Tous</a></li>
-            <li><a href="/service1" class="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">Service 1</a></li>
-            <!-- encore 3awtani -->
+          <ul class="z-30 bg-white shadow-lg rounded-md p-2 mt-2 group-open:block hidden absolute top-full left-0 w-full">
+            <li><a href="/services" class="block text-gray-700 hover:bg-orange-200 px-4 py-2 rounded-md">Tous</a></li>
+            <li><a href="/service1" class="block text-gray-700 hover:bg-orange-200 px-4 py-2 rounded-md">Service 1</a></li>
           </ul>
         </details>
       </li>
 
+
       <!-- Tarifs -->
       <li>
-        <a href="/tarifs" class="hover:text-primary">Tarifs</a>
+        <a href="/tarifs" class="text-gray-950 hover:text-primary">Tarifs</a>
       </li>
 
       <!-- Ressources -->
       <li class="relative">
         <details class="group">
-          <summary class="hover:text-primary cursor-pointer">
+          <summary class="text-gray-950 hover:text-primary cursor-pointer">
             Ressources
           </summary>
-          <ul class="z-30 bg-white shadow-md rounded-md p-2 group-focus:block hidden absolute top-full left-0 w-full">
-            <li><a href="/docs" class="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">Documentation</a></li>
-            <li><a href="/api" class="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">API</a></li>
+          <ul class="z-30 bg-white shadow-lg rounded-md p-2 mt-2 group-open:block hidden absolute top-full left-0 w-full">
+            <li><a href="/docs" class="block text-gray-700 hover:bg-orange-200 px-4 py-2 rounded-md">Docs</a></li>
+            <li><a href="/api" class="block text-gray-700 hover:bg-orange-200 px-4 py-2 rounded-md">API</a></li>
             <!-- encore encooore -->
           </ul>
         </details>
@@ -62,18 +61,14 @@
       <fa-icon *ngIf="!isDarkMode" [icon]="['fas', 'moon']" size="lg" class="text-blue-400"></fa-icon>
     </button>
     <!-- Login -->
-    <div class="dropdown dropdown-end">
-      <div tabindex="0" role="button" class="cursor-pointer">
-        <fa-icon [icon]="['fas', 'user-plus']" class="text-gray-700 hover:text-primary"></fa-icon>
-      </div>
-      <ul class="dropdown-content menu bg-white shadow-lg rounded-box z-10 w-40 p-2">
-        <li><button class="text-sm hover:bg-gray-200 rounded-md px-2 py-1">Se connecter</button></li>
-      </ul>
-    </div>
+    <a routerLink="/login" class="cursor-pointer">
+      <fa-icon [icon]="['fas', 'user-plus']" class="text-gray-700 hover:text-primary"></fa-icon>
+    </a>
 
     <!-- Sign-in -->
     <a routerLink="/sign_in" class="cursor-pointer">
       <fa-icon [icon]="['fas', 'sign-in-alt']" class="text-gray-700 hover:text-primary"></fa-icon>
     </a>
+
   </div>
 </div>
