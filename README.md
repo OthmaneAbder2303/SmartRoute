@@ -1,8 +1,11 @@
 # SmartRoute - Route Optimization & Intelligence
 
-<a href="https://SmartRoute.com" target="_blank" rel="noreferrer">
-  <img src="apps/opt-frontend/public/assets/logo_backg.png" alt="SmartRoute Logo" width="">
-</a>
+<p align="center">
+  <a href="https://SmartRoute.com" target="_blank" rel="noreferrer">
+    <img src="apps/opt-frontend/public/assets/logo_backg.png" alt="SmartRoute Logo" >
+  </a>
+</p>
+
 
 Welcome to **SmartRoute** ! A smarter way to plan your transportation routes and optimize travel efficiency using advanced AI algorithms. This project uses modern technologies such as Angular, Spring Boot, Firebase, and machine learning techniques like Genetic Algorithms and Reinforcement Learning to create optimal routes for users.
 
