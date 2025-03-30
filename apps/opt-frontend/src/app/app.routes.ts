@@ -1,9 +1,9 @@
 import { Route } from '@angular/router';
-import { HomeComponent } from './home/home.component';
+import { HeroComponent } from './hero/hero.component';
 
 export const appRoutes: Route[] = [
   {
     path: '',
-    component: HomeComponent,
+    component: HeroComponent,
   }
 ];
