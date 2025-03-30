@@ -1,14 +1,67 @@
-# Optiroute
+# SmartRoute - Route Optimization & Intelligence
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+<a href="https://SmartRoute.com" target="_blank" rel="noreferrer">
+  <img src="apps/opt-frontend/public/assets/logo_backg.png" alt="SmartRoute Logo" width="">
+</a>
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is almost ready ✨.
+Welcome to **SmartRoute** ! A smarter way to plan your transportation routes and optimize travel efficiency using advanced AI algorithms. This project uses modern technologies such as Angular, Spring Boot, Firebase, and machine learning techniques like Genetic Algorithms and Reinforcement Learning to create optimal routes for users.
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+## Features
 
-## Finish your CI setup
+- **Real-time route optimization**: Get the best routes in real-time using AI-based algorithms.
+- **Interactive UI**: Built with Angular for a seamless and user-friendly experience.
+- **Scalable backend**: Powered by Spring Boot, Firebase/MySQL for a robust and scalable system.
+- **Smart Planning**: Integration of machine learning for smart transport planning.
 
-[Click here to finish setting up your workspace!](https://cloud.nx.app/connect/Lw07ttljUv)
+## Table of Contents
+
+- [Getting Started](#getting-started)
+- [Features](#features)
+- [Run the Project](#run-the-project)
+- [Tasks](#tasks)
+- [Add New Projects](#add-new-projects)
+- [Nx Console](#nx-console)
+- [Useful Links](#useful-links)
+
+## Getting Started
+
+To get started with Optiroute, clone the repository and follow the setup instructions below.
+
+```sh
+git clone https://github.com/OthmaneAbder2303/SmartRoute.git
+cd SmartRoute
+```
+
+## Install Dependencies
+
+Make sure you have Node.js and Java installed, then install dependencies for both frontend and backend.
+
+For the frontend (Angular):
+```sh
+cd opt-frontend
+npm install
+```
+
+For the backend (Spring Boot):
+```sh
+cd opt-backend
+./mvnw clean install
+```
+
+## Run the Project
+
+To run the development server for the frontend, use the following command:
+```sh
+npx nx serve opt-frontend
+```
+
+To run the backend (Spring Boot):
+```sh
+cd opt-backend
+./mvnw spring-boot:run
+```
+
+The frontend will be available at http://localhost:4200 and the backend API will be running on http://localhost:8080.
 
 
 ## Run tasks

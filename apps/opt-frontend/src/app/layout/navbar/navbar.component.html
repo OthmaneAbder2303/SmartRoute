@@ -1,9 +1,9 @@
-<div class="navbar bg-base-100 shadow-md py-5 px-3">
+<div class="navbar bg-base-100 shadow-md py-4 px-3">
   <!-- Start: Logo -->
   <div class="navbar-start">
     <a class="btn btn-ghost text-xl" routerLink="/">
       <div class="border bg-secondary p-1 rounded-xl overflow-hidden w-20 h-20">
-        <img ngSrc="/assets/sr_logo_tp_bckg.png" alt="SmartRoute" class="w-full h-full object-cover" height="500" width="500">
+        <img ngSrc="/assets/logo_backg.png" alt="SmartRoute" class="w-full h-full object-cover" height="500" width="500">
       </div>
     </a>
   </div>
@@ -11,40 +11,57 @@
   <!-- Center: Navigation Menu -->
   <div class="navbar-center">
     <ul class="menu menu-horizontal px-1 space-x-4">
-      <li><a routerLink="/">Accueil</a></li>
+
+      <!-- Accueil -->
       <li>
-        <details>
-          <summary>Services</summary>
-          <ul class="z-30 bg-white shadow-md rounded-md p-2">
-            <li><a routerLink="/services">Tous</a></li>
+        <a href="/" class=" hover:text-primary">Accueil</a>
+      </li>
+
+      <!-- Services -->
+      <li class="relative">
+        <details class="group">
+          <summary class="hover:text-primary cursor-pointer">
+            Services
+          </summary>
+          <ul class="z-30 bg-white shadow-md rounded-md p-2 group-focus:block hidden absolute top-full left-0 w-full">
+            <li><a href="/services" class="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">Tous</a></li>
+            <li><a href="/service1" class="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">Service 1</a></li>
+            <!-- encore 3awtani -->
           </ul>
         </details>
       </li>
 
-      <li><a routerLink="/tarifs">Tarifs</a></li>
-
+      <!-- Tarifs -->
       <li>
-        <details>
-          <summary>Ressources</summary>
-          <ul class="z-30 bg-white shadow-md rounded-md p-2">
-            <li><a routerLink="/resources">Tous</a></li>
-            <li><a routerLink="/resources">Tous</a></li>
+        <a href="/tarifs" class="hover:text-primary">Tarifs</a>
+      </li>
+
+      <!-- Ressources -->
+      <li class="relative">
+        <details class="group">
+          <summary class="hover:text-primary cursor-pointer">
+            Ressources
+          </summary>
+          <ul class="z-30 bg-white shadow-md rounded-md p-2 group-focus:block hidden absolute top-full left-0 w-full">
+            <li><a href="/docs" class="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">Documentation</a></li>
+            <li><a href="/api" class="block text-gray-700 hover:bg-gray-100 px-4 py-2 rounded-md">API</a></li>
+            <!-- encore encooore -->
           </ul>
         </details>
       </li>
-
     </ul>
   </div>
 
 
 
-  <!-- End: User & Cart Icons -->
+
+  <!-- End: login & sign-in Icons -->
   <div class="navbar-end flex items-center space-x-4">
     <button (click)="toggleTheme()" class="p-2 rounded-md bg-gray-200 dark:bg-gray-800">
       <fa-icon *ngIf="isDarkMode" [icon]="['fas', 'sun']" size="lg" class="text-yellow-400"></fa-icon>
       <fa-icon *ngIf="!isDarkMode" [icon]="['fas', 'moon']" size="lg" class="text-blue-400"></fa-icon>
     </button>
-    <!-- User Dropdown -->
+    <!-- Login -->
     <div class="dropdown dropdown-end">
       <div tabindex="0" role="button" class="cursor-pointer">
         <fa-icon [icon]="['fas', 'user-plus']" class="text-gray-700 hover:text-primary"></fa-icon>

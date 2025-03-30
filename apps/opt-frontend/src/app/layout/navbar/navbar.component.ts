@@ -14,21 +14,19 @@ import { ThemeService } from '../../shared/services/theme.service';
 })
 export class NavbarComponent {
   isDarkMode = false;
-  isBrowser: boolean;
-
-  constructor(@Inject(PLATFORM_ID) private platformId: object) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
-
-    // Vérifier et appliquer le thème sauvegardé
-    if (this.isBrowser) {
-      this.isDarkMode = localStorage.getItem('theme') === 'dark';
-    }
-  }
+  // isBrowser: boolean;
+  //
+  // constructor(@Inject(PLATFORM_ID) private platformId: object) {
+  //   this.isBrowser = isPlatformBrowser(this.platformId);
+  //
+  //   // Vérifier et appliquer le thème sauvegardé
+  //   if (this.isBrowser) {
+  //     this.isDarkMode = localStorage.getItem('theme') === 'dark';
+  //   }
+  // }
 
   toggleTheme() {
-    if (this.isBrowser) {
-      this.isDarkMode = !this.isDarkMode;
-      localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
-    }
+    this.isDarkMode = !this.isDarkMode;
+    document.body.classList.toggle('dark', this.isDarkMode);
   }
 }
