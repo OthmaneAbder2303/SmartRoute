@@ -6,6 +6,7 @@ import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { FeaturesComponent } from './features/features.component';
 import { HeroComponent } from './hero/hero.component';
+import {AuthService} from "./services/authService/auth2.service";
 
 @Component({
   imports: [
@@ -25,8 +26,11 @@ export class AppComponent implements OnInit {
   private faIconLibrary = inject(FaIconLibrary);
   private faConfig = inject(FaConfig);
 
-  ngOnInit() {
+  async ngOnInit() {
     this.initFontAwesome();
+    await this.auth.handleRedirectCallback();
+  }
+  constructor(public auth: AuthService) {
   }
 
   private initFontAwesome() {
