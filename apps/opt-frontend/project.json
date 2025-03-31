@@ -82,6 +82,10 @@
         "jestConfig": "apps/opt-frontend/jest.config.ts"
       }
     },
+    "ssr": {
+      "entry": "apps/opt-frontend/src/server.ts",
+      "externalDependencies": ["@auth0/auth0-spa-js"]
+    },
     "serve-static": {
       "executor": "@nx/web:file-server",
       "options": {

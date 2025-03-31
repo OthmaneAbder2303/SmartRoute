@@ -70,5 +70,14 @@
       <fa-icon [icon]="['fas', 'sign-in-alt']" class="text-gray-700 hover:text-primary"></fa-icon>
     </a>
 
-  </div>
+    <div *ngIf="auth.isAuthenticated; else loggedOut">
+      <p class="text-black">Welcome, {{ auth.user?.name }}</p>
+      <button (click)="auth.logout()" class="mt-1 ml-3 mr-3 font-bold bg-black rounded-lg h-8 text-center justify-center ">Logout</button>
+    </div>
+
+    <ng-template #loggedOut>
+      <button (click)="auth.login()" class="mt-1 ml-3 mr-3 font-bold bg-black rounded-lg h-8 text-center justify-center ">Login</button>
+    </ng-template>
+    </div>
+
 </div>
