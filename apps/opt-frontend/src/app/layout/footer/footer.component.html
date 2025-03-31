@@ -35,29 +35,40 @@
 
 <!-- Bottom Footer -->
   <div class="border-t border-gray-700 mt-6 pt-4 flex flex-col md:flex-row justify-between items-center">
-    <div class="flex items-center gap-3">
-      <fa-icon class=" hover:text-primary transition" [icon]="['fas','route']" size="3x"></fa-icon>
-      <p>
+    <div class="flex items-center gap-3 group">
+      <img src="assets/logo_zoomed.png" alt="SmartRoute Logo"
+           class="w-12 h-12 transition duration-300 group-hover:scale-110 cursor-pointer" (click)="scrollToTop()">
+      <p class="transition duration-300 group-hover:text-orange-500">
         <strong class="text-orange-500">SmartRoute</strong> <br />
         Optimisation & Intelligence des Itinéraires
       </p>
     </div>
 
+
     <div class="flex gap-4 mt-6 md:mt-0">
       <a href="https://www.instagram.com/othmane.abderr/" aria-label="Instagram" target="_blank" title="Follow us on Instagram">
         <fa-icon [icon]="['fab', 'instagram']" size="2x" class="hover:text-pink-500"></fa-icon>
       </a>
+      <a href="#" aria-label="Facebook" target="_blank" title="Like us on Facebook">
+        <fa-icon [icon]="['fab', 'facebook']" size="2x" class="hover:text-blue-500"></fa-icon>
+      </a>
       <a href="#" aria-label="Twitter" target="_blank" title="Follow us on Twitter">
         <fa-icon [icon]="['fab', 'x-twitter']" size="2x" class="hover:text-gray-500"></fa-icon>
       </a>
-      <a href="#" aria-label="Facebook" target="_blank" title="Like us on Facebook">
-        <fa-icon [icon]="['fab', 'facebook']" size="2x" class="hover:text-blue-500"></fa-icon>
+      <a href="#" aria-label="LinkedIn" target="_blank" title="Connect with us on LinkedIn">
+        <fa-icon [icon]="['fab', 'linkedin']" size="2x" class="hover:text-blue-700"></fa-icon>
       </a>
       <a href="#" aria-label="YouTube" target="_blank" title="Subscribe to our YouTube channel">
         <fa-icon [icon]="['fab', 'youtube']" size="2x" class="hover:text-red-600"></fa-icon>
       </a>
     </div>
   </div>
+
+  <div class="mt-6 py-1 text-center text-gray-700 text-sm">
+    © {{ currentYear }} SmartRoute Inc - Tous droits réservés |
+    <a href="#" class="hover:underline text-gray-800">Mentions légales</a>
+  </div>
+
 
 </footer>
 

@@ -10,4 +10,19 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.scss',
 })
-export class FooterComponent {}
+export class FooterComponent {
+
+  currentYear: number = new Date().getFullYear();
+
+  refreshPage() {
+    window.location.reload();
+  }
+
+  scrollToTop() {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+
+
+
+}

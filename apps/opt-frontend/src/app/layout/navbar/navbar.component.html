@@ -1,8 +1,8 @@
-<div class="navbar bg-orange-50 shadow-md px-3">
+<div class="navbar bg-gray-100 shadow-md px-3">
   <!-- Start: Logo -->
   <div class="navbar-start">
     <a href="/" class="block">
-      <img ngSrc="/assets/logo_backg.png" alt="SmartRoute Logo" class="w-20 h-20 object-contain" height="500"
+      <img ngSrc="/assets/logo_zoomed.png" alt="SmartRoute Logo" class="w-20 h-20 object-contain" height="500"
            width="500" />
     </a>
   </div>
@@ -13,13 +13,13 @@
 
       <!-- Accueil -->
       <li>
-        <a href="/" class="text-gray-950 hover:text-primary">Accueil</a>
+        <a href="/" class="text-textBlack hover:text-primary font-semibold">Accueil</a>
       </li>
 
       <!-- Services -->
       <li class="relative">
         <details class="group">
-          <summary class="text-gray-950 hover:text-primary cursor-pointer">
+          <summary class="text-textBlack hover:text-primary font-semibold cursor-pointer">
             Services
           </summary>
           <ul class="z-30 bg-white shadow-lg rounded-md p-2 mt-2 group-open:block hidden absolute top-full left-0 w-full">
@@ -32,13 +32,13 @@
 
       <!-- Tarifs -->
       <li>
-        <a href="/tarifs" class="text-gray-950 hover:text-primary">Tarifs</a>
+        <a href="/tarifs" class="text-textBlack hover:text-primary font-semibold">Tarifs</a>
       </li>
 
       <!-- Ressources -->
       <li class="relative">
         <details class="group">
-          <summary class="text-gray-950 hover:text-primary cursor-pointer">
+          <summary class="text-textBlack hover:text-primary font-semibold cursor-pointer">
             Ressources
           </summary>
           <ul class="z-30 bg-white shadow-lg rounded-md p-2 mt-2 group-open:block hidden absolute top-full left-0 w-full">
@@ -56,28 +56,33 @@
 
   <!-- End: login & sign-in Icons -->
   <div class="navbar-end flex items-center space-x-4">
-    <button (click)="toggleTheme()" class="p-2 rounded-md bg-gray-200 dark:bg-gray-800">
+
+    <!-- dark mode -->
+    <button (click)="toggleTheme()" class="p-2 rounded-md bg-gray-100 dark:bg-gray-100">
       <fa-icon *ngIf="isDarkMode" [icon]="['fas', 'sun']" size="lg" class="text-yellow-400"></fa-icon>
       <fa-icon *ngIf="!isDarkMode" [icon]="['fas', 'moon']" size="lg" class="text-blue-400"></fa-icon>
     </button>
-    <!-- Login -->
-    <a routerLink="/login" class="cursor-pointer">
-      <fa-icon [icon]="['fas', 'user-plus']" class="text-gray-700 hover:text-primary"></fa-icon>
-    </a>
 
-    <!-- Sign-in -->
-    <a routerLink="/sign_in" class="cursor-pointer">
-      <fa-icon [icon]="['fas', 'sign-in-alt']" class="text-gray-700 hover:text-primary"></fa-icon>
-    </a>
 
     <div *ngIf="auth.isAuthenticated; else loggedOut">
-      <p class="text-black">Welcome, {{ auth.user?.name }}</p>
-      <button (click)="auth.logout()" class="mt-1 ml-3 mr-3 font-bold bg-black rounded-lg h-8 text-center justify-center ">Logout</button>
+      <p class="text-textBlack">Bienvenue, {{ auth.user?.name }}</p>
+      <a (click)="auth.logout()" class="cursor-pointer" role="button" tabindex="0" (keydown.enter)="auth.logout()" aria-label="Logout" title="Déconnexion">
+        <fa-icon [icon]="['fas', 'sign-out-alt']" class="text-textBlack hover:text-primary"></fa-icon>
+      </a>
     </div>
 
+
     <ng-template #loggedOut>
-      <button (click)="auth.login()" class="mt-1 ml-3 mr-3 font-bold bg-black rounded-lg h-8 text-center justify-center ">Login</button>
+      <a (click)="auth.login()" class="cursor-pointer" role="button" tabindex="0" (keydown.enter)="auth.login()" aria-label="Login" title="Se connecter">
+        <fa-icon [icon]="['fas', 'user-plus']" class="text-textBlack hover:text-primary"></fa-icon>
+      </a>
+      <a routerLink="/sign_in" class="cursor-pointer" role="button" tabindex="0" aria-label="Sign In" title="S'enregistrer">
+        <fa-icon [icon]="['fas', 'sign-in-alt']" class="text-textBlack hover:text-primary"></fa-icon>
+      </a>
     </ng-template>
-    </div>
+  </div>
+
+
+
 
 </div>

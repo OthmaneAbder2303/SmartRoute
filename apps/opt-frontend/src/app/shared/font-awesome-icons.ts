@@ -1,13 +1,13 @@
 import { IconDefinition } from '@fortawesome/angular-fontawesome';
 import {
-  faCartShopping, faTruckFast, faUser, faSignInAlt, faSignOutAlt,
-  faUserPlus, faCog, faShoppingCart, faCreditCard, faHome, faInfoCircle,
+  faTruckFast, faUser, faSignInAlt, faSignOutAlt,
+  faUserPlus, faCog, faCreditCard, faHome, faInfoCircle,
   faMapMarkerAlt, faRoute, faMap, faEnvelope, faPhoneAlt, faHeadset,
   faLock, faShieldAlt, faSun, faMoon
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
-  faFacebook, faInstagram, faTwitter, faXTwitter, faYoutube
+  faFacebook, faInstagram, faLinkedin, faTwitter, faXTwitter, faYoutube
 } from '@fortawesome/free-brands-svg-icons';
 
 export const fontAwesomeIcons: IconDefinition[] = [
@@ -24,7 +24,7 @@ export const fontAwesomeIcons: IconDefinition[] = [
   faEnvelope, faPhoneAlt, faHeadset, faLock, faShieldAlt,
 
   // Social Media
-  faFacebook, faInstagram, faTwitter, faXTwitter, faYoutube,
+  faFacebook, faInstagram, faTwitter, faXTwitter, faYoutube, faLinkedin,
 
   // Sun & Moon
   faSun, faMoon,
