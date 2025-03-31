@@ -6,6 +6,7 @@ import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { FeaturesComponent } from './features/features.component';
 import { HeroComponent } from './hero/hero.component';
+import { MapComponent } from './map/map.component';
 
 @Component({
   imports: [
@@ -14,6 +15,7 @@ import { HeroComponent } from './hero/hero.component';
     FooterComponent,
     FeaturesComponent,
     HeroComponent,
+    MapComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
