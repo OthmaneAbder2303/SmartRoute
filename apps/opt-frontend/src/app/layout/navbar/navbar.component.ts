@@ -3,7 +3,7 @@ import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/comm
 import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { ThemeService } from '../../shared/services/theme.service';
-import {AuthService} from "../../services/authService/auth2.service";
+import {AuthService} from "../../shared/services/authService/auth2.service";
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector

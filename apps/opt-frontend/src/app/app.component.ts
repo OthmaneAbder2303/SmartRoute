@@ -6,7 +6,8 @@ import { NavbarComponent } from './layout/navbar/navbar.component';
 import { FooterComponent } from './layout/footer/footer.component';
 import { FeaturesComponent } from './features/features.component';
 import { HeroComponent } from './hero/hero.component';
-import {AuthService} from "./services/authService/auth2.service";
+import {AuthService} from "./shared/services/authService/auth2.service";
+import {MapComponent} from "./map/map.component";
 
 @Component({
   imports: [
@@ -15,6 +16,7 @@ import {AuthService} from "./services/authService/auth2.service";
     FooterComponent,
     FeaturesComponent,
     HeroComponent,
+    MapComponent
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
