@@ -1,3 +1,11 @@
-@fortawesome/angular-fontawesome
+npm i -D @tailwindcss/typography
+npm i -D daisyui@latest
+npm i @fortawesome/angular-fontawesome
+npm i @fortawesome/free-brands-svg-icons
+npm i @fortawesome/free-regular-svg-icons
+npm i @fortawesome/free-solid-svg-icons
+
+npm i @auth0/auth0-angular
+
 @angular/google-maps
 @auth0/auth0-spa-js
