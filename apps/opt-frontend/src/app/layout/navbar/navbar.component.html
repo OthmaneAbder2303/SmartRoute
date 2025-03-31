@@ -65,10 +65,15 @@
 
 
     <div *ngIf="auth.isAuthenticated; else loggedOut">
-      <p class="text-textBlack">Bienvenue, {{ auth.user?.name }}</p>
-      <a (click)="auth.logout()" class="cursor-pointer" role="button" tabindex="0" (keydown.enter)="auth.logout()" aria-label="Logout" title="Déconnexion">
-        <fa-icon [icon]="['fas', 'sign-out-alt']" class="text-textBlack hover:text-primary"></fa-icon>
-      </a>
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-textBlack">Bienvenue,</p>
+          <p class="text-textBlack font-semibold">{{ auth.user?.name }}</p>
+        </div>
+        <a (click)="auth.logout()" class="cursor-pointer ml-4" role="button" tabindex="0" (keydown.enter)="auth.logout()" aria-label="Logout" title="Déconnexion">
+          <fa-icon [icon]="['fas', 'sign-out-alt']" class="text-textBlack hover:text-primary text-lg"></fa-icon>
+        </a>
+      </div>
     </div>
 
 
