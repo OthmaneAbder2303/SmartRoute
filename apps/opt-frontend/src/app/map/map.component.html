@@ -5,3 +5,9 @@
 
 
 
+<div class="map-container" class="h-[100px] w-screen">
+  <input type="text" #searchInput placeholder="Search for a place">
+  <button (click)="searchLocation(searchInput.value)">Search</button>
+  <div id="map"></div>
+</div>
+

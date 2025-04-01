@@ -9,3 +9,5 @@ npm i @auth0/auth0-angular
 
 @angular/google-maps
 @auth0/auth0-spa-js
+npm install --save-dev @types/leaflet
+npm install leaflet
