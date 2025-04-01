@@ -9,7 +9,6 @@ export class AuthService {
   isAuthenticated = false;
 
   constructor(@Inject(PLATFORM_ID) private platformId: object) {
-    this.initAuth();
     if (isPlatformBrowser(this.platformId)) {
       this.initAuth();
     }

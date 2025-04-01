@@ -26,7 +26,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private loadMap(L: any): void {
-    this.map = L.map('map').setView([31.6295, -7.9811], 13);
+    this.map = L.map('map').setView([31.6295, -7.9811], 40);
 
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'

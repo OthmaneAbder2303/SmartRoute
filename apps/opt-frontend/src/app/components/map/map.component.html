@@ -5,9 +5,15 @@
 
 
 
-<div class="map-container" class="h-[500px] w-screen p-5 mt-10">
-  <input class="w-2/12 h-14 mt-12 rounded-lg p-2 border-white" type="text" #searchInput placeholder="Search for a place">
-  <button (click)="searchLocation(searchInput.value)" class="text-white font-semibold bg-gray-700 w-20 h-14 rounded-lg hover:bg-gray-500 mt-5 ml-3">Search</button>
-  <div id="map" class="h-[400px] "></div>
+<div class="map-container h-[950px] w-screen p-5 mt-10 flex flex-col items-center bg-white ">
+  <div class="flex items-center gap-3 border-4 border-black mt-10 h-[700px] w-[900px] mb-40">
+    <div class="">
+    <input class="w-2/5 h-14 rounded-lg p-2 border-white mt-11" type="text" #searchInput placeholder="Search for a place">
+    <button (click)="searchLocation(searchInput.value)" class="text-white font-semibold bg-gray-700 w-20 h-14 mt-11 rounded-lg hover:bg-gray-500">Search</button>
+    </div>
+    <div id="map" class="h-[600px] mt-40 w-[600px] rounded-lg border-2 border-black  right-10 overflow-hidden mb-40 mt-40 ml-10 mr-10"></div>
+  </div>
+
 </div>
+
 
