@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {AuthService} from "../shared/services/authService/auth2.service";
+import {AuthService} from "../../shared/services/authService/auth2.service";
 import {Router} from "@angular/router";
 import { HeroComponent } from '../hero/hero.component';
 

@@ -1,10 +1,10 @@
 import { Route } from '@angular/router';
-import { HeroComponent } from './hero/hero.component';
-import { PricingComponent } from './pricing/pricing.component';
-import {CallbackComponent} from "./CallbackComponent/callback.component";
+import { HeroComponent } from './components/hero/hero.component';
+import { PricingComponent } from './components/pricing/pricing.component';
+import {CallbackComponent} from "./components/CallbackComponent/callback.component";
 import {AppComponent} from "./app.component";
 import {ServicesComponent} from "./ServicesComponent/Services.component";
-import {MapComponent} from "./map/map.component";
+import {MapComponent} from "./components/map/map.component";
 
 export const appRoutes: Route[] = [
   {
