@@ -1,5 +1,8 @@
-<div class="navbar bg-gray-100 shadow-md px-3">
-  <!-- Start: Logo -->
+<div class="navbar fixed top-0 left-0 w-full bg-gray-100 shadow-md px-3 z-30 transition-all duration-300"
+     [ngClass]="{ 'h-[100px] py-4': !isScrolled, 'h-[70px] py-2': isScrolled }">
+
+
+<!-- Start: Logo -->
   <div class="navbar-start">
     <a href="/" class="block">
       <img ngSrc="/assets/logo_zoomed.png" alt="SmartRoute Logo" class="w-20 h-20 object-contain" height="500"

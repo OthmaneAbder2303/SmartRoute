@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { GoogleMap } from '@angular/google-maps';
+// import { GoogleMap } from '@angular/google-maps';
 
 declare let google: any; // Add this to declare Google Maps API globally
 
@@ -7,7 +7,7 @@ declare let google: any; // Add this to declare Google Maps API globally
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
-  imports: [GoogleMap],
+  imports: [],
 })
 export class MapComponent {
   // map: google.maps.Map | undefined; // Initialize it as undefined

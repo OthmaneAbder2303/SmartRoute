@@ -1,4 +1,4 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -26,6 +26,18 @@ export class NavbarComponent {
   //   }
   // }
   constructor(public auth: AuthService) {
+  }
+
+  isScrolled = false;
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 50; // Ajuste selon vos besoins
+    if (this.isScrolled) {
+      document.querySelector('.navbar')?.classList.add('bg-white');
+    } else {
+      document.querySelector('.navbar')?.classList.remove('bg-white');
+    }
   }
 
 
