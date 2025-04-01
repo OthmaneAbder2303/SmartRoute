@@ -1,9 +1,9 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { Component, HostListener, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { ThemeService } from '../../shared/services/theme.service';
-import {AuthService} from "../../shared/services/authService/auth2.service";
+import { ThemeService } from '../../../shared/services/theme.service';
+import {AuthService} from "../../../shared/services/authService/auth2.service";
 
 @Component({
   // eslint-disable-next-line @angular-eslint/component-selector
@@ -26,6 +26,18 @@ export class NavbarComponent {
   //   }
   // }
   constructor(public auth: AuthService) {
+  }
+
+  isScrolled = false;
+
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 50; // Ajuste selon vos besoins
+    if (this.isScrolled) {
+      document.querySelector('.navbar')?.classList.add('bg-white');
+    } else {
+      document.querySelector('.navbar')?.classList.remove('bg-white');
+    }
   }
 
 
