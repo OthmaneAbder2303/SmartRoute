@@ -3,7 +3,7 @@ import { HeroComponent } from './components/hero/hero.component';
 import { PricingComponent } from './components/pricing/pricing.component';
 import {CallbackComponent} from "./components/CallbackComponent/callback.component";
 import {AppComponent} from "./app.component";
-import {ServicesComponent} from "./ServicesComponent/Services.component";
+import {ServicesComponent} from "./components/ServicesComponent/Services.component";
 import {MapComponent} from "./components/map/map.component";
 
 export const appRoutes: Route[] = [
