@@ -1,38 +1,55 @@
-<section class="features py-24 px-6 bg-gray-100 min-h-screen">
-  <div class="container mx-auto text-center px-4">
-    <h2 class="text-3xl font-extrabold text-primary mb-12 animate__animated animate__fadeIn">
-      Découvrez les fonctionnalités de SmartRoute
-    </h2>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <!-- Feature 1 -->
-      <div class="feature bg-white shadow-lg rounded-lg p-6 hover:scale-105 transition-all duration-300 animate__animated animate__fadeInUp w-full max-w-sm mx-auto">
-        <div class="mb-4">
-          <img src="/assets/time.png" alt="Icone Temps" class="mx-auto h-16 w-16">
-        </div>
-        <h3 class="text-xl font-semibold text-primary mb-4">Optimisation du Temps</h3>
-        <p class="text-lg text-gray-600 mb-4">Planifiez vos trajets pour économiser du temps, en prenant en compte les conditions de trafic en temps réel.</p>
-        <a href="/features/time" class="text-primary hover:underline">En savoir plus</a>
-      </div>
+<div class="flex items-center justify-center h-2/4 mt-24"
+     style="background-image: url('/assets/map_marrakech.png'); background-size: cover; background-position: center; height: 400px;">
+  <div id="buttongholder" class="h-15 w-2/12 rounded-lg hover:bg-orange-500 bg-transparent flex items-center justify-center">
+    <button (click)="gotomap()" class="text-orange-500 text-xl hover:text-secondary font-bold hover:scale-105">Accédez à la carte</button>
+  </div>
+</div>
 
-      <!-- Feature 2 -->
-      <div class="feature bg-white shadow-lg rounded-lg p-6 hover:scale-105 transition-all duration-300 animate__animated animate__fadeInUp w-full max-w-sm mx-auto">
-        <div class="mb-4">
-          <img src="/assets/distance.png" alt="Icone Distance" class="mx-auto h-16 w-16">
-        </div>
-        <h3 class="text-xl font-semibold text-primary mb-4">Réduction de la Distance</h3>
-        <p class="text-lg text-gray-600 mb-4">Optimisez vos trajets pour parcourir la distance la plus courte possible tout en évitant les embouteillages.</p>
-        <a href="/features/distance" class="text-primary hover:underline">En savoir plus</a>
-      </div>
-
-      <!-- Feature 3 -->
-      <div class="feature bg-white shadow-lg rounded-lg p-6 hover:scale-105 transition-all duration-300 animate__animated animate__fadeInUp w-full max-w-sm mx-auto">
-        <div class="mb-4">
-          <img src="/assets/analyse.png" alt="Icone Trafic" class="mx-auto h-16 w-16">
-        </div>
-        <h3 class="text-xl font-semibold text-primary mb-4">Analyse du Trafic</h3>
-        <p class="text-lg text-gray-600 mb-4">Obtenez des prévisions de trafic et ajustez vos trajets en fonction des conditions routières actuelles.</p>
-        <a href="/features/traffic" class="text-primary hover:underline">En savoir plus</a>
-      </div>
+<div id="explanations" class="bg-white flex flex-col justify-center items-center p-5 gap-10 w-full">
+  <div class="flex justify-center items-center p-5 w-full">
+    <div class="mt-5 hover:scale-105 rounded-lg"
+         style="background-image: url('/assets/side-image1.png'); background-size: cover; background-position: center; width: 400px; height: 270px;">
+    </div>
+    <div class="ml-20 max-w-2xl text-center">
+      <div class="text-orange-500 font-bold text-2xl mb-2">Itinéraires</div>
+      <h3 class="text-black text-lg">
+        Le service d'itinéraires SmartRoute couvre le monde entier et vous permet de calculer des trajets et diverses informations de navigation.
+        Nous proposons un large éventail d'options de déplacement pour plusieurs modes de transport : voiture, vélos, marche, randonnée, fauteuil
+        roulant et véhicules lourds. Chaque mode utilise un réseau routier soigneusement élaboré pour répondre aux exigences du profil.
+      </h3>
     </div>
   </div>
-</section>
+
+  <hr class="w-3/4 my-5">
+
+  <div class="flex flex-wrap justify-center items-center gap-5 w-full">
+    <div *ngFor="let feature of features" class="flex flex-col items-center text-center max-w-md">
+      <div class="mt-1 hover:scale-105 rounded-lg w-[70px] h-[70px] bg-cover bg-center"
+           [style.backgroundImage]="'url(' + feature.icon + ')'" >
+      </div>
+      <div class="text-orange-500 font-semibold text-xl mb-2 min-h-[50px] flex items-center justify-center">
+        {{ feature.title }}
+      </div>
+      <h3 class="text-black text-lg min-h-[100px] flex items-center">
+        {{ feature.longDescription }}
+      </h3>
+    </div>
+  </div>
+
+  <hr class="w-3/4 my-5">
+
+  <div class="flex justify-center items-center p-5 w-full">
+    <div class="mt-5 hover:scale-105 rounded-lg"
+         style="background-image: url('/assets/side-image6.png'); background-size: cover; background-position: center; width: 400px; height: 270px;">
+    </div>
+    <div class="ml-20 max-w-2xl text-center">
+      <div class="text-orange-500 font-bold text-2xl mb-2">Optimisation</div>
+      <h3 class="text-black text-lg">
+        L'API d'optimisation SmartRoute est une solution efficace pour résoudre les problèmes de routage de véhicules,
+        qu'il s'agisse de gestion de flottes ou de livraisons. Elle permet de planifier des itinéraires optimisés en tenant compte de contraintes
+        comme les types de véhicules, les capacités de chargement et les délais de livraison. Rapide et flexible, elle aide à réduire les coûts et
+        à améliorer l’efficacité des trajets, tout en simplifiant la gestion des déplacements.
+      </h3>
+    </div>
+  </div>
+</div>

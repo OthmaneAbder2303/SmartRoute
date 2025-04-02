@@ -4,7 +4,7 @@ import { FaConfig, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fontAwesomeIcons } from './shared/font-awesome-icons';
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { FooterComponent } from './components/layout/footer/footer.component';
-import { FeaturesComponent } from './components/features/features.component';
+import { FeaturesComponent } from './components/functionalities/features.component';
 import { HeroComponent } from './components/hero/hero.component';
 import {AuthService} from "./shared/services/authService/auth2.service";
 import {MapComponent} from "./components/map/map.component";
