@@ -1,71 +1,70 @@
-<div class="border-4 border-black flex items-center justify-center h-2/4 mt-24"
+<div class="flex items-center justify-center h-2/4 mt-24"
      style="background-image: url('/assets/map_marrakech.png'); background-size: cover; background-position: center; height: 400px;">
-  <div id="buttongholder" class="h-15 w-2/12 border-4 border-orange-500 rounded-lg  hover:bg-orange-500  flex items-center justify-center">
-    <button (click)="gotomap()" class="text-orange-500 text-xl hover:text-white font-bold hover:scale-105">Get access to our map</button>
+  <div id="buttongholder" class="h-15 w-2/12 rounded-lg hover:bg-orange-500 bg-transparent flex items-center justify-center">
+    <button (click)="gotomap()" class="text-orange-500 text-xl hover:text-secondary font-bold hover:scale-105">Accédez à la carte</button>
   </div>
 </div>
 
-<div id="explanations" class="bg-white flex flex-col justify-center items-center p-5 gap-10">
-  <div class="flex justify-center items-center p-5">
-    <div class="mt-5 hover:scale-105"
-         style="background-image: url('/assets/side-image1.png'); background-size: cover; background-position: center; width: 400px; height: 270px; border-radius: 10px;">
+<div id="explanations" class="bg-white flex flex-col justify-center items-center p-5 gap-10 w-full">
+  <div class="flex justify-center items-center p-5 w-full">
+    <div class="mt-5 hover:scale-105 rounded-lg"
+         style="background-image: url('/assets/side-image1.png'); background-size: cover; background-position: center; width: 400px; height: 270px;">
     </div>
-    <div class="ml-20 max-w-2xl">
-      <div class="text-orange-500 font-bold text-2xl mb-2">Directions</div>
+    <div class="ml-20 max-w-2xl text-center">
+      <div class="text-orange-500 font-bold text-2xl mb-2">Itinéraires</div>
       <h3 class="text-black text-lg">
-        The SmartRoute directions service covers the globe and allows you to compute routes and all sorts of navigation information. To this end, we offer a wide range of travelling options for multiple modes of transport. Amongst these you can choose between car, different bicycle types, walking, hiking, wheelchair, and heavy vehicle. Each of these modes uses a carefully compiled street network to suit the profile's requirements. To help you individualize your routes even further, the API offers the possibility to customize your input with road type restrictions and vehicle characteristics.
+        Le service d'itinéraires SmartRoute couvre le monde entier et vous permet de calculer des trajets et diverses informations de navigation.
+        Nous proposons un large éventail d'options de déplacement pour plusieurs modes de transport : voiture, vélos, marche, randonnée, fauteuil
+        roulant et véhicules lourds.
+        Chaque mode utilise un réseau routier soigneusement élaboré pour répondre aux exigences du profil.
       </h3>
     </div>
   </div>
-  <div class="mr-3 flex justify-center items-center ">
-    <div class="mt-1 hover:scale-105"
-         style="background-image: url('/assets/side-image2.png'); background-size: cover; background-position: center; width: 70px; height: 70px; border-radius: 10px;">
-    </div>
-    <div class="ml-2 max-w-2xl">
-      <div class="text-orange-500 font-semibold text-xl mb-2">Long distance routes</div>
-      <h3 class="text-black text-lg">
-        With SmartRoute you are able to determine routes for car and heavy vehicle with distances within Marrakech with any kind of options added.
+
+  <hr class="w-3/4 my-5">
+
+  <div class="flex flex-wrap justify-center items-center gap-5 w-full">
+
+    <div class="flex flex-col items-center text-center max-w-md">
+      <div class="mt-1 hover:scale-105 rounded-lg w-[70px] h-[70px] bg-cover bg-center"
+           style="background-image: url('/assets/side-image2.png');">
+      </div>
+      <div class="text-orange-500 font-semibold text-xl mb-2 min-h-[50px] flex items-center justify-center">
+        Itinéraires longue distance
+      </div>
+      <h3 class="text-black text-lg min-h-[100px] flex items-center">
+        Avec SmartRoute, vous pouvez calculer des itinéraires pour voitures et véhicules lourds dans Marrakech, en ajoutant toutes sortes d'options personnalisées.
       </h3>
     </div>
-    <div class="mt-1 hover:scale-105"
-         style="background-image: url('/assets/side-image3.png'); background-size: cover; background-position: center; width: 70px; height: 70px; border-radius: 10px;">
-    </div>
-    <div class="ml-2 max-w-2xl">
-      <div class="text-orange-500 font-semibold text-xl mb-2">Can used by professionals</div>
-      <h3 class="text-black text-lg w-2/3">
-        SmartRoute’s heavy vehicle routing option allows the planning of delivery for equipment and resources to disaster stricken areas, whilst taking into account restrictions based on vehicle properties.
+
+    <div class="flex flex-col items-center text-center max-w-md">
+      <div class="mt-1 hover:scale-105 rounded-lg w-[70px] h-[70px] bg-cover bg-center"
+           style="background-image: url('/assets/side-image3.png');">
+      </div>
+      <div class="text-orange-500 font-semibold text-xl mb-2 min-h-[50px] flex items-center justify-center">
+        Utilisation professionnelle
+      </div>
+      <h3 class="text-black text-lg min-h-[100px] flex items-center">
+        L'option de routage pour véhicules lourds de SmartRoute permet de planifier la livraison d'équipements et de ressources vers des zones sinistrées.
       </h3>
     </div>
+
+
   </div>
-  <hr>
-  <div class="mr-3 flex justify-center items-center ">
-    <div class="mt-1 hover:scale-105"
-         style="background-image: url('/assets/side-image4.png'); background-size: cover; background-position: center; width: 70px; height: 70px; border-radius: 10px;">
+
+  <hr class="w-3/4 my-5">
+
+  <div class="flex justify-center items-center p-5 w-full">
+    <div class="mt-5 hover:scale-105 rounded-lg"
+         style="background-image: url('/assets/side-image6.png'); background-size: cover; background-position: center; width: 400px; height: 270px;">
     </div>
-    <div class="ml-2 max-w-2xl">
-      <div class="text-orange-500 font-semibold text-xl mb-2">Long distance routes</div>
+    <div class="ml-20 max-w-2xl text-center">
+      <div class="text-orange-500 font-bold text-2xl mb-2">Optimisation</div>
       <h3 class="text-black text-lg">
-        With SmartRoute you are able to determine routes for car and heavy vehicle with distances within Marrakech with any kind of options added.
-      </h3>
-    </div>
-    <div class="mt-1 hover:scale-105"
-         style="background-image: url('/assets/side-image5.png'); background-size: cover; background-position: center; width: 70px; height: 100px; border-radius: 10px;">
-    </div>
-    <div class="ml-2 max-w-2xl">
-      <div class="text-orange-500 font-semibold text-xl mb-2">Can used by professionals</div>
-      <h3 class="text-black text-lg w-2/3">
-        SmartRoute’s heavy vehicle routing option allows plannin for equipment and resources to disaster stricken areas, whilst taking into account restrictions based on vehicle properties.
-      </h3>
-    </div>
-  </div>
-  <div class="flex justify-center items-center p-5">
-    <div class="mt-5 hover:scale-105"
-         style="background-image: url('/assets/side-image6.png'); background-size: cover; background-position: center; width: 400px; height: 270px; border-radius: 10px;">
-    </div>
-    <div class="ml-20 max-w-2xl">
-      <div class="text-orange-500 font-bold text-2xl mb-2">Optimization</div>
-      <h3 class="text-black text-lg">
-        SmartRoute’s optimization api can be used to solve various vehicle routing problems. This versatile service will not only provide fast responses but lets you customize your vehicle, task and time constraints according to your needs. By specifying multiple vehicles the result will be optimized for your whole fleet. The tasks can be either defined as jobs, which are single-location pickups or deliveries, or as shipments where pickup and delivery should happen by one vehicle on the same route. We provide a working example request in our api playground, so start optimizing right away.
+        L'API d'optimisation SmartRoute est une solution efficace pour résoudre les problèmes de routage de véhicules,
+        qu'il s'agisse de gestion de flottes ou de livraisons. Elle permet de planifier des itinéraires optimisés en tenant compte de contraintes
+        comme les types de véhicules, les capacités de chargement et les délais de livraison. Rapide et flexible, elle aide à réduire les coûts et
+        à améliorer l’efficacité des trajets, tout en simplifiant la gestion des déplacements.
       </h3>
     </div>
   </div>
