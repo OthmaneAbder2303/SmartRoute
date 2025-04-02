@@ -6,5 +6,6 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   templateUrl: './features.component.html',
   styleUrl: './features.component.scss',
+  standalone: true
 })
 export class FeaturesComponent {}

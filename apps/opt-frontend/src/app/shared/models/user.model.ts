@@ -1,7 +1,7 @@
 export interface User {
-  id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  role: 'admin' | 'user';
-  token?: string; // pour  lauthentication
+  password: string;
+  role: string;
 }

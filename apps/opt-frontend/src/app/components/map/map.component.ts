@@ -4,6 +4,7 @@ import { isPlatformBrowser } from '@angular/common';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
+  standalone: true,
   styleUrls: ['./map.component.scss']
 })
 export class MapComponent implements AfterViewInit {

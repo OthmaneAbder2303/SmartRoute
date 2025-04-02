@@ -7,6 +7,7 @@ import {FeaturesComponent} from "./components/features/features.component";
 import {MapComponent} from "./components/map/map.component";
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { FaqComponent } from './components/faq/faq.component';
+import {SignupComponent} from "./components/signup/signup.component";
 
 export const appRoutes: Route[] = [
   {
@@ -16,6 +17,9 @@ export const appRoutes: Route[] = [
   {
     path: 'login/callback',
     component: CallbackComponent
+  },
+  { path: 'signup',
+    component: SignupComponent
   },
   { path: 'services',
     component: FeaturesComponent
