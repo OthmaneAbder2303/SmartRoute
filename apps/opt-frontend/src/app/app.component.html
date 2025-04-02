@@ -1,16 +1,6 @@
 <div class="flex flex-col min-h-screen">
   <app-navbar></app-navbar>
   <div class="border-b border-gray-100"></div>
-
-  <!-- Bouton de retour en haut -->
-  <button id="backToTop"
-          class="fixed bottom-10 right-10 bg-orange-500 text-white p-4 rounded-full shadow-lg hover:bg-orange-600 transition-transform transform hover:scale-110 focus:outline-none z-50"
-          style="display: none;" (click)="scrollToTop()">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7-7-7 7"></path>
-    </svg>
-  </button>
-
 <!--  <app-hero></app-hero>-->
   <router-outlet></router-outlet>
   <app-features></app-features>
