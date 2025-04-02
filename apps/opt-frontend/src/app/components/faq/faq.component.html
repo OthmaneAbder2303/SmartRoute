@@ -1,0 +1,84 @@
+<section class="bg-gray-100 py-10 px-6">
+  <div class="max-w-3xl mx-auto">
+    <h2 class="text-3xl font-extrabold text-orange-500 mb-8 text-center">Foire Aux Questions</h2>
+
+    <!-- Section Support du Site -->
+    <div class="mb-6">
+      <h3 class="text-2xl font-semibold text-black mb-4">Support du Site</h3>
+
+      <div *ngFor="let faq of supportFaqs; let i = index"
+           class="mb-4 border border-orange-300 rounded-lg shadow-md hover:shadow-lg transition">
+        <button (click)="toggleFAQ('support',i)"
+                class="w-full p-4 text-left bg-orange-100 hover:bg-orange-200 rounded-t-lg flex justify-between items-center">
+          <span class="text-lg font-medium text-black">{{ faq.question }}</span>
+          <svg [ngClass]="faq.isOpen ? 'rotate-180' : ''"
+               class="w-6 h-6 text-orange-600 transition-transform duration-300"
+               xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+
+        <div *ngIf="faq.isOpen" class="p-4 bg-white text-black border-t border-orange-300">
+          {{ faq.answer }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Routes et Optimisation -->
+    <div class="mb-6">
+      <h3 class="text-2xl font-semibold text-black mb-4">Routes et Optimisation</h3>
+
+      <div *ngFor="let faq of routesFaqs; let i = index"
+           class="mb-4 border border-orange-300 rounded-lg shadow-md hover:shadow-lg transition">
+        <button (click)="toggleFAQ('routes', i)"
+                class="w-full p-4 text-left bg-orange-100 hover:bg-orange-200 rounded-t-lg flex justify-between items-center">
+          <span class="text-lg font-medium text-black">{{ faq.question }}</span>
+          <svg [ngClass]="faq.isOpen ? 'rotate-180' : ''"
+               class="w-6 h-6 text-orange-600 transition-transform duration-300"
+               xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+
+        <div *ngIf="faq.isOpen" class="p-4 bg-white text-black border-t border-orange-300">
+          {{ faq.answer }}
+        </div>
+      </div>
+    </div>
+
+    <!-- Section Problèmes -->
+    <div>
+      <h3 class="text-2xl font-semibold text-black mb-4">Problèmes</h3>
+
+      <div *ngFor="let faq of problemsFaqs; let i = index"
+           class="mb-4 border border-orange-300 rounded-lg shadow-md hover:shadow-lg transition">
+        <button (click)="toggleFAQ('problems',i)"
+                class="w-full p-4 text-left bg-orange-100 hover:bg-orange-200 rounded-t-lg flex justify-between items-center">
+          <span class="text-lg font-medium text-black">{{ faq.question }}</span>
+          <svg [ngClass]="faq.isOpen ? 'rotate-180' : ''"
+               class="w-6 h-6 text-orange-600 transition-transform duration-300"
+               xmlns="http://www.w3.org/2000/svg"
+               fill="none"
+               viewBox="0 0 24 24"
+               stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+
+        <div *ngIf="faq.isOpen" class="p-4 bg-white text-black border-t border-orange-300">
+          {{ faq.answer }}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>

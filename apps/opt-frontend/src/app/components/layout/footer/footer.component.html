@@ -6,7 +6,7 @@
       <ul class="space-y-2">
         <li><a href="#" class="hover:underline hover:text-primary transition">Suivi des trajets</a></li>
         <li><a href="#" class="hover:underline hover:text-primary transition">Support client</a></li>
-        <li><a href="#" class="hover:underline hover:text-primary transition">FAQ - SmartRoute</a></li>
+        <li><a href="/faq" class="hover:underline hover:text-primary transition">FAQ - SmartRoute</a></li>
         <li><a href="#" class="hover:underline hover:text-primary transition">Comparer les services</a></li>
       </ul>
     </nav>
@@ -33,18 +33,25 @@
     </nav>
   </div>
 
-<!-- Bottom Footer -->
+  <!-- Contact Bar -->
+  <div class="mt-6 bg-orange-100 py-3 px-6 rounded-xl flex justify-between items-center">
+    <div class="text-black">
+      <p>Contactez-nous : <a href="mailto:othmane232004@gmail.com" class="text-orange-500 hover:underline">othmane232004&#64;gmail.com</a>  |  Téléphone : <a href="tel:+212648871178" class="text-orange-500 hover:underline">+33 1 23 45 67 89</a></p>
+      <!-- drt dyali pour tester 7ta ndirou adrari mail dyal charika dyalna inchaallah hahahaha-->
+    </div>
+    <a href="/contact-form" class="bg-orange-500 text-white py-1 px-4 rounded-lg hover:bg-orange-600 transition">Formulaire de Contact</a>
+  </div>
+
+  <!-- Bottom Footer -->
   <div class="border-t border-gray-700 mt-6 pt-4 flex flex-col md:flex-row justify-between items-center">
     <div class="flex items-center gap-3 group">
       <img src="assets/logo_zoomed.png" alt="SmartRoute Logo"
-           class="w-12 h-12 transition duration-300 group-hover:scale-110 cursor-pointer" (click)="scrollToTop()">
+           class="w-12 h-12 transition duration-300 group-hover:scale-110 cursor-pointer">
       <p class="transition duration-300 group-hover:text-orange-500">
         <strong class="text-orange-500">SmartRoute</strong> <br />
         Optimisation & Intelligence des Itinéraires
       </p>
     </div>
-
-
     <div class="flex gap-4 mt-6 md:mt-0">
       <a href="https://www.instagram.com/othmane.abderr/" aria-label="Instagram" target="_blank" title="Follow us on Instagram">
         <fa-icon [icon]="['fab', 'instagram']" size="2x" class="hover:text-pink-500"></fa-icon>
@@ -68,7 +75,4 @@
     © {{ currentYear }} SmartRoute Inc - Tous droits réservés |
     <a href="#" class="hover:underline text-gray-800">Mentions légales</a>
   </div>
-
-
 </footer>
-

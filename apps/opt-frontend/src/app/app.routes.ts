@@ -5,17 +5,31 @@ import {CallbackComponent} from "./components/CallbackComponent/callback.compone
 import {AppComponent} from "./app.component";
 import {ServicesComponent} from "./components/ServicesComponent/Services.component";
 import {MapComponent} from "./components/map/map.component";
+import { ContactFormComponent } from './components/contact-form/contact-form.component';
+import { FaqComponent } from './components/faq/faq.component';
 
 export const appRoutes: Route[] = [
   {
     path: '',
     component: HeroComponent,
   },
-  // {
-  //   path: 'pricing',
-  //   component: PricingComponent,
-  // },
-  { path: 'login/callback', component: CallbackComponent },
-  { path: 'services', component: ServicesComponent },
-  { path: 'map', component: MapComponent }
+  {
+    path: 'login/callback',
+    component: CallbackComponent
+  },
+  { path: 'services',
+    component: ServicesComponent
+  },
+  { path: 'map',
+    component: MapComponent
+  },
+  { path: 'pricing',
+    component: PricingComponent
+  },
+  { path: 'contact-form',
+    component: ContactFormComponent
+  },
+  { path: 'faq',
+    component: FaqComponent
+  },
 ];

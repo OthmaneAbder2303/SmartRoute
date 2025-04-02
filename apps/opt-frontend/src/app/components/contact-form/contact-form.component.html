@@ -1,0 +1,70 @@
+<section class="bg-gray-100 py-16 px-6">
+  <div class="max-w-lg mx-auto bg-white p-8 rounded-lg shadow-lg transition-all duration-500 transform hover:scale-105 hover:shadow-2xl">
+    <h2 class="text-3xl font-extrabold text-center text-orange-500 mb-8 animate__animated animate__fadeIn">
+      Contactez-nous
+    </h2>
+
+    <form (ngSubmit)="handleSubmit()" class="space-y-8">
+
+      <!-- Nom -->
+      <div class="relative">
+        <input
+          type="text"
+          [(ngModel)]="name"
+          name="name"
+          placeholder="Nom"
+          required
+          class="w-full p-4 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-300 ease-in-out"
+        />
+        <label class="absolute top-0 left-0 text-gray-500 text-sm ml-2 mt-2">Nom</label>
+      </div>
+
+      <!-- Email -->
+      <div class="relative">
+        <input
+          type="email"
+          [(ngModel)]="email"
+          name="email"
+          placeholder="Email"
+          required
+          class="w-full p-4 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-300 ease-in-out"
+        />
+        <label class="absolute top-0 left-0 text-gray-500 text-sm ml-2 mt-2">Email</label>
+      </div>
+
+      <!-- Message -->
+      <div class="relative">
+        <textarea
+          [(ngModel)]="message"
+          name="message"
+          placeholder="Votre message"
+          rows="6"
+          required
+          class="w-full p-4 bg-gray-50 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 focus:border-transparent transition duration-300 ease-in-out"
+        ></textarea>
+        <label class="absolute top-0 left-0 text-gray-500 text-sm ml-2 mt-2">Message</label>
+      </div>
+
+      <!-- Submit Button -->
+      <div class="relative">
+        <button
+          type="submit"
+          [disabled]="loading"
+          class="w-full bg-orange-500 text-white py-3 rounded-lg shadow-md hover:bg-orange-600 transition duration-300 ease-in-out disabled:bg-gray-300 disabled:cursor-not-allowed"
+        >
+          {{ loading ? 'Envoi...' : 'Envoyer' }}
+        </button>
+      </div>
+    </form>
+
+    <!-- Success/Error Message -->
+    <div *ngIf="success !== null" class="mt-6 text-center">
+      <p *ngIf="success" class="text-green-600 text-lg font-semibold animate__animated animate__fadeIn">
+        Message envoyé avec succès ! 🎉
+      </p>
+      <p *ngIf="!success" class="text-red-600 text-lg font-semibold animate__animated animate__fadeIn">
+        Une erreur est survenue, veuillez réessayer. 😞
+      </p>
+    </div>
+  </div>
+</section>

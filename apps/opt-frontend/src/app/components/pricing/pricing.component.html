@@ -1,1 +1,54 @@
-<p>pricing works!</p>
+<section class="pricing py-24 px-6 bg-gray-200">
+  <div class="container mx-auto text-center">
+    <h2 class="text-3xl font-extrabold text-primary mb-12">
+      Nos Offres Tarifaires
+    </h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Plan Basique -->
+      <div class="pricing-card bg-white shadow-lg rounded-lg p-6 border hover:scale-105 transition-all duration-300">
+        <h3 class="text-xl font-semibold text-primary mb-4">Basique</h3>
+        <p class="text-3xl font-bold text-gray-900">Gratuit</p>
+        <ul class="text-gray-600 my-4 space-y-2">
+          <li>✔ 10 requêtes/jour</li>
+          <li>✔ Support email</li>
+          <li>❌ Accès aux fonctionnalités avancées</li>
+        </ul>
+        <button onclick="window.location.href='/signin'" class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition">
+          Essayer
+        </button>
+      </div>
+
+      <!-- Plan Pro (Mise en avant) -->
+      <div class="pricing-card bg-white shadow-lg rounded-lg p-6 border-2 border-orange-500 hover:scale-105 transition-all duration-300 relative">
+        <span class="absolute top-0 left-1/2 -translate-x-1/2 bg-orange-500 text-white text-sm px-4 py-1 rounded-b-lg">Best Seller</span>
+        <h3 class="text-xl font-semibold text-primary mb-4">Pro</h3>
+        <p class="text-3xl font-bold text-gray-900">149MAD/mois</p>
+        <ul class="text-gray-600 my-4 space-y-2">
+          <li>✔ 1000 requêtes/jour</li>
+          <li>✔ Accès aux API avancées</li>
+          <li>✔ Support prioritaire</li>
+        </ul>
+        <button class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition">
+          S'abonner
+        </button>
+      </div>
+
+      <!-- Plan Entreprise -->
+      <div class="pricing-card bg-white shadow-lg rounded-lg p-6 border hover:scale-105 transition-all duration-300">
+        <h3 class="text-xl font-semibold text-primary mb-4">Entreprise</h3>
+        <p class="text-3xl font-bold text-gray-900">Sur mesure</p>
+        <ul class="text-gray-600 my-4 space-y-2">
+          <li>✔ Nombre illimité de requêtes</li>
+          <li>✔ Support 24/7</li>
+          <li>✔ Solutions personnalisées</li>
+        </ul>
+        <button onclick="window.location.href='/contact-form'" class="bg-orange-500 text-white px-6 py-2 rounded-lg hover:bg-orange-600 transition">
+          Nous contacter
+        </button>
+      </div>
+
+    </div>
+  </div>
+</section>
+
