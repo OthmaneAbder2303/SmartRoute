@@ -4,7 +4,7 @@ import { FaConfig, FaIconLibrary } from '@fortawesome/angular-fontawesome';
 import { fontAwesomeIcons } from './shared/font-awesome-icons';
 import { NavbarComponent } from './components/layout/navbar/navbar.component';
 import { FooterComponent } from './components/layout/footer/footer.component';
-import { FeaturesComponent } from './components/functionalities/features.component';
+import { FuncionalitiesComponent } from './components/functionalities/funcionalities.component';
 import {AuthService} from "./shared/services/authService/auth2.service";
 import { FormsModule } from '@angular/forms';
 
@@ -14,7 +14,7 @@ import { FormsModule } from '@angular/forms';
     FormsModule,
     NavbarComponent,
     FooterComponent,
-    FeaturesComponent,
+    FuncionalitiesComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
