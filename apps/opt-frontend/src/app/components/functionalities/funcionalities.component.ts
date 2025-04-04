@@ -4,8 +4,8 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-features',
   imports: [CommonModule],
-  templateUrl: './features.component.html',
-  styleUrl: './features.component.scss',
+  templateUrl: './funcionalities.component.html',
+  styleUrl: './funcionalities.component.scss',
   standalone: true
 })
-export class FeaturesComponent {}
+export class FuncionalitiesComponent {}
