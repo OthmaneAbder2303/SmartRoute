@@ -7,6 +7,7 @@ import { FooterComponent } from './components/layout/footer/footer.component';
 import { FuncionalitiesComponent } from './components/functionalities/funcionalities.component';
 import {AuthService} from "./shared/services/authService/auth2.service";
 import { FormsModule } from '@angular/forms';
+import { CalendarComponent } from './components/calendar/calendar.component';
 
 @Component({
   imports: [
@@ -15,6 +16,7 @@ import { FormsModule } from '@angular/forms';
     NavbarComponent,
     FooterComponent,
     FuncionalitiesComponent,
+    CalendarComponent,
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -30,8 +32,7 @@ export class AppComponent implements OnInit {
     this.initFontAwesome();
     await this.auth.handleRedirectCallback();
   }
-  constructor(public auth: AuthService) {
-  }
+  constructor(public auth: AuthService) {}
 
   private initFontAwesome() {
     this.faConfig.defaultPrefix = 'far';

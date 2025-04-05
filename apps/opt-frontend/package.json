@@ -1,0 +1,22 @@
+{
+  "name": "opt-frontend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tailwind.config.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OthmaneAbder2303/optiroute.git"
+  },
+  "private": true,
+  "dependencies": {
+    "@fullcalendar/angular": "^6.1.17",
+    "@fullcalendar/core": "^6.1.17",
+    "@fullcalendar/daygrid": "^6.1.17",
+    "@fullcalendar/interaction": "^6.1.17",
+    "@tailwindcss/typography": "^0.5.16",
+    "opt-frontend": "file:"
+  }
+}
