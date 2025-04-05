@@ -1,6 +1,6 @@
 import { Component, Inject, PLATFORM_ID, AfterViewInit } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-
+import { LocationService } from '../../shared/services/LocationService/location.service';
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -11,7 +11,7 @@ export class MapComponent implements AfterViewInit {
   private map!: any;
   private isBrowser: boolean;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {
+  constructor(@Inject(PLATFORM_ID) private platformId: Object,private locationservice:LocationService) {
     this.isBrowser = isPlatformBrowser(this.platformId);
   }
 
@@ -28,13 +28,24 @@ export class MapComponent implements AfterViewInit {
 
   private loadMap(L: any): void {
     this.map = L.map('map').setView([31.6295, -7.9811], 40);
-
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
       attribution: '&copy; OpenStreetMap contributors'
     }).addTo(this.map);
   }
+  getPosition(){
+    this.locationservice.watchPosition(
+      position => {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+         console.log(latitude)
+        console.log(longitude)
+      },
+      error => console.error(error)
+    );
+  }
 
-  searchLocation(query: string) {
+
+searchLocation(query: string) {
     if (this.isBrowser) {
       fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
         .then(response => response.json())

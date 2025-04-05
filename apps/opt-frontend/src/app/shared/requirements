@@ -11,5 +11,5 @@ npm i @auth0/auth0-angular
 @auth0/auth0-spa-js
 npm install --save-dev @types/leaflet
 npm install leaflet
-
+@nxrocks/nx-spring-boot
 npm install @emailjs/browser
