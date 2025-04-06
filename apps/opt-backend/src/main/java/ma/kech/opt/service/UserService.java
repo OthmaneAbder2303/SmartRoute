@@ -4,21 +4,24 @@ import ma.kech.opt.dto.UserDTO;
 import ma.kech.opt.repository.UserRepository;
 import ma.kech.opt.entity.User;
 
-import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class UserService {
+public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
-  private final BCryptPasswordEncoder passwordEncoder;
+  private final PasswordEncoder passwordEncoder;
 
-  public UserService(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
+  public UserService(UserRepository userRepository) {
     System.out.println("UserService created");
     this.userRepository = userRepository;
-    this.passwordEncoder = passwordEncoder;
+    this.passwordEncoder = new BCryptPasswordEncoder();
   }
 
   public UserDTO registerUser(User user) {
@@ -47,6 +50,17 @@ public class UserService {
     dto.setEmail(user.getEmail());
     dto.setRoles(user.getRoles());
     return dto;
+  }
+
+  @Override
+  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    User user = userRepository.findByUsername(username)
+      .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    return org.springframework.security.core.userdetails.User
+      .withUsername(user.getUsername())
+      .password(user.getPassword())
+      .authorities("USER")
+      .build();
   }
 }
 
