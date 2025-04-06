@@ -45,10 +45,6 @@
         </div>
       </li>
 
-
-
-
-
       <!-- Tarifs -->
       <li>
         <a href="/pricing" class="text-textBlack hover:text-primary font-semibold">Tarifs</a>
@@ -70,18 +66,8 @@
     </ul>
   </div>
 
-
-
-
   <!-- End: login & sign-in Icons -->
   <div class="navbar-end flex items-center space-x-4">
-
-    <!-- dark mode -->
-    <button (click)="toggleTheme()" class="p-2 rounded-md bg-gray-100 dark:bg-gray-100">
-      <fa-icon *ngIf="isDarkMode" [icon]="['fas', 'sun']" size="lg" class="text-yellow-400"></fa-icon>
-      <fa-icon *ngIf="!isDarkMode" [icon]="['fas', 'moon']" size="lg" class="text-blue-400"></fa-icon>
-    </button>
-
 
     <div *ngIf="auth.isAuthenticated; else loggedOut">
       <div class="flex items-center justify-between">
@@ -95,7 +81,6 @@
       </div>
     </div>
 
-
     <ng-template #loggedOut>
       <a (click)="auth.login()" class="cursor-pointer" role="button" tabindex="0" (keydown.enter)="auth.login()" aria-label="Login" title="Se connecter">
         <fa-icon [icon]="['fas', 'user-plus']" class="text-textBlack hover:text-primary"></fa-icon>
@@ -105,8 +90,4 @@
       </a>
     </ng-template>
   </div>
-
-
-
-
 </div>

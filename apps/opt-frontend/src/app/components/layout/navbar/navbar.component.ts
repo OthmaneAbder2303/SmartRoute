@@ -1,8 +1,7 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { ThemeService } from '../../../shared/services/theme.service';
 import {AuthService} from "../../../shared/services/authService/auth2.service";
 import { Feature, FeatureService } from '../../../shared/services/featuresService/feature.service';
 
@@ -14,19 +13,8 @@ import { Feature, FeatureService } from '../../../shared/services/featuresServic
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit{
-  isDarkMode = false;
   features: Feature[] = [];
 
-  // isBrowser: boolean;
-  //
-  // constructor(@Inject(PLATFORM_ID) private platformId: object,public auth: AuthService) {
-  //   this.isBrowser = isPlatformBrowser(this.platformId);
-  //
-  //   // Vérifier et appliquer le thème sauvegardé
-  //   if (this.isBrowser) {
-  //     this.isDarkMode = localStorage.getItem('theme') === 'dark';
-  //   }
-  // }
   constructor(public auth: AuthService, private featureService: FeatureService) {
   }
   ngOnInit() {
@@ -46,11 +34,6 @@ export class NavbarComponent implements OnInit{
     } else {
       document.querySelector('.navbar')?.classList.remove('bg-white');
     }
-  }
-
-  toggleTheme() {
-    this.isDarkMode = !this.isDarkMode;
-    document.body.classList.toggle('dark', this.isDarkMode);
   }
 
   // // Update the features or perform actions on them
