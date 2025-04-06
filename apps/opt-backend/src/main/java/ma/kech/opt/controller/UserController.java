@@ -14,10 +14,10 @@ import java.util.List;
 public class UserController {
   private final UserService userService;
 
-  @PostMapping("/register")
-  public UserDTO registerUser(@RequestBody User user) {
-    return userService.registerUser(user);
-  }
+//  @PostMapping("/register")
+//  public UserDTO registerUser(@RequestBody User user) {
+//    return userService.registerUser(user);
+//  }
 
   @GetMapping
   public List<UserDTO> getAllUsers() {

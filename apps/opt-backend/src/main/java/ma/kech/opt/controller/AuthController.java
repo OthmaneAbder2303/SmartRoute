@@ -1,5 +1,6 @@
 package ma.kech.opt.controller;
 
+import lombok.RequiredArgsConstructor;
 import ma.kech.opt.entity.User;
 import ma.kech.opt.service.UserService;
 import ma.kech.opt.utils.JwtUtils;
