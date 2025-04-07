@@ -35,9 +35,9 @@ public class UserService implements UserDetailsService {
     return userRepository.findAll().stream().map(this::mapToDTO).toList();
   }
 
-  public Optional<UserDTO> findByUsername(String username) {
-    return userRepository.findByUsername(username).map(this::mapToDTO);
-  }
+//  public Optional<UserDTO> findByUsername(String username) {
+//    return userRepository.findByUsername(username).map(this::mapToDTO);
+//  }
 
   public Optional<UserDTO> findByEmail(String email) {
     return userRepository.findByEmail(email).map(this::mapToDTO);
@@ -46,18 +46,19 @@ public class UserService implements UserDetailsService {
   private UserDTO mapToDTO(User user) {
     UserDTO dto = new UserDTO();
     dto.setId(user.getId());
-    dto.setUsername(user.getUsername());
+    dto.setFirstname(user.getFirstname());
+    dto.setLastname(user.getLastname());
     dto.setEmail(user.getEmail());
     dto.setRoles(user.getRoles());
     return dto;
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    User user = userRepository.findByUsername(username)
-      .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+  public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    User user = userRepository.findByEmail(email)
+      .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + email));
     return org.springframework.security.core.userdetails.User
-      .withUsername(user.getUsername())
+      .withUsername(user.getEmail())
       .password(user.getPassword())
       .authorities("USER")
       .build();

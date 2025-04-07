@@ -24,10 +24,10 @@ public class UserController {
     return userService.getAllUsers();
   }
 
-  @GetMapping("/username/{username}")
-  public UserDTO getUserByUsername(@PathVariable String username) {
-    return userService.findByUsername(username).orElse(null);
-  }
+//  @GetMapping("/username/{username}")
+//  public UserDTO getUserByUsername(@PathVariable String username) {
+//    return userService.findByUsername(username).orElse(null);
+//  }
 
   @GetMapping("/email/{email}")
   public UserDTO getUserByEmail(@PathVariable String email) {

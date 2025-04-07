@@ -29,8 +29,8 @@ public class AuthController {
 
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@RequestBody User user) {
-    if (userService.findByUsername(user.getUsername()).isPresent()) {
-      return ResponseEntity.badRequest().body("Username is already taken");
+    if (userService.findByEmail(user.getEmail()).isPresent()) {
+      return ResponseEntity.badRequest().body("Email is already taken");
     }
     userService.registerUser(user);
     return ResponseEntity.ok("User registered successfully");
@@ -40,12 +40,12 @@ public class AuthController {
   public ResponseEntity<?> loginUser(@RequestBody User user) {
     try {
       Authentication authentication = authenticationManager.authenticate(
-        new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
+        new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
       String jwt = jwtUtils.generateToken(userDetails);
       return ResponseEntity.ok(jwt);
     } catch (AuthenticationException e) {
-      return ResponseEntity.status(401).body("Invalid username or password");
+      return ResponseEntity.status(401).body("Invalid email or password");
     }
   }
 
