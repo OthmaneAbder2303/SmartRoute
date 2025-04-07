@@ -1,17 +1,59 @@
-<!--<section class="flex justify-center items-center min-h-screen bg-gray-100">-->
-<!--  <div class="w-full max-w-md p-8">-->
-<!--    <div class="rounded-2xl shadow-lg bg-white">-->
-<!--      <div class="p-6">-->
-<!--        <h2 class="text-2xl font-semibold text-center mb-4">Sign Up for SmartRoute</h2>-->
-<!--        <form class="space-y-4" (ngSubmit)="onSignup()">-->
-<!--          <input [(ngModel)]="user.firstName" name="firstName" placeholder="First Name" class="w-full px-3 py-2 border rounded-lg" />-->
-<!--          <input [(ngModel)]="user.lastName" name="lastName" placeholder="Last Name" class="w-full px-3 py-2 border rounded-lg" />-->
-<!--          <input [(ngModel)]="user.email" name="email" placeholder="Email" type="email" class="w-full px-3 py-2 border rounded-lg" />-->
-<!--          <input [(ngModel)]="user.password" name="password" placeholder="Password" type="password" class="w-full px-3 py-2 border rounded-lg" />-->
-<!--          <input [(ngModel)]="user.password" name="confirmPassword" placeholder="Confirm Password" type="password" class="w-full px-3 py-2 border rounded-lg" />-->
-<!--          <button class="w-full bg-blue-600 text-white py-2 mt-4 rounded-lg hover:bg-blue-700" type="submit">Sign Up</button>-->
-<!--        </form>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--  </div>-->
-<!--</section>-->
+<div class="flex justify-center items-center min-h-screen bg-gray-100">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold text-center text-gray-800 mb-6">Create an Account</h2>
+
+    <form #signupForm="ngForm" (ngSubmit)="register()">
+      <div class="mb-4">
+        <label for="username" class="block text-gray-700 font-semibold mb-2">Username</label>
+        <input
+          id="username"
+          type="text"
+          [(ngModel)]="user.username"
+          name="username"
+          required
+          placeholder="Enter your username"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div class="mb-4">
+        <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
+        <input
+          id="email"
+          type="email"
+          [(ngModel)]="user.email"
+          name="email"
+          required
+          placeholder="Enter your email"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <div class="mb-6">
+        <label for="password" class="block text-gray-700 font-semibold mb-2">Password</label>
+        <input
+          id="password"
+          type="password"
+          [(ngModel)]="user.password"
+          name="password"
+          required
+          placeholder="Enter your password"
+          class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      <button
+        type="submit"
+        [disabled]="!signupForm.form.valid"
+        class="w-full py-2 bg-primary text-white font-semibold rounded-lg hover:bg-orange-400 transition duration-200 disabled:bg-gray-400">
+        Sign Up
+      </button>
+    </form>
+
+    <div class="text-center mt-4">
+      <p class="text-gray-600">Already have an account?
+        <a routerLink="/" class="text-blue-600 hover:underline">Login here</a>
+      </p>
+    </div>
+  </div>
+</div>
