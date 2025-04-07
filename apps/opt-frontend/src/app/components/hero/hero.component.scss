@@ -1,6 +1,9 @@
 .hero {
-  background-size: 83.5% auto; /* Redimensionne le logo pour l'adapter en arrière-plan */
+  background-size: 83.5% auto;
+  background-repeat: no-repeat;
+  margin-top: 100px; /* Correspond à la hauteur maximale du navbar */
 }
+
 @keyframes fadeIn {
   0% {
     opacity: 0;
@@ -14,4 +17,5 @@
 
 .animate-fadeIn {
   animation: fadeIn 1.5s ease-in-out forwards;
+  animation-delay: 0.5s;
 }
