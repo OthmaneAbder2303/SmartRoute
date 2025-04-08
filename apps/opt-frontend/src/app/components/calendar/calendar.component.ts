@@ -1,40 +1,111 @@
 import { Component, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common';
-// import { CalendarOptions } from '@fullcalendar/core';
+import { CommonModule, DatePipe } from '@angular/common';
+import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import { HttpClient } from '@angular/common/http';
-// import { FullCalendarModule } from '@fullcalendar/angular';
+import { FullCalendarModule } from '@fullcalendar/angular';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import timeGridPlugin from '@fullcalendar/timegrid';
 
 @Component({
   selector: 'app-calendar',
-  imports: [CommonModule],
+  imports: [CommonModule, FullCalendarModule, DatePipe],
   templateUrl: './calendar.component.html',
   styleUrl: './calendar.component.scss',
+  standalone: true,
 })
-export class CalendarComponent{
-  // calendarOptions: CalendarOptions = {
-  //   initialView: 'dayGridMonth',
-  //   events: [], // Les événements seront remplis dynamiquement ici
-  //   eventClick: (info) => {
-  //     alert('Event: ' + info.event.title);
-  //   },
-  // };
-  //
-  // constructor(private http: HttpClient) {}
-  //
-  // ngOnInit(): void {
-  //   this.http
-  //     .get<any[]>('http://localhost:8080/api/events')
-  //     .subscribe((events) => {
-  //       this.calendarOptions.events = events.map((event) => ({
-  //         title: event.title,
-  //         start: event.startDate,
-  //         end: event.endDate,
-  //         description: event.description,
-  //         location: event.location,
-  //         extendedProps: {
-  //           type: event.type,
-  //         },
-  //       }));
-  //     });
-  // }
+export class CalendarComponent implements OnInit {
+  calendarOptions: CalendarOptions = {
+    initialView: 'dayGridMonth',
+    plugins: [dayGridPlugin, timeGridPlugin],
+    events: [],
+    eventClick: this.handleEventClick.bind(this),
+    height: 'auto',
+    headerToolbar: {
+      left: 'prev,next today',
+      center: 'title',
+      right: '',
+    },
+    locale: 'fr', // locale française pour FullCalendar
+    buttonText: {
+      today: 'Aujourd\'hui',
+      month: 'Mois',
+      week: 'Semaine',
+      day: 'Jour',
+    },
+  };
+
+  loading = true;
+  error: string | null = null;
+  isVisible = false;
+  currentView = 'dayGridMonth';
+  selectedEvent: any = null;
+
+  constructor(private http: HttpClient) {}
+
+  ngOnInit(): void {
+    console.log('CalendarComponent initialisé');
+    setTimeout(() => {
+      this.isVisible = true;
+    }, 100);
+
+    this.loadEvents();
+  }
+
+  loadEvents(): void {
+    console.log('Chargement des événements...');
+    this.loading = true;
+    this.error = null;
+    this.http.get<any[]>('http://localhost:8080/events').subscribe({
+      next: (events) => {
+        // console.log('Événements chargés:', events);
+        this.calendarOptions.events = events.map((event) => {
+          const mappedEvent = {
+            title: event.title,
+            start: event.startDate,
+            end: event.endDate,
+            extendedProps: {
+              description: event.description,
+              location: event.location,
+              type: event.type,
+            },
+          };
+          // console.log('Événement mappé:', mappedEvent);
+          return mappedEvent;
+        });
+        this.loading = false;
+      },
+      error: (error) => {
+        console.error('Échec du chargement des événements:', error);
+        this.error = `Échec du chargement des événements : ${error.status} - ${error.statusText}`;
+        this.loading = false;
+      },
+    });
+  }
+
+  changeView(view: string): void {
+    console.log('Changement de vue vers:', view);
+    this.currentView = view;
+    const calendarApi = (this as any).calendar?.getApi();
+    if (calendarApi) {
+      calendarApi.changeView(view);
+    } else {
+      console.error('API du calendrier non disponible');
+      this.calendarOptions = { ...this.calendarOptions, initialView: view };
+    }
+  }
+
+  handleEventClick(info: EventClickArg): void {
+    // console.log('Événement cliqué:', info.event);
+    this.selectedEvent = {
+      title: info.event.title,
+      start: info.event.start,
+      end: info.event.end,
+      extendedProps: info.event.extendedProps,
+    };
+  }
+
+  closeModal(): void {
+    console.log('Fermeture du modale');
+    this.selectedEvent = null;
+  }
 }

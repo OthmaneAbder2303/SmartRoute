@@ -14,4 +14,6 @@ export class NewAuthService {
   register(user: any): Observable<any> {
     return this.http.post(`${this.baseUrl}/register`, user);
   }
+
+
 }

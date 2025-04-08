@@ -70,8 +70,8 @@ export class SignupComponent {
     // Implémenter la logique de connexion avec Google
   }
 
-  loginWithFacebook() {
-    console.log('Login with Facebook');
-    // Implémenter la logique de connexion avec Facebook
+  loginWithGithub() {
+    console.log('Login with Github');
+    // Implémenter la logique de connexion avec Github
   }
 }
