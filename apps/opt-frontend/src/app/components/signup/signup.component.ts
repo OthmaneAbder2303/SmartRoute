@@ -13,7 +13,13 @@ import { firstValueFrom } from 'rxjs';
   standalone: true,
 })
 export class SignupComponent {
-  user: { firstname: string; lastname: string; password: string; email: string; roles?: string } = {
+  user: {
+    firstname: string;
+    lastname: string;
+    password: string;
+    email: string;
+    roles?: string;
+  } = {
     firstname: '',
     lastname: '',
     password: '',
@@ -49,11 +55,14 @@ export class SignupComponent {
   }
 
   onPasswordChange() {
-    this.passwordMismatch = this.user.password !== this.confirmPassword && this.confirmPassword.length > 0;
+    this.passwordMismatch =
+      this.user.password !== this.confirmPassword &&
+      this.confirmPassword.length > 0;
   }
 
   onEmailChange() {
-    this.emailMismatch = this.user.email !== this.confirmEmail && this.confirmEmail.length > 0;
+    this.emailMismatch =
+      this.user.email !== this.confirmEmail && this.confirmEmail.length > 0;
   }
 
   loginWithGoogle() {

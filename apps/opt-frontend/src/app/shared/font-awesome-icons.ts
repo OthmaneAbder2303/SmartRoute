@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
-  faFacebook, faInstagram, faLinkedin, faTwitter, faXTwitter, faYoutube
+  faFacebook, faGoogle, faInstagram, faLinkedin, faTwitter, faXTwitter, faYoutube
 } from '@fortawesome/free-brands-svg-icons';
 
 export const fontAwesomeIcons: IconDefinition[] = [
@@ -24,7 +24,7 @@ export const fontAwesomeIcons: IconDefinition[] = [
   faEnvelope, faPhoneAlt, faHeadset, faLock, faShieldAlt,
 
   // Social Media
-  faFacebook, faInstagram, faTwitter, faXTwitter, faYoutube, faLinkedin,
+  faFacebook, faInstagram, faTwitter, faXTwitter, faYoutube, faLinkedin, faGoogle,
 
   // Sun & Moon
   faSun, faMoon,

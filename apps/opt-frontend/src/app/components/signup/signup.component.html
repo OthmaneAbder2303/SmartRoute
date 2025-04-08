@@ -1,9 +1,20 @@
 <div class="flex justify-center items-center min-h-screen bg-white">
+  <!-- Logo en haut à gauche -->
+  <div class="absolute top-4 left-8"><!-- ghi l positionnement dyal logo , k7ztou chwya bach uji houwa hadak  -->
+    <a href="/">
+      <img src="assets/logo_zoomed.png" alt="Logo" class="h-16" /> <!-- 64px  -->
+    </a>
+  </div>
+
+  <!-- Conteneur principal (centré) -->
   <div class="p-6 w-full max-w-2xl">
     <!-- Titre et lien "Se connecter" -->
-    <div class="flex justify-between items-center mb-6">
-      <h2 class="text-2xl font-extrabold text-center text-black uppercase">S'inscrire</h2>
-      <a routerLink="/" class="text-orange-500 hover:text-orange-600 hover:underline text-sm">Se connecter</a>
+    <div class="flex flex-col items-center mb-6">
+      <h2 class="text-2xl font-extrabold text-center text-black uppercase mb-2">S'inscrire</h2>
+      <p class="text-gray-600 text-sm">
+        Vous avez déjà un compte ?
+        <a routerLink="/" class="text-orange-500 hover:text-orange-600 hover:underline">Se connecter</a>
+      </p>
     </div>
 
     <!-- Conteneur principal avec deux colonnes -->
@@ -11,6 +22,34 @@
       <!-- Colonne gauche : Formulaire -->
       <div class="w-full md:w-1/2">
         <form #signupForm="ngForm" (ngSubmit)="register()">
+          <!-- Prénom -->
+          <div class="mb-4">
+            <label for="prenom" class="block text-gray-700 font-semibold mb-2">Prénom</label>
+            <input
+              id="prenom"
+              type="email"
+              [(ngModel)]="user.firstname"
+              name="prenom"
+              required
+              placeholder="Entrez votre prénom"
+              class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
+            />
+          </div>
+
+          <!-- Nom -->
+          <div class="mb-4">
+            <label for="nom" class="block text-gray-700 font-semibold mb-2">Nom</label>
+            <input
+              id="nom"
+              type="email"
+              [(ngModel)]="user.lastname"
+              name="prenom"
+              required
+              placeholder="Entrez votre nom"
+              class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
+            />
+          </div>
+
           <!-- Email -->
           <div class="mb-4">
             <label for="email" class="block text-gray-700 font-semibold mb-2">E-mail</label>
@@ -20,26 +59,10 @@
               [(ngModel)]="user.email"
               name="email"
               required
-              placeholder="E-mail"
-              class="w-full py-2 border-b border-gray-300 focus:outline-none focus:border-orange-500 text-gray-700 placeholder-gray-400"
+              placeholder="Entrez votre e-mail"
+              class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
               (ngModelChange)="onEmailChange()"
             />
-          </div>
-
-          <!-- Confirmation Email -->
-          <div class="mb-4">
-            <label for="confirmEmail" class="block text-gray-700 font-semibold mb-2">Confirmez votre e-mail</label>
-            <input
-              id="confirmEmail"
-              type="email"
-              [(ngModel)]="confirmEmail"
-              name="confirmEmail"
-              required
-              placeholder="Confirmez votre e-mail"
-              class="w-full py-2 border-b border-gray-300 focus:outline-none focus:border-orange-500 text-gray-700 placeholder-gray-400"
-              (ngModelChange)="onEmailChange()"
-            />
-            <p *ngIf="emailMismatch" class="text-red-500 text-sm mt-1">Les e-mails ne correspondent pas !</p>
           </div>
 
           <!-- Mot de passe -->
@@ -53,7 +76,7 @@
               required
               (ngModelChange)="onPasswordChange()"
               placeholder="Choisissez un mot de passe"
-              class="w-full py-2 border-b border-gray-300 focus:outline-none focus:border-orange-500 text-gray-700 placeholder-gray-400"
+              class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
             />
           </div>
 
@@ -68,7 +91,7 @@
               required
               (ngModelChange)="onPasswordChange()"
               placeholder="Confirmez votre mot de passe"
-              class="w-full py-2 border-b border-gray-300 focus:outline-none focus:border-orange-500 text-gray-700 placeholder-gray-400"
+              class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
             />
             <p *ngIf="passwordMismatch" class="text-red-500 text-sm mt-1">Les mots de passe ne correspondent pas !</p>
           </div>
@@ -93,19 +116,33 @@
       <div class="w-full md:w-1/2 flex flex-col items-center space-y-4">
         <button
           class="flex items-center py-2 px-4 w-full max-w-xs bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition duration-300"
-          (click)="loginWithGoogle()"
-        >
+          (click)="loginWithGoogle()">   <!-- rah bghit nkhdm b les icons mais ma3ndich kindir nred logo dyal google multicoloré kifma houwa daba -->
           <img src="https://www.google.com/favicon.ico" alt="Google Icon" class="w-5 h-5 mr-2" />
           <span class="text-gray-700 font-semibold">Continuer avec Google</span>
         </button>
+
         <button
           class="flex items-center py-2 px-4 w-full max-w-xs bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition duration-300"
-          (click)="loginWithFacebook()"
-        >
+          (click)="loginWithFacebook()">
           <img src="https://www.facebook.com/favicon.ico" alt="Facebook Icon" class="w-5 h-5 mr-2" />
           <span class="text-gray-700 font-semibold">Continuer avec Facebook</span>
         </button>
       </div>
+    </div>
+
+    <!-- AAAAttention hhhh -->
+    <div class="mt-10 text-center text-gray-500 text-xs">
+      <p>
+        * En vous inscrivant, vous acceptez nos
+        <a href="/terms" class="text-orange-500 hover:text-orange-600 hover:underline">Conditions d'utilisation</a>
+        et reconnaissez avoir lu notre
+        <a href="/privacy" class="text-orange-500 hover:text-orange-600 hover:underline">Politique de confidentialité</a>.<br>
+        Ce site est protégé par reCAPTCHA Enterprise. La
+        <a href="https://policies.google.com/privacy" target="_blank" class="text-orange-500 hover:text-orange-600 hover:underline">Politique de confidentialité</a>
+        et les
+        <a href="https://policies.google.com/terms" target="_blank" class="text-orange-500 hover:text-orange-600 hover:underline">Conditions d'utilisation</a>
+        de Google s'appliquent.
+      </p>
     </div>
   </div>
 </div>
