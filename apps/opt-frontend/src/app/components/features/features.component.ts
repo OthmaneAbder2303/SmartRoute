@@ -11,7 +11,7 @@ import { FeatureService, Feature } from '../../shared/services/featuresService/f
 })
 export class FeaturesComponent implements OnInit {
   features: Feature[] = [];
-
+  
   constructor(private router: Router, private featureService: FeatureService) {}
 
   ngOnInit() {
