@@ -1,16 +1,16 @@
-<div class="flex flex-col min-h-screen">
-  <app-navbar></app-navbar>
-  <div class="border-b border-gray-100"></div>
-<!--  <app-hero></app-hero>-->
+<div class="flex flex-col min-h-screen bg-gray-100">
+
+  <!-- Always render the current route's component -->
   <router-outlet></router-outlet>
-  <app-features></app-features>
-<!--  <div class="container mx-auto py-7 grow h-full">-->
-<!--    <div class="mx-5">-->
-<!--&lt;!&ndash;      <router-outlet></router-outlet>&ndash;&gt;-->
-<!--&lt;!&ndash;      <app-features></app-features>&ndash;&gt;-->
-<!--    </div>-->
-<!--  </div>-->
 
+  <!-- Show layout components only if not on /signup -->
+  <ng-container *ngIf="router.url !== '/signup'">
+    <app-navbar></app-navbar>
+    <div class="border-b border-gray-100"></div>
+    <app-features></app-features>
+    <app-calendar></app-calendar>
+  </ng-container>
+
+  <!-- Show footer only if not on /signup -->
+  <app-footer *ngIf="router.url !== '/signup'"></app-footer>
 </div>
-
-<app-footer></app-footer>

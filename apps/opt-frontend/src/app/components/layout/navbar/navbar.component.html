@@ -1,112 +1,154 @@
-<div class="navbar fixed top-0 left-0 w-full bg-gray-100 shadow-md px-3 z-30 transition-all duration-300"
-     [ngClass]="{ 'h-[100px] py-4': !isScrolled, 'h-[70px] py-2': isScrolled }">
-
-
-<!-- Start: Logo -->
+<!-- Ajout de #navbarRef ici -->
+<div
+  #navbarRef
+  class="navbar fixed top-0 left-0 w-full bg-gray-100 shadow-md px-3 z-30 transition-all duration-300"
+  [ngClass]="{ 'h-[100px] py-4': !isScrolled, 'h-[70px] py-2': isScrolled }"
+>
+  <!-- Start: Logo -->
   <div class="navbar-start">
-    <a href="" class="block">
-      <img ngSrc="/assets/logo_zoomed.png" alt="SmartRoute Logo" class="w-20 h-20 object-contain" height="500"
-           width="500" />
+    <a routerLink="/" class="block">
+      <img
+        ngSrc="/assets/logo_zoomed.png"
+        alt="SmartRoute Logo"
+        class="w-20 h-20 object-contain"
+        height="500"
+        width="500"
+      />
     </a>
   </div>
 
   <!-- Center: Navigation Menu -->
   <div class="navbar-center">
     <ul class="menu menu-horizontal px-1 space-x-4">
-
-      <!-- Accueil -->
       <li>
-        <a href="" class="text-textBlack hover:text-primary font-semibold">Accueil</a>
+        <a routerLink="/" class="text-textBlack hover:text-orange-500 font-semibold">Accueil</a>
       </li>
 
       <!-- Services -->
-      <li class="relative group">
-        <a href="#" class="text-textBlack hover:text-primary font-semibold">Services</a>
-        <div class="z-30 bg-white shadow-lg rounded-md p-6 mt-2 hidden group-hover:flex absolute top-full left-1/2 -translate-x-1/2 w-[90vw] max-w-5xl flex-wrap gap-6 justify-center">
+      <li class="relative">
+        <button
+          (click)="toggleMenu('services')"
+          class="flex items-center gap-2 text-textBlack hover:text-orange-500 font-semibold focus:outline-none"
+        >
+          Services
+          <svg
+            [ngClass]="{ 'rotate-180': isServicesOpen }"
+            class="w-4 h-4 transition-transform duration-200"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
 
-          <!-- Loop through features -->
+        <div
+          *ngIf="isServicesOpen"
+          class="z-30 bg-white shadow-lg rounded-md p-6 mt-2 absolute top-full left-1/2 -translate-x-1/2 w-[90vw] max-w-5xl flex-wrap gap-6 justify-center flex"
+        >
           <ng-container *ngFor="let feature of features">
             <div class="flex items-start space-x-3 p-4 w-[250px]">
-              <img [src]="feature.icon" [alt]="feature.title" class="w-8 h-8">
+              <img [src]="feature.icon" [alt]="feature.title" class="w-8 h-8" />
               <div>
-                <a [href]="feature.link" class="font-semibold text-textBlack">{{ feature.title }}</a>
+                <a [routerLink]="feature.link" class="font-semibold text-textBlack">{{ feature.title }}</a>
                 <p class="text-gray-600 text-sm">{{ feature.shortDescription }}</p>
               </div>
             </div>
           </ng-container>
 
-          <!-- Button: Voir tous les services -->
           <div class="w-full text-center mt-6">
-            <a href="/services" class="bg-primary text-white font-semibold py-3 px-6 rounded-md hover:bg-primary-dark">
+            <a
+              routerLink="/services"
+              class="bg-orange-500 text-white font-semibold py-3 px-6 rounded-md hover:bg-orange-600"
+            >
               Voir tous les services
             </a>
           </div>
-
         </div>
       </li>
 
-
-
-
-
       <!-- Tarifs -->
       <li>
-        <a href="/pricing" class="text-textBlack hover:text-primary font-semibold">Tarifs</a>
+        <a routerLink="/pricing" class="text-textBlack hover:text-orange-500 font-semibold">Tarifs</a>
       </li>
 
       <!-- Ressources -->
       <li class="relative">
-        <details class="group">
-          <summary class="text-textBlack hover:text-primary font-semibold cursor-pointer">
-            Ressources
-          </summary>
-          <ul class="z-30 bg-white shadow-lg rounded-md p-2 mt-2 group-open:block hidden absolute top-full left-0 w-full">
-            <li><a href="/docs" class="block text-gray-700 hover:bg-orange-200 px-4 py-2 rounded-md">Docs</a></li>
-            <li><a href="/api" class="block text-gray-700 hover:bg-orange-200 px-4 py-2 rounded-md">API</a></li>
-            <!-- encore encooore -->
-          </ul>
-        </details>
+        <button
+          (click)="toggleMenu('ressources')"
+          class="text-textBlack hover:text-orange-500 font-semibold flex items-center gap-2"
+        >
+          Ressources
+          <svg
+            [ngClass]="{ 'rotate-180': isRessourcesOpen }"
+            class="w-4 h-4 transition-transform duration-200"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+          </svg>
+        </button>
+
+        <ul
+          *ngIf="isRessourcesOpen"
+          class="z-30 bg-white shadow-lg rounded-md p-2 mt-2 absolute top-full left-1/2 -translate-x-1/2 w-[200px]"
+        >
+          <li>
+            <a routerLink="/docs" class="block text-gray-700 hover:bg-orange-200 px-4 py-2 rounded-md">Docs</a>
+          </li>
+          <li>
+            <a routerLink="/api" class="block text-gray-700 hover:bg-orange-200 px-4 py-2 rounded-md">API</a>
+          </li>
+        </ul>
       </li>
     </ul>
   </div>
 
-
-
-
-  <!-- End: login & sign-in Icons -->
+  <!-- End: Login & Sign-in Icons -->
   <div class="navbar-end flex items-center space-x-4">
-
-    <!-- dark mode -->
-    <button (click)="toggleTheme()" class="p-2 rounded-md bg-gray-100 dark:bg-gray-100">
-      <fa-icon *ngIf="isDarkMode" [icon]="['fas', 'sun']" size="lg" class="text-yellow-400"></fa-icon>
-      <fa-icon *ngIf="!isDarkMode" [icon]="['fas', 'moon']" size="lg" class="text-blue-400"></fa-icon>
-    </button>
-
-
     <div *ngIf="auth.isAuthenticated; else loggedOut">
       <div class="flex items-center justify-between">
         <div>
           <p class="text-textBlack">Bienvenue,</p>
           <p class="text-textBlack font-semibold">{{ auth.user?.name }}</p>
         </div>
-        <a (click)="auth.logout()" class="cursor-pointer ml-4" role="button" tabindex="0" (keydown.enter)="auth.logout()" aria-label="Logout" title="Déconnexion">
-          <fa-icon [icon]="['fas', 'sign-out-alt']" class="text-textBlack hover:text-primary text-lg"></fa-icon>
+        <a
+          (click)="auth.logout()"
+          class="cursor-pointer ml-4"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="auth.logout()"
+          aria-label="Logout"
+          title="Déconnexion"
+        >
+          <fa-icon [icon]="['fas', 'sign-out-alt']" class="text-textBlack hover:text-orange-500 text-lg"></fa-icon>
         </a>
       </div>
     </div>
 
-
     <ng-template #loggedOut>
-      <a (click)="auth.login()" class="cursor-pointer" role="button" tabindex="0" (keydown.enter)="auth.login()" aria-label="Login" title="Se connecter">
-        <fa-icon [icon]="['fas', 'user-plus']" class="text-textBlack hover:text-primary"></fa-icon>
+      <a
+        (click)="auth.login()"
+        class="cursor-pointer"
+        role="button"
+        tabindex="0"
+        (keydown.enter)="auth.login()"
+        aria-label="Login"
+        title="Se connecter"
+      >
+        <fa-icon [icon]="['fas', 'user-plus']" class="text-textBlack hover:text-orange-500"></fa-icon>
       </a>
-      <a routerLink="/signup" class="cursor-pointer" role="button" tabindex="0" aria-label="Sign Up" title="S'enregistrer">
-        <fa-icon [icon]="['fas', 'sign-in-alt']" class="text-textBlack hover:text-primary"></fa-icon>
+      <a
+        routerLink="/signup"
+        class="cursor-pointer"
+        role="button"
+        tabindex="0"
+        aria-label="Sign Up"
+        title="S'enregistrer"
+      >
+        <fa-icon [icon]="['fas', 'sign-in-alt']" class="text-textBlack hover:text-orange-500"></fa-icon>
       </a>
     </ng-template>
   </div>
-
-
-
-
 </div>

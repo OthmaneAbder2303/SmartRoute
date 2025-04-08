@@ -1,8 +1,7 @@
-import { Component, HostListener, OnInit } from '@angular/core';
-import { CommonModule, isPlatformBrowser, NgOptimizedImage } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
+import { CommonModule, NgOptimizedImage } from '@angular/common';
+import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { ThemeService } from '../../../shared/services/theme.service';
 import {AuthService} from "../../../shared/services/authService/auth2.service";
 import { Feature, FeatureService } from '../../../shared/services/featuresService/feature.service';
 
@@ -14,29 +13,23 @@ import { Feature, FeatureService } from '../../../shared/services/featuresServic
   styleUrl: './navbar.component.scss',
 })
 export class NavbarComponent implements OnInit{
-  isDarkMode = false;
+  isScrolled = false;
   features: Feature[] = [];
+  isServicesOpen = false;
+  isRessourcesOpen = false;
 
-  // isBrowser: boolean;
-  //
-  // constructor(@Inject(PLATFORM_ID) private platformId: object,public auth: AuthService) {
-  //   this.isBrowser = isPlatformBrowser(this.platformId);
-  //
-  //   // Vérifier et appliquer le thème sauvegardé
-  //   if (this.isBrowser) {
-  //     this.isDarkMode = localStorage.getItem('theme') === 'dark';
-  //   }
-  // }
-  constructor(public auth: AuthService, private featureService: FeatureService) {
-  }
+  constructor(public auth: AuthService, private featureService: FeatureService, private router: Router, private elementRef: ElementRef) { }
+
   ngOnInit() {
-    // Subscribe to the feature service to get features
     this.featureService.features$.subscribe((features) => {
       this.features = features;
     });
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        this.closeMenus();
+      }
+    });
   }
-
-  isScrolled = false;
 
   @HostListener('window:scroll', [])
   onWindowScroll() {
@@ -47,10 +40,25 @@ export class NavbarComponent implements OnInit{
       document.querySelector('.navbar')?.classList.remove('bg-white');
     }
   }
+  @HostListener('document:click', ['$event.target'])
+  onClickOutside(target: HTMLElement) {
+    const clickedInside = this.elementRef.nativeElement.contains(target);
+    if (!clickedInside) {
+      this.closeMenus();
+    }
+  }
+  @HostListener('window:scroll', [])
+  onScroll(): void {
+    this.closeMenus();
+  }
 
-  toggleTheme() {
-    this.isDarkMode = !this.isDarkMode;
-    document.body.classList.toggle('dark', this.isDarkMode);
+  toggleMenu(menu: 'services' | 'ressources') {
+    this.isServicesOpen = menu === 'services' ? !this.isServicesOpen : false;
+    this.isRessourcesOpen = menu === 'ressources' ? !this.isRessourcesOpen : false;
+  }
+  private closeMenus() {
+    this.isServicesOpen = false;
+    this.isRessourcesOpen = false;
   }
 
   // // Update the features or perform actions on them
