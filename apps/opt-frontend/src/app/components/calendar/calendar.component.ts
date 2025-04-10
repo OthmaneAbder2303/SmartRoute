@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { CalendarOptions, EventClickArg } from '@fullcalendar/core';
 import { HttpClient } from '@angular/common/http';
 import { FullCalendarModule } from '@fullcalendar/angular';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-calendar',
   imports: [CommonModule, FullCalendarModule, DatePipe],
   templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.scss',
   standalone: true,
 })
 export class CalendarComponent implements OnInit {
@@ -25,13 +25,16 @@ export class CalendarComponent implements OnInit {
       center: 'title',
       right: '',
     },
-    locale: 'fr', // locale française pour FullCalendar
+    locale: 'fr',
     buttonText: {
-      today: 'Aujourd\'hui',
+      today: "Aujourd'hui",
       month: 'Mois',
       week: 'Semaine',
       day: 'Jour',
     },
+    eventClassNames: 'bg-orange-500 text-white border-none rounded-md px-2 py-1 transition-all duration-300 hover:bg-orange-600 cursor-pointer',
+    dayHeaderClassNames: 'text-gray-700 font-semibold py-2',
+    dayCellClassNames: 'bg-white border border-gray-200 transition-all duration-300 hover:bg-gray-50',
   };
 
   loading = true;
@@ -40,15 +43,19 @@ export class CalendarComponent implements OnInit {
   currentView = 'dayGridMonth';
   selectedEvent: any = null;
 
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {}
 
   ngOnInit(): void {
-    console.log('CalendarComponent initialisé');
-    setTimeout(() => {
-      this.isVisible = true;
-    }, 100);
-
-    this.loadEvents();
+    if (isPlatformBrowser(this.platformId)) {
+      console.log('CalendarComponent initialisé');
+      setTimeout(() => {
+        this.isVisible = true;
+      }, 100);
+      this.loadEvents();
+    }
   }
 
   loadEvents(): void {
@@ -57,7 +64,7 @@ export class CalendarComponent implements OnInit {
     this.error = null;
     this.http.get<any[]>('http://localhost:8080/events').subscribe({
       next: (events) => {
-        // console.log('Événements chargés:', events);
+        console.log('Événements chargés:', events);
         this.calendarOptions.events = events.map((event) => {
           const mappedEvent = {
             title: event.title,
@@ -69,7 +76,7 @@ export class CalendarComponent implements OnInit {
               type: event.type,
             },
           };
-          // console.log('Événement mappé:', mappedEvent);
+          console.log('Événement mappé:', mappedEvent);
           return mappedEvent;
         });
         this.loading = false;
@@ -95,7 +102,7 @@ export class CalendarComponent implements OnInit {
   }
 
   handleEventClick(info: EventClickArg): void {
-    // console.log('Événement cliqué:', info.event);
+    console.log('Événement cliqué:', info.event);
     this.selectedEvent = {
       title: info.event.title,
       start: info.event.start,
@@ -105,7 +112,7 @@ export class CalendarComponent implements OnInit {
   }
 
   closeModal(): void {
-    console.log('Fermeture du modale');
+    console.log('Fermeture de la modale');
     this.selectedEvent = null;
   }
 }

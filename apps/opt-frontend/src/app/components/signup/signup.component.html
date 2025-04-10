@@ -13,7 +13,7 @@
       <h2 class="text-3xl font-extrabold text-center text-black uppercase mb-2">S'inscrire</h2>
       <p class="text-gray-600 text-sm">
         Vous avez déjà un compte ?
-        <a routerLink="/" class="text-orange-500 hover:text-orange-600 hover:underline">Se connecter</a>
+        <a routerLink="/login" class="text-orange-500 hover:text-orange-600 hover:underline">Se connecter</a>
       </p>
     </div>
 
@@ -27,7 +27,7 @@
             <label for="prenom" class="block text-gray-700 font-semibold mb-1">Prénom</label>
             <input
               id="prenom"
-              type="email"
+              type="text"
               [(ngModel)]="user.firstname"
               name="prenom"
               required
@@ -41,7 +41,7 @@
             <label for="nom" class="block text-gray-700 font-semibold mb-1">Nom</label>
             <input
               id="nom"
-              type="email"
+              type="text"
               [(ngModel)]="user.lastname"
               name="prenom"
               required
@@ -95,6 +95,7 @@
             />
             <p *ngIf="passwordMismatch" class="text-red-500 text-sm mt-1">Les mots de passe ne correspondent pas !</p>
           </div>
+          <div *ngIf="errorMessage" class="text-red-500 text-sm text-center mb-4">{{ errorMessage }}</div>
 
           <!-- Bouton S'inscrire -->
           <div class="flex justify-center mt-4">

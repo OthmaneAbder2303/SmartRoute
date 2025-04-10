@@ -8,6 +8,7 @@ import {MapComponent} from "./components/map/map.component";
 import { ContactFormComponent } from './components/contact-form/contact-form.component';
 import { FaqComponent } from './components/faq/faq.component';
 import {SignupComponent} from "./components/signup/signup.component";
+import { LoginComponent } from './components/login/login.component';
 
 export const appRoutes: Route[] = [
   {
@@ -20,6 +21,9 @@ export const appRoutes: Route[] = [
   },
   { path: 'signup',
     component: SignupComponent
+  },
+  { path: 'login',
+    component: LoginComponent
   },
   { path: 'services',
     component: FeaturesComponent

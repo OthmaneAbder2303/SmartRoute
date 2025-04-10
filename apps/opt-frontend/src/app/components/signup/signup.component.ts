@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NewAuthService } from '../../shared/services/newAuthService/new-auth.service';
 import { Router, RouterLink } from '@angular/router';
@@ -30,10 +30,17 @@ export class SignupComponent {
   confirmEmail = '';
   passwordMismatch = false;
   emailMismatch = false;
+  errorMessage: string | null = null;
 
-  constructor(private newAuthService: NewAuthService, private router: Router) {}
+  constructor(
+    private newAuthService: NewAuthService,
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: object
+  ) {}
 
-  async register() {
+  async register(): Promise<void> {
+    this.errorMessage = null;
+
     if (this.user.email !== this.confirmEmail) {
       this.emailMismatch = true;
       return;
@@ -48,9 +55,21 @@ export class SignupComponent {
 
     try {
       await firstValueFrom(this.newAuthService.register(this.user));
-      this.router.navigate(['/']);
+      console.log('Inscription réussie');
+
+      // Navigate to login page (only in browser environment)
+      if (isPlatformBrowser(this.platformId)) {
+        this.router.navigate(['/login']).then((success) => {
+          console.log('Navigation to /login successful:', success);
+        }).catch((err) => {
+          console.error('Navigation to /login failed:', err);
+        });
+      } else {
+        console.log('Navigation skipped on server-side');
+      }
     } catch (error) {
-      console.error('Registration error:', error);
+      console.error('Erreur lors de l\'inscription:', error);
+      this.errorMessage = 'Échec de l\'inscription, veuillez réessayer.';
     }
   }
 
@@ -61,8 +80,9 @@ export class SignupComponent {
   }
 
   onEmailChange() {
+    //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     this.emailMismatch =
-      this.user.email !== this.confirmEmail && this.confirmEmail.length > 0;
+      this.user.email !== this.confirmEmail && this.confirmEmail.length > 0; //&& !emailPattern.test(this.user.email);
   }
 
   loginWithGoogle() {
