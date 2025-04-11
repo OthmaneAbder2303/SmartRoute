@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { isPlatformBrowser } from '@angular/common';
 import { NewAuthService } from '../../shared/services/newAuthService/new-auth.service';
+import { LoginResponse } from '../../shared/models/auth.models';
 
 @Component({
   selector: 'app-login',
@@ -17,12 +18,9 @@ export class LoginComponent {
     password: '',
   };
   emailMismatch = false;
+  errorMessage: string | null = null;
 
-  constructor(
-    private newAuthService: NewAuthService,
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: object
-  ) {}
+  constructor(private newAuthService: NewAuthService, private router: Router) {}
 
   onEmailChange(): void {
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -30,33 +28,42 @@ export class LoginComponent {
   }
 
   login(): void {
-    this.newAuthService.login(this.credentials).subscribe(
-      (response: string) => {
-        // Only access localStorage in the browser
-        if (isPlatformBrowser(this.platformId)) {
-          localStorage.setItem('token', response);
-        }
-        this.router.navigate(['/map']);
+    this.errorMessage = null;
+
+    this.newAuthService.login(this.credentials).subscribe({
+      next: (response: LoginResponse) => {
+        localStorage.setItem('token', response.token);
+        this.router.navigate(['/map']).then((success) => {
+          console.log('Navigation to /map successful:', success);
+        }).catch((err) => {
+          console.error('Navigation to /map failed:', err);
+        });
       },
-      () => {
-        this.router.navigate(['/login']);
-      }
-    );
+      error: (err) => {
+        console.error('Erreur lors de la connexion:', err);
+        this.errorMessage = err.error?.message || 'Échec de la connexion, veuillez vérifier vos identifiants.';
+        this.router.navigate(['/']).then((success) => {
+          console.log('Navigation to / successful:', success);
+        }).catch((err) => {
+          console.error('Navigation to / failed:', err);
+        });
+      },
+    });
   }
 
   loginWithGoogle(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      window.location.href = 'http://localhost:8080/oauth2/authorization/google';
-    } else {
-      console.log('Connexion avec Google - Exécution côté serveur, redirection non disponible');
-    }
+    // if (isPlatformBrowser(this.platformId)) {
+    //   window.location.href = 'http://localhost:8080/oauth2/authorization/google';
+    // } else {
+    //   console.log('Connexion avec Google - Exécution côté serveur, redirection non disponible');
+    // }
   }
 
   loginWithGithub(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      window.location.href = 'http://localhost:8080/oauth2/authorization/github';
-    } else {
-      console.log('Connexion avec GitHub - Exécution côté serveur, redirection non disponible');
-    }
+    // if (isPlatformBrowser(this.platformId)) {
+    //   window.location.href = 'http://localhost:8080/oauth2/authorization/github'; //après
+    // } else {
+    //   console.log('Connexion avec GitHub - Exécution côté serveur, redirection non disponible');
+    // }
   }
 }

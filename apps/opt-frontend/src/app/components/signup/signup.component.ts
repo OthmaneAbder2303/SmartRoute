@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { NewAuthService } from '../../shared/services/newAuthService/new-auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { RegisterResponse } from '../../shared/models/auth.models';
 
 @Component({
   selector: 'app-signup',
@@ -13,13 +14,7 @@ import { firstValueFrom } from 'rxjs';
   standalone: true,
 })
 export class SignupComponent {
-  user: {
-    firstname: string;
-    lastname: string;
-    password: string;
-    email: string;
-    roles?: string;
-  } = {
+  user= {
     firstname: '',
     lastname: '',
     password: '',
@@ -32,13 +27,9 @@ export class SignupComponent {
   emailMismatch = false;
   errorMessage: string | null = null;
 
-  constructor(
-    private newAuthService: NewAuthService,
-    private router: Router,
-    @Inject(PLATFORM_ID) private platformId: object
-  ) {}
+  constructor(private newAuthService: NewAuthService, private router: Router){}
 
-  async register(): Promise<void> {
+  async register() {
     this.errorMessage = null;
 
     if (this.user.email !== this.confirmEmail) {
@@ -54,22 +45,17 @@ export class SignupComponent {
     this.passwordMismatch = false;
 
     try {
-      await firstValueFrom(this.newAuthService.register(this.user));
-      console.log('Inscription réussie');
-
-      // Navigate to login page (only in browser environment)
-      if (isPlatformBrowser(this.platformId)) {
-        this.router.navigate(['/login']).then((success) => {
+      const response: RegisterResponse = await firstValueFrom(this.newAuthService.register(this.user));
+      console.log('Inscription réussie:', response.message);
+      this.router.navigate(['/login']).then(
+        (success) => {
           console.log('Navigation to /login successful:', success);
         }).catch((err) => {
           console.error('Navigation to /login failed:', err);
         });
-      } else {
-        console.log('Navigation skipped on server-side');
-      }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur lors de l\'inscription:', error);
-      this.errorMessage = 'Échec de l\'inscription, veuillez réessayer.';
+      this.errorMessage = error.error?.message || 'Échec de l\'inscription, veuillez réessayer.';
     }
   }
 
