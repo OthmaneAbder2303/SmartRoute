@@ -24,11 +24,11 @@ public class UserService implements UserDetailsService {
     this.passwordEncoder = new BCryptPasswordEncoder();
   }
 
-  public UserDTO registerUser(User user) {
+  public void registerUser(User user) {
     String encodedPassword = passwordEncoder.encode(user.getPassword());
     user.setPassword(encodedPassword);
     User savedUser = userRepository.save(user);
-    return mapToDTO(savedUser);
+    mapToDTO(savedUser);
   }
 
   public List<UserDTO> getAllUsers() {

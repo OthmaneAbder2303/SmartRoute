@@ -4,7 +4,7 @@
   <router-outlet></router-outlet>
 
   <!-- Show layout components only if not on /signup -->
-  <ng-container *ngIf="router.url !== '/signup'">
+  <ng-container *ngIf="router.url !== '/signup' && router.url !== '/login'">
     <app-navbar></app-navbar>
     <div class="border-b border-gray-100"></div>
     <app-features></app-features>
@@ -12,5 +12,5 @@
   </ng-container>
 
   <!-- Show footer only if not on /signup -->
-  <app-footer *ngIf="router.url !== '/signup'"></app-footer>
+  <app-footer *ngIf="router.url !== '/signup' && router.url !== '/login'"></app-footer>
 </div>

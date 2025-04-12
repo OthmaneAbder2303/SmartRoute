@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Inject, PLATFORM_ID } from '@angular/core';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NewAuthService } from '../../shared/services/newAuthService/new-auth.service';
 import { Router, RouterLink } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
+import { RegisterResponse } from '../../shared/models/auth.models';
 
 @Component({
   selector: 'app-signup',
@@ -13,13 +14,7 @@ import { firstValueFrom } from 'rxjs';
   standalone: true,
 })
 export class SignupComponent {
-  user: {
-    firstname: string;
-    lastname: string;
-    password: string;
-    email: string;
-    roles?: string;
-  } = {
+  user= {
     firstname: '',
     lastname: '',
     password: '',
@@ -30,10 +25,13 @@ export class SignupComponent {
   confirmEmail = '';
   passwordMismatch = false;
   emailMismatch = false;
+  errorMessage: string | null = null;
 
-  constructor(private newAuthService: NewAuthService, private router: Router) {}
+  constructor(private newAuthService: NewAuthService, private router: Router){}
 
   async register() {
+    this.errorMessage = null;
+
     if (this.user.email !== this.confirmEmail) {
       this.emailMismatch = true;
       return;
@@ -47,10 +45,17 @@ export class SignupComponent {
     this.passwordMismatch = false;
 
     try {
-      await firstValueFrom(this.newAuthService.register(this.user));
-      this.router.navigate(['/']);
-    } catch (error) {
-      console.error('Registration error:', error);
+      const response: RegisterResponse = await firstValueFrom(this.newAuthService.register(this.user));
+      console.log('Inscription réussie:', response.message);
+      this.router.navigate(['/login']).then(
+        (success) => {
+          console.log('Navigation to /login successful:', success);
+        }).catch((err) => {
+          console.error('Navigation to /login failed:', err);
+        });
+    } catch (error: any) {
+      console.error('Erreur lors de l\'inscription:', error);
+      this.errorMessage = error.error?.message || 'Échec de l\'inscription, veuillez réessayer.';
     }
   }
 
@@ -61,8 +66,9 @@ export class SignupComponent {
   }
 
   onEmailChange() {
+    //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     this.emailMismatch =
-      this.user.email !== this.confirmEmail && this.confirmEmail.length > 0;
+      this.user.email !== this.confirmEmail && this.confirmEmail.length > 0; //&& !emailPattern.test(this.user.email);
   }
 
   loginWithGoogle() {
@@ -70,8 +76,8 @@ export class SignupComponent {
     // Implémenter la logique de connexion avec Google
   }
 
-  loginWithFacebook() {
-    console.log('Login with Facebook');
-    // Implémenter la logique de connexion avec Facebook
+  loginWithGithub() {
+    console.log('Login with Github');
+    // Implémenter la logique de connexion avec Github
   }
 }

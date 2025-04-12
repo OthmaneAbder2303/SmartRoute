@@ -43,6 +43,7 @@ public class SecurityConfig {
       .csrf(AbstractHttpConfigurer::disable)
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/auth/**").permitAll() // accès public
+          .requestMatchers("/events").permitAll()
 //        .requestMatchers("/admin/**").hasRole("ADMIN") // accessible uniquement aux admins
 //        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // accessible aux users ET admins
         .anyRequest().authenticated()

@@ -1,19 +1,20 @@
+<!-- Conteneur principal -->
 <div class="flex justify-center items-center min-h-screen bg-white">
   <!-- Logo en haut à gauche -->
-  <div class="absolute top-4 left-8"><!-- ghi l positionnement dyal logo , k7ztou chwya bach uji houwa hadak  -->
+  <div class="absolute top-4 left-8">
     <a href="/">
-      <img src="assets/logo_zoomed.png" alt="Logo" class="h-16" /> <!-- 64px  -->
+      <img src="assets/logo_zoomed.png" alt="Logo" class="h-16" />
     </a>
   </div>
 
   <!-- Conteneur principal (centré) -->
   <div class="p-6 w-full max-w-2xl">
-    <!-- Titre et lien "Se connecter" -->
+    <!-- Titre et lien "S'inscrire" -->
     <div class="flex flex-col items-center mb-6">
-      <h2 class="text-3xl font-extrabold text-center text-black uppercase mb-2">S'inscrire</h2>
+      <h2 class="text-3xl font-extrabold text-center text-black uppercase mb-2">Se connecter</h2>
       <p class="text-gray-600 text-sm">
-        Vous avez déjà un compte ?
-        <a routerLink="/login" class="text-orange-500 hover:text-orange-600 hover:underline">Se connecter</a>
+        Vous n'avez pas de compte ?
+        <a routerLink="/signup" class="text-orange-500 hover:text-orange-600 hover:underline">S'inscrire</a>
       </p>
     </div>
 
@@ -21,42 +22,14 @@
     <div class="flex flex-col md:flex-row items-center justify-between gap-6">
       <!-- Colonne gauche : Formulaire -->
       <div class="w-full md:w-1/2">
-        <form #signupForm="ngForm" (ngSubmit)="register()">
-          <!-- Prénom -->
-          <div class="mb-4">
-            <label for="prenom" class="block text-gray-700 font-semibold mb-1">Prénom</label>
-            <input
-              id="prenom"
-              type="text"
-              [(ngModel)]="user.firstname"
-              name="prenom"
-              required
-              placeholder="Entrez votre prénom"
-              class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
-            />
-          </div>
-
-          <!-- Nom -->
-          <div class="mb-4">
-            <label for="nom" class="block text-gray-700 font-semibold mb-1">Nom</label>
-            <input
-              id="nom"
-              type="text"
-              [(ngModel)]="user.lastname"
-              name="prenom"
-              required
-              placeholder="Entrez votre nom"
-              class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
-            />
-          </div>
-
+        <form #loginForm="ngForm" (ngSubmit)="login()">
           <!-- Email -->
           <div class="mb-4">
             <label for="email" class="block text-gray-700 font-semibold mb-1">E-mail</label>
             <input
               id="email"
               type="email"
-              [(ngModel)]="user.email"
+              [(ngModel)]="credentials.email"
               name="email"
               required
               placeholder="Entrez votre e-mail"
@@ -66,78 +39,60 @@
           </div>
 
           <!-- Mot de passe -->
-          <div class="mb-4">
+          <div class="mb-6">
             <label for="password" class="block text-gray-700 font-semibold mb-1">Mot de passe</label>
             <input
               id="password"
               type="password"
-              [(ngModel)]="user.password"
+              [(ngModel)]="credentials.password"
               name="password"
               required
-              (ngModelChange)="onPasswordChange()"
-              placeholder="Choisissez un mot de passe"
+              placeholder="Entrez votre mot de passe"
               class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
             />
           </div>
 
-          <!-- Confirmation Mot de passe -->
-          <div class="mb-6">
-            <label for="confirmPassword" class="block text-gray-700 font-semibold mb-1">Confirmez votre mot de passe</label>
-            <input
-              id="confirmPassword"
-              type="password"
-              [(ngModel)]="confirmPassword"
-              name="confirmPassword"
-              required
-              (ngModelChange)="onPasswordChange()"
-              placeholder="Confirmez votre mot de passe"
-              class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
-            />
-            <p *ngIf="passwordMismatch" class="text-red-500 text-sm mt-1">Les mots de passe ne correspondent pas !</p>
-          </div>
-          <div *ngIf="errorMessage" class="text-red-500 text-sm text-center mb-4">{{ errorMessage }}</div>
-
-          <!-- Bouton S'inscrire -->
+          <!-- Bouton Se connecter -->
           <div class="flex justify-center mt-4">
             <button
               type="submit"
-              [disabled]="!signupForm.form.valid || passwordMismatch || emailMismatch"
+              [disabled]="!loginForm.form.valid || emailMismatch"
               class="py-2 px-6 bg-white border border-orange-500 text-orange-500 font-semibold rounded-full hover:bg-orange-500 hover:text-white transition duration-300 disabled:border-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed text-base"
             >
-              S'inscrire
+              Se connecter
             </button>
           </div>
         </form>
       </div>
 
       <!-- Séparateur "ou" -->
-      <div class="hidden md:block text-textBlack">ou</div>
+      <div class="hidden md:block text-black">ou</div>
 
       <!-- Colonne droite : Boutons sociaux -->
       <div class="w-full md:w-1/2 flex flex-col items-center space-y-4">
         <button
           class="flex items-center py-2 px-4 w-full max-w-xs bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition duration-300"
-          (click)="loginWithGoogle()">   <!-- rah bghit nkhdm b les icons mais ma3ndich kindir nred logo dyal google multicoloré kifma houwa daba -->
+          (click)="loginWithGoogle()"
+        >
           <img src="https://www.google.com/favicon.ico" alt="Google Icon" class="w-5 h-5 mr-2" />
           <span class="text-gray-700 font-semibold">Continuer avec Google</span>
         </button>
 
         <button
           class="flex items-center py-2 px-4 w-full max-w-xs bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition duration-300"
-          (click)="loginWithGithub()">
+          (click)="loginWithGithub()"
+        >
           <img src="https://www.github.com/favicon.ico" alt="Github Icon" class="w-5 h-5 mr-2" />
           <span class="text-gray-700 font-semibold">Continuer avec Github</span>
         </button>
       </div>
     </div>
 
-    <!-- AAAAttention hhhh -->
+    <!-- Mention légale -->
     <div class="mt-10 text-center text-gray-500 text-xs">
       <p>
-        * En vous inscrivant, vous acceptez nos
         <a href="/terms" class="text-orange-500 hover:text-orange-600 hover:underline">Conditions d'utilisation</a>
-        et reconnaissez avoir lu notre
-        <a href="/privacy" class="text-orange-500 hover:text-orange-600 hover:underline">Politique de confidentialité</a>.<br>
+        <a href="/privacy" class="text-orange-500 hover:text-orange-600 hover:underline"> Politique de confidentialité</a>.<br>
         Ce site est protégé par reCAPTCHA Enterprise. La
         <a href="https://policies.google.com/privacy" target="_blank" class="text-orange-500 hover:text-orange-600 hover:underline">Politique de confidentialité</a>
         et les
