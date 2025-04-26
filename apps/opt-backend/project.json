@@ -1,6 +1,17 @@
 {
-  "name": "demo",
+  "name": "opt-backend",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "root": "apps/opt-backend",
   "sourceRoot": "apps/opt-backend/src",
+  "targets": {
+    "serve": {
+      "executor": "@nxrocks/nx-spring-boot:run",
+      "options": {
+        "buildSystem": "maven",
+        "runCommand": "\"mvnw.cmd\" spring-boot:run"
+      }
+    }
+  },
   "tags": []
 }
