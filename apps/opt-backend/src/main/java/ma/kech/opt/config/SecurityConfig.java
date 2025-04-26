@@ -33,7 +33,7 @@ public class SecurityConfig {
   public SecurityConfig(UserService userService, JwtUtils jwtUtils) {
     this.userService = userService;
     this.jwtUtils = jwtUtils;
-    System.out.println("✅ SecurityConfig loaded");
+    System.out.println("SecurityConfig loaded");
   }
 
   @Bean
@@ -46,7 +46,7 @@ public class SecurityConfig {
           .requestMatchers("/events").permitAll()
 //        .requestMatchers("/admin/**").hasRole("ADMIN") // accessible uniquement aux admins
 //        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // accessible aux users ET admins
-        .anyRequest().authenticated()
+        .anyRequest().permitAll()
       )
       .sessionManagement(session -> session
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
