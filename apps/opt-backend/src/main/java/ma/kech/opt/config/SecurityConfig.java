@@ -1,5 +1,6 @@
 package ma.kech.opt.config;
 
+import ma.kech.opt.filter.CsrfTokenFilter;
 import ma.kech.opt.filter.JwtAuthenticationFilter;
 import ma.kech.opt.service.UserService;
 import ma.kech.opt.utils.JwtUtils;
@@ -10,12 +11,15 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -38,18 +42,29 @@ public class SecurityConfig {
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
+    requestHandler.setCsrfRequestAttributeName("_csrf");//not needed ubless u want to change the token tag
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-      .csrf(AbstractHttpConfigurer::disable)
+//      .csrf(AbstractHttpConfigurer::disable)
+      .csrf(csrfConfig->csrfConfig.csrfTokenRequestHandler(requestHandler)
+        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+      .addFilterAfter(new CsrfTokenFilter(), BasicAuthenticationFilter.class)
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/auth/**").permitAll() // accès public
           .requestMatchers("/events").permitAll()
 //        .requestMatchers("/admin/**").hasRole("ADMIN") // accessible uniquement aux admins
-//        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // accessible aux users ET admins
+//        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // accessible aux users ET
+
         .anyRequest().permitAll()
       )
       .sessionManagement(session -> session
-        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        .maximumSessions(1)//per uesr
+        .maxSessionsPreventsLogin(false)//if a user tried to login without logout it lets him in with deleting it's old session
+      )
+      .logout(logout -> logout
+        .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
       )
       .addFilterBefore(new JwtAuthenticationFilter(userService, jwtUtils), UsernamePasswordAuthenticationFilter.class);
 
