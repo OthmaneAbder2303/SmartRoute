@@ -20,11 +20,14 @@ public class PredictionController {
   public PredictionController(PredictionService predictionService) {
     this.predictionService = predictionService;
   }
-  @PostMapping
-  public Map<String, Object> predict(@RequestBody Map<String, Object> requestData){
+  @PostMapping("/predictTime")
+  public Map<String, Object> predictTime(@RequestBody Map<String, Object> requestData){
         //Map :pour que la requet soit en Map format
     return predictionService.getPrediction(requestData);
   }
-
+  @PostMapping
+  public Map<String, Object> predict(@RequestBody Map<String, Object> requestData){
+    return predictionService.getPrediction(requestData);
+  }
 
 }
