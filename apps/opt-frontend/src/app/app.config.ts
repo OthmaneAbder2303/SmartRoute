@@ -5,7 +5,9 @@ import {
   provideClientHydration,
   withEventReplay,
 } from '@angular/platform-browser';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
+import { csrfInterceptor } from './EventService_TEST_ONLY/interceptor';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,5 +15,6 @@ export const appConfig: ApplicationConfig = {
     provideZoneChangeDetection({ eventCoalescing: true }),
     provideRouter(appRoutes),
     provideHttpClient(withFetch()), // zdtha mli bghit n accedi l /signup , darouri lprovider for HttpClient
+    provideHttpClient(withInterceptors([csrfInterceptor]))
   ],
 };

@@ -54,7 +54,7 @@ public class SecurityConfig {
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/auth/**").permitAll() // accès public
           .requestMatchers(HttpMethod.POST,"/events").permitAll()
-          .requestMatchers(HttpMethod.GET,"/events").authenticated()
+          .requestMatchers(HttpMethod.GET,"/events").permitAll()
 //        .requestMatchers("/admin/**").hasRole("ADMIN") // accessible uniquement aux admins
 //        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // accessible aux users ET
 
@@ -85,6 +85,8 @@ public class SecurityConfig {
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
+    configuration.setAllowedHeaders(List.of("Content-Type", "X-XSRF-TOKEN"));
+
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);

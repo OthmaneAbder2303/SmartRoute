@@ -9,12 +9,12 @@ import pandas as pd
 app=Flask(__name__)
 
 #charger le model:
-with open("C:/Users/el houcine/Desktop/pfs/SmartRoute/apps/ml-api/xgboost_model.pkl","rb") as f:
+with open("xgboost_model.pkl","rb") as f:
     pipeline=pickle.load(f)
 
 @app.route('/predict', methods=['POST'])
 def predict():
-    data=request.json # khass tkon {"données json   "Distance_km": [10.0],"Weather": ["clear"],"Speed_kmh": [60],Traffic": ["low"] }
+    data=request.json # khass tkon {"Distance_km": [10.0],"Weather": ["clear"],"Speed_kmh": [60],"Traffic": ["low"] }
     df=pd.DataFrame(data)
     prediction=pipeline.predict(df)
     return jsonify({'prediction':prediction.tolist()})
