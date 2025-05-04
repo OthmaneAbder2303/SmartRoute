@@ -1,65 +1,94 @@
-import { Component, Inject, PLATFORM_ID, AfterViewInit } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { LocationService } from '../../shared/services/LocationService/location.service';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import * as L from 'leaflet';
+import { HttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { FormsModule, NgModel } from '@angular/forms';
+
 @Component({
   selector: 'app-map',
-  templateUrl: './map.component.html',
   standalone: true,
-  styleUrls: ['./map.component.scss']
+  imports: [CommonModule, HttpClientModule, FormsModule],
+  templateUrl: './map.component.html',
+  styleUrls: ['./map.component.css']
 })
-export class MapComponent implements AfterViewInit {
-  private map!: any;
-  private isBrowser: boolean;
+export class MapComponent implements AfterViewInit, OnDestroy {
+  places =[
+    {name: 'Jemaa el-Fnaa', lat: 31.625, lng: -7.989},
+    {name: 'Menara Gardens', lat: 31.616, lng: -8.012},
+    {name: 'Majorelle Garden', lat: 31.637, lng: -8.002},
+  ];
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object,private locationservice:LocationService) {
-    this.isBrowser = isPlatformBrowser(this.platformId);
+  startPlace: any;
+  endPlace: any;
+
+  map: L.Map | undefined;
+  startMarker: any;
+  endMarker: any;
+  routeLine: any;
+
+  customIcon: L.Icon;
+
+  constructor(private http: HttpClient) {
+    this.customIcon = L.icon({
+      iconUrl: './assets/map-marker-end.png',  
+      iconSize: [32, 32],                  
+      iconAnchor: [16, 32],              
+      popupAnchor: [0, -32]               
+    });
   }
-
   ngAfterViewInit(): void {
-    if (this.isBrowser) {
-      import('leaflet').then((L) => {
-        this.loadMap(L);
-        setTimeout(() => {
-          this.map.invalidateSize();
-        }, 500);
-      });
-    }
-  }
-
-  private loadMap(L: any): void {
-    this.map = L.map('map').setView([31.6295, -7.9811], 40);
+    this.map = L.map('map').setView([31.63, -7.99], 13);
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; OpenStreetMap contributors'
+      attribution: 'Map data © OpenStreetMap contributors'
     }).addTo(this.map);
+    this.map.on('click', (e: any) => this.handleMapClick(e));
   }
-  getPosition(){
-    this.locationservice.watchPosition(
-      position => {
-        const latitude = position.coords.latitude;
-        const longitude = position.coords.longitude;
-         console.log(latitude)
-        console.log(longitude)
-      },
-      error => console.error(error)
-    );
-  }
-
-
-searchLocation(query: string) {
-    if (this.isBrowser) {
-      fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}`)
-        .then(response => response.json())
-        .then(data => {
-          if (data.length > 0) {
-            const { lat, lon } = data[0];
-            this.map.setView([lat, lon], 14);
-            import('leaflet').then((L) => {
-              L.marker([lat, lon]).addTo(this.map).bindPopup(query).openPopup();
-            });
-          } else {
-            alert('Location not found');
-          }
-        });
+  ngOnDestroy(): void{
+    if (this.map) {
+      this.map.remove();
     }
+  }
+  handleMapClick(e: any){
+    if (!this.map) return;
+    if (!this.startMarker){
+      this.startMarker = L.marker(e.latlng, { icon: this.customIcon }).addTo(this.map);
+    } else if (!this.endMarker){
+      this.endMarker = L.marker(e.latlng, { icon: this.customIcon }).addTo(this.map);
+      this.requestRoute();
+    } else {
+      this.map.removeLayer(this.startMarker);
+      this.map.removeLayer(this.endMarker);
+      if (this.routeLine) this.map.removeLayer(this.routeLine);
+      this.startMarker = this.endMarker = this.routeLine = null;
+    }
+  }
+
+  onSelectChange() {
+    if (this.startPlace && this.endPlace) {
+      this.setMapMarkersAndRoute(this.startPlace, this.endPlace);
+    }
+  }
+
+  setMapMarkersAndRoute(start: any, end: any) {
+    if (this.startMarker) this.map?.removeLayer(this.startMarker);
+    if (this.endMarker) this.map?.removeLayer(this.endMarker);
+
+    this.startMarker = L.marker([start.lat, start.lng], { icon: this.customIcon }).addTo(this.map!);
+    this.endMarker = L.marker([end.lat, end.lng], {icon: this.customIcon}).addTo(this.map!);
+
+    this.requestRoute();
+  }
+
+  requestRoute() {
+    const start = this.startMarker.getLatLng();
+    const end = this.endMarker.getLatLng();
+    this.http.post<any>('http://localhost:8080/predict/testMap', {}).subscribe(response =>{
+      console.log(response);
+      const latlngs = response.route.map((p: any) => [p.lat, p.lng]);
+      if (this.routeLine) this.map?.removeLayer(this.routeLine);
+      this.routeLine = L.polyline(latlngs, { color: 'blue' }).addTo(this.map!);
+      this.map?.fitBounds(this.routeLine.getBounds());
+    });
   }
 }
