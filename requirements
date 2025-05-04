@@ -15,3 +15,5 @@ npm i @nxrocks/nx-spring-boot
 npm install @emailjs/browser
 
 npm install @fullcalendar/angular @fullcalendar/core @fullcalendar/daygrid @fullcalendar/interaction @fullcalendar/timegrid
+
+npm i @angular/animations
