@@ -49,7 +49,7 @@ public class SecurityConfig {
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
    //.csrf(csrf->csrf.disable())
    .csrf(csrfConfig->csrfConfig.csrfTokenRequestHandler(requestHandler)
-   .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+   .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))//to test post from postman add X-XSRF-TOKEN (csrf handling work only on secured routes)
     .addFilterAfter(new CsrfTokenFilter(), BasicAuthenticationFilter.class)
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/auth/**").permitAll() // accès public
