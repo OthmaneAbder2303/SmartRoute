@@ -2,8 +2,9 @@ import { Component, ElementRef, HostListener, OnInit } from '@angular/core';
 import { CommonModule, NgOptimizedImage } from '@angular/common';
 import { NavigationEnd, Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import {AuthService} from "../../../shared/services/authService/auth2.service";
 import { Feature, FeatureService } from '../../../shared/services/featuresService/feature.service';
+import { NewAuthService } from '../../../shared/services/newAuthService/new-auth.service';
+import { UserInfo } from '../../../shared/models/auth.models';
 
 @Component({
   selector: 'app-navbar',
@@ -17,8 +18,9 @@ export class NavbarComponent implements OnInit{
   features: Feature[] = [];
   isServicesOpen = false;
   isRessourcesOpen = false;
+  user!: UserInfo;
 
-  constructor(public auth: AuthService, private featureService: FeatureService, private router: Router, private elementRef: ElementRef) { }
+  constructor(public auth: NewAuthService, private featureService: FeatureService, private router: Router, private elementRef: ElementRef) { }
 
   ngOnInit() {
     this.featureService.features$.subscribe((features) => {
@@ -28,6 +30,10 @@ export class NavbarComponent implements OnInit{
       if (event instanceof NavigationEnd) {
         this.closeMenus();
       }
+    });
+    this.auth.getCurrentUser().subscribe({
+      next: (user) => this.user = user,
+      error: (err) => console.error('User not authenticated', err)
     });
   }
 
@@ -60,19 +66,6 @@ export class NavbarComponent implements OnInit{
     this.isServicesOpen = false;
     this.isRessourcesOpen = false;
   }
-
-  // // Update the features or perform actions on them
-  // updateFeature() {
-  //   const updatedFeatures: Feature[] = [
-  //     // Example: Update the title of the first feature
-  //     { ...this.featureService.features$.getValue()[0], title: 'Updated Planification d\'itinéraire' },
-  //     // Keep other features unchanged
-  //     ...this.featureService.features$.getValue().slice(1)
-  //   ];
-  //
-  //   // Update features in the service
-  //   this.featureService.updateFeatures(updatedFeatures);
-  // }
 
 
 }

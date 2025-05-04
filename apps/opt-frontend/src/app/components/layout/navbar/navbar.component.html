@@ -110,7 +110,7 @@
       <div class="flex items-center justify-between">
         <div>
           <p class="text-textBlack">Bienvenue,</p>
-          <p class="text-textBlack font-semibold">{{ auth.user?.name }}</p>
+          <p class="text-textBlack font-semibold">{{ user.firstname }} {{ user.lastname }}</p>
         </div>
         <a
           (click)="auth.logout()"
@@ -128,11 +128,10 @@
 
     <ng-template #loggedOut>
       <a
-        (click)="auth.login()"
+        routerLink="/login"
         class="cursor-pointer"
         role="button"
         tabindex="0"
-        (keydown.enter)="auth.login()"
         aria-label="Login"
         title="Se connecter"
       >
