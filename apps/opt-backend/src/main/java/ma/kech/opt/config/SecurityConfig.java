@@ -7,6 +7,7 @@ import ma.kech.opt.utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -46,20 +47,21 @@ public class SecurityConfig {
     requestHandler.setCsrfRequestAttributeName("_csrf");//not needed ubless u want to change the token tag
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-//      .csrf(AbstractHttpConfigurer::disable)
-      .csrf(csrfConfig->csrfConfig.csrfTokenRequestHandler(requestHandler)
-        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
-      .addFilterAfter(new CsrfTokenFilter(), BasicAuthenticationFilter.class)
+   //.csrf(csrf->csrf.disable())
+   .csrf(csrfConfig->csrfConfig.csrfTokenRequestHandler(requestHandler)
+   .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+    .addFilterAfter(new CsrfTokenFilter(), BasicAuthenticationFilter.class)
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/auth/**").permitAll() // accès public
-          .requestMatchers("/events").permitAll()
+          .requestMatchers(HttpMethod.POST,"/events").permitAll()
+          .requestMatchers(HttpMethod.GET,"/events").permitAll()
 //        .requestMatchers("/admin/**").hasRole("ADMIN") // accessible uniquement aux admins
 //        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // accessible aux users ET
 
         .anyRequest().permitAll()
       )
       .sessionManagement(session -> session
-        .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+        .sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
         .maximumSessions(1)//per uesr
         .maxSessionsPreventsLogin(false)//if a user tried to login without logout it lets him in with deleting it's old session
       )
@@ -83,6 +85,8 @@ public class SecurityConfig {
     configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
     configuration.setAllowedHeaders(List.of("*"));
     configuration.setAllowCredentials(true);
+    configuration.setAllowedHeaders(List.of("Content-Type", "X-XSRF-TOKEN"));
+
 
     UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", configuration);

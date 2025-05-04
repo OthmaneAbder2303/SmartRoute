@@ -1,13 +1,12 @@
 package ma.kech.opt.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import ma.kech.opt.entity.Event;
 import ma.kech.opt.service.EventService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,4 +30,15 @@ public class EventController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
+    @PostMapping
+    public String  getAllEvents(HttpServletRequest r) {
+      Cookie[] cookies = r.getCookies();
+      if (cookies != null) {
+        for (Cookie cookie : cookies) {
+          System.out.println("Cookie name: " + cookie.getName() + ", value: " + cookie.getValue());
+        }
+      }
+      return "Cookies logged in console";
+      }
+
 }
