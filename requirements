@@ -7,11 +7,11 @@ npm i @fortawesome/free-solid-svg-icons
 
 npm i @auth0/auth0-angular
 
-@angular/google-maps
-@auth0/auth0-spa-js
+npm i @angular/google-maps
+npm i@auth0/auth0-spa-js
 npm install --save-dev @types/leaflet
 npm install leaflet
-@nxrocks/nx-spring-boot
+npm i @nxrocks/nx-spring-boot
 npm install @emailjs/browser
 
 npm install @fullcalendar/angular @fullcalendar/core @fullcalendar/daygrid @fullcalendar/interaction @fullcalendar/timegrid

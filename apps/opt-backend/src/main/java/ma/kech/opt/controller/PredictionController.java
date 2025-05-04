@@ -27,7 +27,7 @@ public class PredictionController {
   }
   @PostMapping
   public Map<String, Object> predict(@RequestBody Map<String, Object> requestData){
-    return predictionService.getPrediction(requestData);
+    return predictionService.getPredictionVolume(requestData);
   }
 
 }
