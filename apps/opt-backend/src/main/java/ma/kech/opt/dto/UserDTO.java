@@ -1,6 +1,8 @@
+// UserDTO.java
 package ma.kech.opt.dto;
 
 import lombok.Data;
+import java.util.List;
 
 @Data
 public class UserDTO {
@@ -9,4 +11,6 @@ public class UserDTO {
   private String lastname;
   private String email;
   private String roles;
+  private String provider;
+  private String providerId;
 }
