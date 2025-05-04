@@ -6,15 +6,14 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 import pandas as pd
 import os
-
+from huggingface_hub import hf_hub_download
 app=Flask(__name__)
 import joblib
 max_volume=7280
-model_path = 'C:/Users/ayoug/IdeaProjects/SmartRoute/apps/ml-api/traffic_volume_model.joblib'
-if os.path.exists(model_path):
-    model = joblib.load(model_path)
-else:
-    model = None
+model_path = hf_hub_download(repo_id="zzzzakaria/traffic-volume-predictor", filename="traffic_volume_model.joblib")
+
+model = joblib.load(model_path)
+
 def adjust_volume_by_distance_and_width(predicted_volume, my_road_km, my_road_width):
     """
     Adjust predicted traffic volume based on both distance and road width.
