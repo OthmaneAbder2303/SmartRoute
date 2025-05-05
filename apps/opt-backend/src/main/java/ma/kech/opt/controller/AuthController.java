@@ -1,6 +1,7 @@
 // AuthController.java
 package ma.kech.opt.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import ma.kech.opt.dto.UserDTO;
 import ma.kech.opt.entity.User;
@@ -33,10 +34,10 @@ public class AuthController {
   @PostMapping("/register")
   public ResponseEntity<?> registerUser(@RequestBody User user) {
     if (userService.findByEmail(user.getEmail()).isPresent()) {
-      return ResponseEntity.badRequest().body("Email is already taken");
+      return ResponseEntity.badRequest().body(Map.of("message","Email is already taken"));
     }
     userService.registerUser(user);
-    return ResponseEntity.ok("User registered successfully");
+    return ResponseEntity.ok(Map.of("message", "User registered successfully"));
   }
 
   @PostMapping("/login")
@@ -48,9 +49,15 @@ public class AuthController {
       String jwt = jwtUtils.generateToken(userDetails);
       return ResponseEntity.ok(jwt);
     } catch (AuthenticationException e) {
-      return ResponseEntity.status(401).body("Invalid email or password");
+      return ResponseEntity.status(401).body(Map.of("message","Invalid email or password"));
     }
   }
+
+  @GetMapping("/csrf")
+  public ResponseEntity<Map<String, String>> getCsrfToken(HttpServletRequest request) {
+    return ResponseEntity.ok(Map.of("message", "CSRF token generated"));
+  }
+
 
   @GetMapping("/me")
   public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
