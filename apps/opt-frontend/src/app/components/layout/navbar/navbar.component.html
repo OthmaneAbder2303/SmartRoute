@@ -106,47 +106,40 @@
 
   <!-- End: Login & Sign-in Icons -->
   <div class="navbar-end flex items-center space-x-4">
-    <div *ngIf="auth.isAuthenticated; else loggedOut">
-      <div class="flex items-center justify-between">
-        <div>
-          <p class="text-textBlack">Bienvenue,</p>
-          <p class="text-textBlack font-semibold">{{ user.firstname }} {{ user.lastname }}</p>
-        </div>
-        <a
-          (click)="auth.logout()"
-          class="cursor-pointer ml-4"
-          role="button"
-          tabindex="0"
-          (keydown.enter)="auth.logout()"
-          aria-label="Logout"
-          title="Déconnexion"
-        >
-          <fa-icon [icon]="['fas', 'sign-out-alt']" class="text-textBlack hover:text-orange-500 text-lg"></fa-icon>
-        </a>
+    <!-- User is authenticated -->
+    <div *ngIf="isAuthenticated" class="flex items-center">
+      <div class="mr-3">
+        <p class="text-sm text-gray-600">Bienvenue</p>
+        <p class="text-primary font-semibold">{{ userFullName }}</p>
       </div>
+      <button
+        (click)="auth.logout()"
+        class="p-2 transition-all duration-200 hover:-translate-y-1"
+        aria-label="Déconnexion"
+        title="Déconnexion"
+      >
+        <fa-icon [icon]="['fas', 'sign-out-alt']" class="text-textBlack hover:text-orange-500 text-lg"></fa-icon>
+      </button>
     </div>
 
-    <ng-template #loggedOut>
+    <!-- User is not authenticated -->
+    <div *ngIf="!isAuthenticated" class="flex items-center space-x-4">
       <a
         routerLink="/login"
-        class="cursor-pointer"
-        role="button"
-        tabindex="0"
-        aria-label="Login"
+        class="p-2 transition-all duration-200 hover:-translate-y-1"
+        aria-label="Se connecter"
         title="Se connecter"
       >
-        <fa-icon [icon]="['fas', 'user-plus']" class="text-textBlack hover:text-orange-500"></fa-icon>
+        <fa-icon [icon]="['fas', 'user']" class="text-textBlack hover:text-orange-500 text-lg"></fa-icon>
       </a>
       <a
         routerLink="/signup"
-        class="cursor-pointer"
-        role="button"
-        tabindex="0"
-        aria-label="Sign Up"
-        title="S'enregistrer"
+        class="p-2 transition-all duration-200 hover:-translate-y-1"
+        aria-label="S'inscrire"
+        title="S'inscrire"
       >
-        <fa-icon [icon]="['fas', 'sign-in-alt']" class="text-textBlack hover:text-orange-500"></fa-icon>
+        <fa-icon [icon]="['fas', 'user-plus']" class="text-textBlack hover:text-orange-500 text-lg"></fa-icon>
       </a>
-    </ng-template>
+    </div>
   </div>
 </div>
