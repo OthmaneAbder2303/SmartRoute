@@ -5,9 +5,7 @@ export const csrfInterceptor: HttpInterceptorFn = (req: HttpRequest<any>, next: 
     const match = document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`));
     return match ? decodeURIComponent(match[2]) : null;
   };
-
   const token = getCookie('XSRF-TOKEN');
-console.log(token)
   if (token) {
     req = req.clone({
       headers: req.headers.set('X-XSRF-TOKEN', token),

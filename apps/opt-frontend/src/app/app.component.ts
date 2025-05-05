@@ -9,7 +9,7 @@ import { AuthService } from './shared/services/authService/auth2.service';
 import { FormsModule } from '@angular/forms';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { NgIf } from '@angular/common';
-import { EventService } from './EventService_TEST_ONLY/event.service';
+
 
 @Component({
   imports: [
@@ -30,7 +30,7 @@ export class AppComponent implements OnInit {
   title = 'opt-frontend';
   private faIconLibrary = inject(FaIconLibrary);
   private faConfig = inject(FaConfig);
-  constructor(public auth: AuthService, public router: Router,private testp:EventService) {} // Make router public for template access
+  constructor(public auth: AuthService, public router: Router) {} // Make router public for template access
 
   async ngOnInit() {
     this.initFontAwesome();
@@ -41,10 +41,5 @@ export class AppComponent implements OnInit {
     this.faConfig.defaultPrefix = 'far';
     this.faIconLibrary.addIcons(...fontAwesomeIcons);
   }
-  testpost(){
-    this.testp.post().subscribe(
-      response => console.log('Success', response),
-      error => console.error('Error', error)
-    );
-  }
+ 
 }

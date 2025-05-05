@@ -30,15 +30,5 @@ public class EventController {
       return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
     }
   }
-    @PostMapping
-    public String  getAllEvents(HttpServletRequest r) {
-      Cookie[] cookies = r.getCookies();
-      if (cookies != null) {
-        for (Cookie cookie : cookies) {
-          System.out.println("Cookie name: " + cookie.getName() + ", value: " + cookie.getValue());
-        }
-      }
-      return "Cookies logged in console";
-      }
 
 }

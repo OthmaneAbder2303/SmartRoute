@@ -52,10 +52,9 @@ public class SecurityConfig {
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     CsrfTokenRequestAttributeHandler requestHandler = new CsrfTokenRequestAttributeHandler();
-    requestHandler.setCsrfRequestAttributeName("_csrf");//not needed ubless u want to change the token tag
+    requestHandler.setCsrfRequestAttributeName("_csrf");//not needed unless u want to change the token tag
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-      //.csrf(csrf->csrf.disable())
       .csrf(csrfConfig->csrfConfig.csrfTokenRequestHandler(requestHandler)
         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
       .addFilterAfter(new CsrfTokenFilter(), BasicAuthenticationFilter.class)

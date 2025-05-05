@@ -2,7 +2,7 @@
   <select
     [(ngModel)]="startPlace"
     (change)="onSelectChange()"
-    class="m-2 px-4 py-2 text-base rounded-lg border border-gray-300 bg-gray-100 focus:outline-none focus:border-blue-500"
+    class="m-2 px-4 py-2 text-base rounded-lg border border-gray-300 bg-gray-100 focus:outline-none focus:border-blue-500  text-black"
   >
     <option [ngValue]="null" disabled selected>Select start</option>
     <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
@@ -11,11 +11,11 @@
   <select
     [(ngModel)]="endPlace"
     (change)="onSelectChange()"
-    class="m-2 px-4 py-2 text-base rounded-lg border border-gray-300 bg-gray-100 focus:outline-none focus:border-blue-500"
+    class="m-2 px-4 py-2 text-base rounded-lg border border-gray-300 bg-gray-100 focus:outline-none focus:border-blue-500 text-black"
   >
     <option [ngValue]="null" disabled selected>Select destination</option>
     <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
   </select>
 
-  <div id="map" class="h-[500px] w-[90%] max-w-[800px] mt-4 border-2 border-gray-300 rounded-lg"></div>
+  <div id="map" class="h-[500px] w-[90%] max-w-[800px] mt-4 border-2 border-gray-300 rounded-lg overflow-hidden"></div>
 </div>
