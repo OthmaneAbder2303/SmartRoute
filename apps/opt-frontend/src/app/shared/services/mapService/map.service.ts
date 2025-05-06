@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class MapService {
-  private baseUrl = 'http://localhost:8080';//ana khdam b 8090 If I forgot someday to change it 
+  private baseUrl = 'http://localhost:8080/predict';//ana khdam b 8090 If I forgot someday to change it 
   constructor(private http: HttpClient) {}
   getRoute(start: { lat: number, lng: number }, end: { lat: number, lng: number }): Observable<any> {
     const requestData = {
