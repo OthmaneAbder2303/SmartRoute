@@ -9,7 +9,7 @@ import { catchError, map } from 'rxjs/operators';
 })
 export class TrafficService {
 
-  private apiUrl =  'http://localhost:5000/predictVolume';
+  private apiUrl =  'http://localhost:8080/predict';
 
   constructor(private http: HttpClient) { }
   getRouteTraffic(start: any, end: any): Observable<any> {
