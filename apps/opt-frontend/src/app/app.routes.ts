@@ -9,6 +9,7 @@ import { ContactFormComponent } from './components/contact-form/contact-form.com
 import { FaqComponent } from './components/faq/faq.component';
 import {SignupComponent} from "./components/signup/signup.component";
 import { LoginComponent } from './components/login/login.component';
+import { OAuthRedirectComponent } from './components/OAuthRedirectComponent/oauth-redirect.component';
 
 export const appRoutes: Route[] = [
   {
@@ -19,12 +20,20 @@ export const appRoutes: Route[] = [
     path: 'login/callback',
     component: CallbackComponent
   },
-  { path: 'signup',
+
+  { 
+    path: 'signup',
     component: SignupComponent
   },
-  { path: 'login',
+  { 
+    path: 'login',
     component: LoginComponent
   },
+  { 
+    path: 'oauth2/redirect', 
+    component: OAuthRedirectComponent
+  },
+
   { path: 'services',
     component: FeaturesComponent
   },

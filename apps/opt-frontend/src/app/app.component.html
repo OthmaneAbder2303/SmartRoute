@@ -1,17 +1,14 @@
 <div class="flex flex-col min-h-screen bg-gray-100">
 
-  <!-- Always render the current route's component -->
   <router-outlet></router-outlet>
 
-  <!-- Show layout components only if not on /signup -->
-  <ng-container *ngIf="router.url !== '/signup' && router.url !== '/login'">
+  <ng-container *ngIf="router.url !== '/signup' && router.url !== '/login' && router.url !== '/map'">
     <app-navbar></app-navbar>
     <div class="border-b border-gray-100"></div>
     <app-features></app-features>
     <app-calendar></app-calendar>
   </ng-container>
 
-  <!-- Show footer only if not on /signup -->
-  <app-footer *ngIf="router.url !== '/signup' && router.url !== '/login'"></app-footer>
+  <app-footer *ngIf="router.url !== '/signup' && router.url !== '/login' && router.url !== '/map'"></app-footer>
   <!-- <button (click)="testpost()" class="bg-red-600 h-10 w-20">heyyyyyyy</button> -->
 </div>

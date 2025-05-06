@@ -61,7 +61,6 @@
               required
               placeholder="Entrez votre e-mail"
               class="w-full py-1 bg-white border-b-2 border-gray-200 focus:outline-none focus:border-orange-500 text-black placeholder-gray-300 transition duration-300"
-              (ngModelChange)="onEmailChange()"
             />
           </div>
 
@@ -101,7 +100,7 @@
           <div class="flex justify-center mt-4">
             <button
               type="submit"
-              [disabled]="!signupForm.form.valid || passwordMismatch || emailMismatch"
+              [disabled]="!signupForm.form.valid || passwordMismatch"
               class="py-2 px-6 bg-white border border-orange-500 text-orange-500 font-semibold rounded-full hover:bg-orange-500 hover:text-white transition duration-300 disabled:border-gray-400 disabled:text-gray-400 disabled:cursor-not-allowed text-base"
             >
               S'inscrire

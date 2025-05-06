@@ -19,7 +19,6 @@ public class UserService implements UserDetailsService {
   private final PasswordEncoder passwordEncoder;
 
   public UserService(UserRepository userRepository) {
-    System.out.println("UserService created");
     this.userRepository = userRepository;
     this.passwordEncoder = new BCryptPasswordEncoder();
   }
@@ -43,13 +42,15 @@ public class UserService implements UserDetailsService {
     return userRepository.findByEmail(email).map(this::mapToDTO);
   }
 
-  private UserDTO mapToDTO(User user) {
+  public UserDTO mapToDTO(User user) {
     UserDTO dto = new UserDTO();
     dto.setId(user.getId());
     dto.setFirstname(user.getFirstname());
     dto.setLastname(user.getLastname());
     dto.setEmail(user.getEmail());
     dto.setRoles(user.getRoles());
+    dto.setProvider(String.valueOf(user.getProvider()));
+    dto.setProviderId(user.getProviderId());
     return dto;
   }
 

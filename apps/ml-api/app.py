@@ -6,15 +6,14 @@ from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 import pandas as pd
 import os
-
+from huggingface_hub import hf_hub_download
 app=Flask(__name__)
 import joblib
 max_volume=7280
-model_path = '/ml-api/traffic_volume_model.joblib'
-if os.path.exists(model_path):
-    model = joblib.load(model_path)
-else:
-    model = None
+model_path = hf_hub_download(repo_id="zzzzakaria/traffic-volume-predictor", filename="traffic_volume_model.joblib")
+
+model = joblib.load(model_path)
+
 def adjust_volume_by_distance_and_width(predicted_volume, my_road_km, my_road_width):
     """
     Adjust predicted traffic volume based on both distance and road width.
@@ -36,7 +35,7 @@ def adjust_volume_by_distance_and_width(predicted_volume, my_road_km, my_road_wi
     return adjusted_volume
 
 #charger le model:
-with open("/ml-api/xgboost_model.pkl","rb") as f:
+with open("C:/Users/ayoug/IdeaProjects/SmartRoute/apps/ml-api/xgboost_model.pkl","rb") as f:
     pipeline=pickle.load(f)
 
 @app.route('/predict', methods=['POST'])

@@ -1,5 +1,5 @@
-import { Component, Inject, PLATFORM_ID } from '@angular/core';
-import { CommonModule, isPlatformBrowser } from '@angular/common';
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NewAuthService } from '../../shared/services/newAuthService/new-auth.service';
 import { Router, RouterLink } from '@angular/router';
@@ -14,29 +14,22 @@ import { RegisterResponse } from '../../shared/models/auth.models';
   standalone: true,
 })
 export class SignupComponent {
-  user= {
+  user = {
     firstname: '',
     lastname: '',
     password: '',
     email: '',
     roles: 'USER',
+    provider: 'LOCAL'
   };
   confirmPassword = '';
-  confirmEmail = '';
   passwordMismatch = false;
-  emailMismatch = false;
   errorMessage: string | null = null;
 
-  constructor(private newAuthService: NewAuthService, private router: Router){}
+  constructor(private newAuthService: NewAuthService, private router: Router) {}
 
   async register() {
     this.errorMessage = null;
-
-    if (this.user.email !== this.confirmEmail) {
-      this.emailMismatch = true;
-      return;
-    }
-    this.emailMismatch = false;
 
     if (this.user.password !== this.confirmPassword) {
       this.passwordMismatch = true;
@@ -50,9 +43,10 @@ export class SignupComponent {
       this.router.navigate(['/login']).then(
         (success) => {
           console.log('Navigation to /login successful:', success);
-        }).catch((err) => {
-          console.error('Navigation to /login failed:', err);
-        });
+        }
+      ).catch((err) => {
+        console.error('Navigation to /login failed:', err);
+      });
     } catch (error: any) {
       console.error('Erreur lors de l\'inscription:', error);
       this.errorMessage = error.error?.message || 'Échec de l\'inscription, veuillez réessayer.';
@@ -65,19 +59,11 @@ export class SignupComponent {
       this.confirmPassword.length > 0;
   }
 
-  onEmailChange() {
-    //const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    this.emailMismatch =
-      this.user.email !== this.confirmEmail && this.confirmEmail.length > 0; //&& !emailPattern.test(this.user.email);
-  }
-
   loginWithGoogle() {
-    console.log('Login with Google');
-    // Implémenter la logique de connexion avec Google
+    this.newAuthService.loginWithGoogle();
   }
 
   loginWithGithub() {
-    console.log('Login with Github');
-    // Implémenter la logique de connexion avec Github
+    this.newAuthService.loginWithGithub();
   }
 }

@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { CommonModule } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
@@ -16,10 +16,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     { name: 'Menara Gardens', lat: 31.616, lng: -8.012 },
     { name: 'Majorelle Garden', lat: 31.637, lng: -8.002 },
   ];
-
+  
   startPlace: any;
   endPlace: any;
-
   map: any;
   startMarker: any;
   endMarker: any;
@@ -74,13 +73,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.startMarker = this.endMarker = this.routeLine = null;
     }
   }
-
+  
   onSelectChange() {
+    if (!this.isBrowser) return;
+    
     if (this.startPlace && this.endPlace) {
       this.setMapMarkersAndRoute(this.startPlace, this.endPlace);
     }
   }
-
+  
   setMapMarkersAndRoute(start: any, end: any) {
     if (!this.L || !this.map) return;
 
@@ -92,7 +93,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.requestRoute();
   }
-
+  
   requestRoute() {
     if (!this.startMarker || !this.endMarker || !this.L || !this.map) return;
 
