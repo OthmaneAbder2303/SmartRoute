@@ -3,6 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { Inject, PLATFORM_ID } from '@angular/core';
+import { MapService } from '../../shared/services/mapService/map.service';
+
 
 @Component({
   selector: 'app-map',
@@ -27,7 +30,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   L: any;
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object,private mapService :MapService) {}
+
+  get isBrowser(): boolean {
+    return isPlatformBrowser(this.platformId);
+  }
 
   ngAfterViewInit(): void {
     // hadi 7It serveur ne peut pas acces window pour Map.
@@ -61,11 +68,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     if (!this.startMarker) {
       this.startMarker = this.L.marker(e.latlng, { icon: this.customIcon }).addTo(this.map);
-      console.log("the start  is :"+this.startMarker);
+      console.log("Start marker at:", this.startMarker.getLatLng());
     } else if (!this.endMarker) {
       this.endMarker = this.L.marker(e.latlng, { icon: this.customIcon }).addTo(this.map);
       this.requestRoute();
-      console.log("the start  is :"+this.endMarker);
+      console.log("End marker at:", this.endMarker.getLatLng());
     } else {
       this.map.removeLayer(this.startMarker);
       this.map.removeLayer(this.endMarker);
@@ -96,17 +103,18 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   
   requestRoute() {
     if (!this.startMarker || !this.endMarker || !this.L || !this.map) return;
-
+  
     const start = this.startMarker.getLatLng();
     const end = this.endMarker.getLatLng();
-
-    this.http.post<any>('http://localhost:8080/predict/testMap', {}).subscribe((response) => {
-      console.log(response);
+  console.log("hello je suis en loading");
+    this.mapService.getRoute(start, end).subscribe((response) => {
       const latlngs = response.route.map((p: any) => [p.lat, p.lng]);
-
+  
       if (this.routeLine) this.map.removeLayer(this.routeLine);
       this.routeLine = this.L.polyline(latlngs, { color: 'blue' }).addTo(this.map);
       this.map.fitBounds(this.routeLine.getBounds());
     });
-  }
+    console.log("ennnd calling");
+    }
+  
 }
