@@ -35,7 +35,7 @@ def adjust_volume_by_distance_and_width(predicted_volume, my_road_km, my_road_wi
     return adjusted_volume
 
 #charger le model:
-with open("C:/Users/ayoug/IdeaProjects/SmartRoute/apps/ml-api/xgboost_model.pkl","rb") as f:
+with open("xgboost_model.pkl","rb") as f:
     pipeline=pickle.load(f)
 
 @app.route('/predict', methods=['POST'])

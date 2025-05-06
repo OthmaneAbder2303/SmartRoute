@@ -2,6 +2,8 @@ package ma.kech.opt.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import net.minidev.json.annotate.JsonIgnore;
+
 import java.time.LocalDateTime;
 
 @Data
@@ -17,24 +19,24 @@ public class User {
 
   @Column(nullable = false)
   private String lastname;
-
+  @JsonIgnore
   private String password;
 
   @Column(nullable = false, unique = true)
   private String email;
-
+  @JsonIgnore
   @Column(nullable = false)
   private String roles;
-
+  @JsonIgnore
   @Column(nullable = false)
   private LocalDateTime createdAt;
-
+  @JsonIgnore
   @Column(nullable = false)
   private LocalDateTime updatedAt;
-
+  @JsonIgnore
   @Enumerated(EnumType.STRING)
   private AuthProvider provider = AuthProvider.LOCAL;
-
+  @JsonIgnore
   private String providerId;
 
   @PrePersist
