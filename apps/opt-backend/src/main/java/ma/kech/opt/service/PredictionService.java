@@ -26,9 +26,9 @@ public class PredictionService {
     String trafficLevel;
     if (trafficVolume instanceof Number) {
       double volume = ((Number) trafficVolume).doubleValue();
-      if (volume < 2000) {
+      if (volume < 200) {
         trafficLevel = "low";
-      } else if (volume < 4000) {
+      } else if (volume < 500) {
         trafficLevel = "medium";
       } else {
         trafficLevel = "high";
@@ -49,16 +49,17 @@ public class PredictionService {
 
 
   public Map<String, Object> getPredictionVolume(Map<String, Object> data) {
+    System.out.println(data.get("distance"));
     Map<String, Object> formattedData = new LinkedHashMap<>();
     formattedData.put("temp", new Object[]{25.32});
     formattedData.put("rain_1h", new Object[]{10.0});
     formattedData.put("snow_1h", new Object[]{0.0});
     formattedData.put("clouds_all", new Object[]{75});
-    formattedData.put("hour", new Object[]{19});
-    formattedData.put("day_of_week", new Object[]{2});
+    formattedData.put("hour", new Object[]{data.get("hour")});
+    formattedData.put("day_of_week", new Object[]{data.get("dayofweek")});
     formattedData.put("month", new Object[]{8});
     formattedData.put("is_holiday", new Object[]{0});
-    formattedData.put("weather_main_Clouds", new Object[]{true});
+    formattedData.put("weather_main_Clouds", new Object[]{true});//until we get weather data from api's
     formattedData.put("weather_main_Drizzle", new Object[]{false});
     formattedData.put("weather_main_Fog", new Object[]{false});
     formattedData.put("weather_main_Haze", new Object[]{false});
@@ -91,8 +92,8 @@ public class PredictionService {
     formattedData.put("traffic_volume_lag2", new Object[]{1700.0});
     formattedData.put("year", new Object[]{2018});
     formattedData.put("day_of_month", new Object[]{1});
-    formattedData.put("road_km", 10.0);
-    formattedData.put("road_width", 0.01);
+    formattedData.put("road_km", data.get("distance"));
+    formattedData.put("road_width", 0.0086);//average road width in marrakech
     //data filled here is from imagination we should make sure that we get some (we cannot get all of that data )data to replace the data here ,i need the road distance and width also
     return restTemplate.postForObject(flaskUrl+"Volume", formattedData, Map.class);
   }

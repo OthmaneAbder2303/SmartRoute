@@ -29,7 +29,7 @@ public class PredictionController {
     return predictionService.getPrediction(requestData);
   }
   @PostMapping
-  public Map<String, Object> predict(@RequestBody Map<String, Object> requestData){
+  public Map<String, Object> predict(@RequestBody Map<String, Object> requestData ){
     return predictionService.getPredictionVolume(requestData);
   }
   @PostMapping("/Route")
