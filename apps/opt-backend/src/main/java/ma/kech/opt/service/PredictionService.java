@@ -12,21 +12,41 @@ import java.util.Map;
 public class PredictionService {
   private String flaskUrl= "http://localhost:5000/predict";
   private final RestTemplate restTemplate;
+
   // we also need to add the apis to the weather and the call of the traffic_volume prediction
   public PredictionService(RestTemplate restTemplate){
     this.restTemplate=restTemplate;
   }
 
-  public Map<String,Object> getPrediction( Map<String,Object> data){
-    Map<String, Object> formattedData = new HashMap<>();
-    formattedData.put("Distance_km", new Object[]{10.0});
-    formattedData.put("Weather", new Object[]{"clear"});
-    formattedData.put("Speed_kmh", new Object[]{60});
-    formattedData.put("Traffic", new Object[]{"low"});
-    System.out.println(formattedData);
-    return restTemplate.postForObject(flaskUrl, formattedData, Map.class);
+  public Map<String,Object> getPrediction(Map<String,Object> data){
+    // Get traffic volume prediction
+    Map<String, Object> volumePrediction = getPredictionVolume(data);
+    Object trafficVolume = volumePrediction.get("prediction");
 
+    String trafficLevel;
+    if (trafficVolume instanceof Number) {
+      double volume = ((Number) trafficVolume).doubleValue();
+      if (volume < 2000) {
+        trafficLevel = "low";
+      } else if (volume < 4000) {
+        trafficLevel = "medium";
+      } else {
+        trafficLevel = "high";
+      }
+    } else {
+      trafficLevel = "medium"; //chwia Hriiff :)
+    }
+    Map<String, Object> formattedData = new HashMap<>();
+    formattedData.put("Distance_km", new Object[]{data.get("Distance_km")});
+    formattedData.put("Weather", new Object[]{data.get("Weather")});
+    formattedData.put("Speed_kmh", new Object[]{data.get("Speed_kmh")});
+    formattedData.put("Traffic", new Object[]{trafficLevel});
+
+    System.out.println("Formatted Data for Prediction: " + formattedData);
+    return restTemplate.postForObject(flaskUrl, formattedData, Map.class);
   }
+
+
 
   public Map<String, Object> getPredictionVolume(Map<String, Object> data) {
     Map<String, Object> formattedData = new LinkedHashMap<>();

@@ -46,5 +46,3 @@ public class PredictionController {
     return response;
   }
 }
-
-}
