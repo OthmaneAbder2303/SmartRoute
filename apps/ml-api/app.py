@@ -10,7 +10,7 @@ import os
 app=Flask(__name__)
 import joblib
 max_volume=7280
-model_path = 'C:/Users/ayoug/IdeaProjects/SmartRoute/apps/ml-api/traffic_volume_model.joblib'
+model_path = '/ml-api/traffic_volume_model.joblib'
 if os.path.exists(model_path):
     model = joblib.load(model_path)
 else:
@@ -36,7 +36,7 @@ def adjust_volume_by_distance_and_width(predicted_volume, my_road_km, my_road_wi
     return adjusted_volume
 
 #charger le model:
-with open("C:/Users/ayoug/IdeaProjects/SmartRoute/apps/ml-api/xgboost_model.pkl","rb") as f:
+with open("/ml-api/xgboost_model.pkl","rb") as f:
     pipeline=pickle.load(f)
 
 @app.route('/predict', methods=['POST'])

@@ -22,7 +22,9 @@
             "input": "apps/opt-frontend/public"
           }
         ],
-        "styles": ["apps/opt-frontend/src/styles.scss"],
+        "styles": ["apps/opt-frontend/src/styles.scss",
+        "node_modules/leaflet/dist/leaflet.css"
+],
         "scripts": [],
         "server": "apps/opt-frontend/src/main.server.ts",
         "ssr": {
