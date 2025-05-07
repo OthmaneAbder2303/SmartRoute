@@ -19,7 +19,7 @@ model_path = hf_hub_download(repo_id="zzzzakaria/traffic-volume-predictor", file
 model = joblib.load(model_path)
 #uding Djikstra as The first Step : 
 # Load GPKG roads layer
-gdf = gpd.read_file("marrakech_streets.gpkg", layer="roads")
+gdf = gpd.read_file("marrakech_streets.gpkg", layer="edges")
 
 # Build the graph
 G = nx.Graph()
@@ -90,7 +90,7 @@ def predictVolume():
     extra=df[['road_km', 'road_width']].copy()
     drop=['road_km', 'road_width']
     df=df.drop(columns=drop, errors='ignore')
-    prediction=adjust_volume_by_distance_and_width(model.predict(df)*max_volume,10,0.01)
+    prediction=adjust_volume_by_distance_and_width(model.predict(df)*max_volume,extra["road_km"],extra["road_width"])
     return jsonify({'prediction':prediction.tolist()})
 
 

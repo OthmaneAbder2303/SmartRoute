@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { WeatherService } from '../WeatherService/Weather.service';
 
 
 @Injectable({
@@ -11,14 +12,27 @@ export class TrafficService {
 
   private apiUrl =  'http://localhost:8080/predict';
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient,private Weather:WeatherService) { }
   getRouteTraffic(start: any, end: any): Observable<any> {
     const currentHour = new Date().getHours();
     const currentDay = new Date().getDay();
+    const weatherdata=""
+    this.Weather.getWeatherByCity().subscribe({
+      next: (data) => {
+        
+        console.log(data);
+      },
+      error: (err) => {
+        
+        console.error(err);
+      }
+    })
     const requestData = {
-        distance:this.calculateDistance(start.lat, start.lng, end.lat, end.lng),
+      distance:this.calculateDistance(start.lat, start.lng, end.lat, end.lng),
       hour: currentHour,
+      weatherdat:weatherdata,
       dayofweek: currentDay,
+      
     };
     return this.http.post<any>(this.apiUrl, requestData).pipe(
       map(response => {

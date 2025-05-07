@@ -49,7 +49,7 @@ public class PredictionService {
 
 
   public Map<String, Object> getPredictionVolume(Map<String, Object> data) {
-    System.out.println(data.get("distance"));
+    System.out.println(data);
     Map<String, Object> formattedData = new LinkedHashMap<>();
     formattedData.put("temp", new Object[]{25.32});
     formattedData.put("rain_1h", new Object[]{10.0});
