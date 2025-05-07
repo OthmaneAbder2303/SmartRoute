@@ -56,11 +56,15 @@ public class SecurityConfig {
     http
       .cors(cors -> cors.configurationSource(corsConfigurationSource()))
       .csrf(csrfConfig->csrfConfig.csrfTokenRequestHandler(requestHandler)
-        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse()))
+
+        .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+        .ignoringRequestMatchers("/specific/endpoint", "/**")//here are the routes we won't need csrf for
+  )
+
       .addFilterAfter(new CsrfTokenFilter(), BasicAuthenticationFilter.class)
       .authorizeHttpRequests(auth -> auth
         .requestMatchers("/auth/**", "/oauth2/**").permitAll() // Public access for auth and OAuth2
-        .requestMatchers(HttpMethod.POST,"/events").permitAll()
+        .requestMatchers(HttpMethod.POST,"/**").permitAll()
         .requestMatchers(HttpMethod.GET,"/events").permitAll()
         //.requestMatchers("/admin/**").hasRole("ADMIN") // accessible uniquement aux admins
         //.requestMatchers("/user/**").hasAnyRole("USER", "ADMIN") // accessible aux users ET

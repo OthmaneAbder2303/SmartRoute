@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { MapService } from '../../shared/services/mapService/map.service';
-
+import { TrafficService } from '../../EventService_TEST_ONLY/traffic.service';
 
 @Component({
   selector: 'app-map',
@@ -29,15 +29,20 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   customIcon: any;
 
   L: any;
-
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object,private mapService :MapService) {}
+   
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private mapService: MapService,private trafficS:TrafficService) {}
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }
 
   ngAfterViewInit(): void {
-    // hadi 7It serveur ne peut pas acces window pour Map.
+    if (this.isBrowser) {
+      this.initMap();
+    }
+  }
+
+  private initMap(): void {
     import('leaflet').then((L) => {
       this.L = L;
 
@@ -47,24 +52,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }).addTo(this.map);
 
       this.customIcon = L.icon({
-        iconUrl: '/assets/map-marker-end.png', //kantesty le marker
+        iconUrl: '/assets/map-marker-end.png',
         iconSize: [40, 40],
         iconAnchor: [16, 32],
         popupAnchor: [0, -32],
       });
 
       this.map.on('click', (e: any) => this.handleMapClick(e));
+    }).catch(error => {
+      console.error('Error loading Leaflet:', error);
     });
   }
 
   ngOnDestroy(): void {
-    if (this.map) {
+    if (this.isBrowser && this.map) {
       this.map.remove();
     }
   }
 
   handleMapClick(e: any) {
-    if (!this.map || !this.L) return;
+    if (!this.map || !this.L || !this.isBrowser) return;
 
     if (!this.startMarker) {
       this.startMarker = this.L.marker(e.latlng, { icon: this.customIcon }).addTo(this.map);
@@ -90,7 +97,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
   
   setMapMarkersAndRoute(start: any, end: any) {
-    if (!this.L || !this.map) return;
+    if (!this.L || !this.map || !this.isBrowser) return;
 
     if (this.startMarker) this.map.removeLayer(this.startMarker);
     if (this.endMarker) this.map.removeLayer(this.endMarker);
@@ -102,19 +109,41 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }
   
   requestRoute() {
-    if (!this.startMarker || !this.endMarker || !this.L || !this.map) return;
+    if (!this.startMarker || !this.endMarker || !this.L || !this.map || !this.isBrowser) return;
   
     const start = this.startMarker.getLatLng();
     const end = this.endMarker.getLatLng();
-  console.log("hello je suis en loading");
-    this.mapService.getRoute(start, end).subscribe((response) => {
-      const latlngs = response.route.map((p: any) => [p.lat, p.lng]);
   
-      if (this.routeLine) this.map.removeLayer(this.routeLine);
-      this.routeLine = this.L.polyline(latlngs, { color: 'blue' }).addTo(this.map);
-      this.map.fitBounds(this.routeLine.getBounds());
+    console.log("Requesting route...");
+
+    this.trafficS.getRouteTraffic(start, end).subscribe(prediction => {
+      console.log('Prédiction de trafic :', prediction);
+
+      let trafficColor = 'green';
+      const volume = prediction.prediction;
+      console.log(volume)
+      if (volume > 500) {
+        trafficColor = 'red';
+      } else if (volume > 200) {
+        trafficColor = 'orange'; 
+      }
+
+      this.mapService.getRoute(start, end).subscribe({
+        next: (response) => {
+          const latlngs = response.route.map((p: any) => [p.lat, p.lng]);
+  
+          if (this.routeLine) this.map.removeLayer(this.routeLine);
+          this.routeLine = this.L.polyline(latlngs, { color: trafficColor }).addTo(this.map);
+          this.map.fitBounds(this.routeLine.getBounds());
+        },
+        error: (error) => {
+          console.error('Error fetching route:', error);
+        }
+      });
+  
     });
-    console.log("ennnd calling");
-    }
+  }
+  
+  
   
 }

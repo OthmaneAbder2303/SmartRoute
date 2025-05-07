@@ -6,8 +6,9 @@
   >
     <option [ngValue]="null" disabled selected>Select start</option>
     <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
+    
   </select>
-
+  
   <select
     [(ngModel)]="endPlace"
     (change)="onSelectChange()"
@@ -17,5 +18,7 @@
     <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
   </select>
 
+  
   <div id="map" class="h-[500px] w-[90%] max-w-[800px] mt-4 border-2 border-gray-300 rounded-lg overflow-hidden"></div>
 </div>
+
