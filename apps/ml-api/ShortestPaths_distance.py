@@ -3,7 +3,7 @@ import networkx as nx
 from shapely.geometry import Point, LineString
 
 # Load GPKG roads layer
-gdf = gpd.read_file("C:/Users/el houcine/Desktop/pfs/SmartRoute/apps/ml-api/marrakech_streets.gpkg", layer="roads")
+gdf = gpd.read_file("marrakech_streets.gpkg", layer="roads")
 
 # Build the graph
 G = nx.Graph()
