@@ -1,0 +1,14 @@
+Flask
+flask-cors
+xgboost
+pandas
+numpy
+scikit-learn
+joblib
+requests
+python-dotenv
+osmnx
+networkx
+geopandas
+shapely
+huggingface_hub
