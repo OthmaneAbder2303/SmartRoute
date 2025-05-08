@@ -6,6 +6,8 @@ import { FormsModule } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { MapService } from '../../shared/services/mapService/map.service';
 import { TrafficService } from '../../shared/services/TrafficcService/traffic.service';
+import { WeatherResponse, WeatherService } from '../../shared/services/WeatherService/Weather.service';
+import { catchError, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-map',
@@ -30,19 +32,34 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   L: any;
    
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private mapService: MapService,private trafficS:TrafficService) {}
+  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private mapService: MapService,private trafficS:TrafficService,private Weather:WeatherService) {}
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }
-
+  weatherData:any
+  ngOnInit(): void {
+    if (this.isBrowser) {
+      this.Weather.getWeatherByCity().subscribe(
+        (data) => {
+          console.log("Weather data loaded at initialization:", data);
+          this.weatherData = data;
+        },
+        (error) => {
+          console.error("Error loading weather data:", error);
+        }
+      );
+    }
+  }
   ngAfterViewInit(): void {
     if (this.isBrowser) {
       this.initMap();
     }
+
   }
 
   private initMap(): void {
+
     import('leaflet').then((L) => {
       this.L = L;
 
@@ -62,6 +79,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }).catch(error => {
       console.error('Error loading Leaflet:', error);
     });
+    
   }
 
   ngOnDestroy(): void {
@@ -86,6 +104,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (this.routeLine) this.map.removeLayer(this.routeLine);
       this.startMarker = this.endMarker = this.routeLine = null;
     }
+    
   }
   
   onSelectChange() {
@@ -93,6 +112,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     
     if (this.startPlace && this.endPlace) {
       this.setMapMarkersAndRoute(this.startPlace, this.endPlace);
+      
     }
   }
   
@@ -107,21 +127,22 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.requestRoute();
   }
+ 
   
   requestRoute() {
     if (!this.startMarker || !this.endMarker || !this.L || !this.map || !this.isBrowser) return;
   
     const start = this.startMarker.getLatLng();
     const end = this.endMarker.getLatLng();
-  
-    console.log("Requesting route...");
-
-    this.trafficS.getRouteTraffic(start, end).subscribe(prediction => {
+    
+    console.log("Requesting route...",this.weatherData);
+    
+    
+    this.trafficS.getRouteTraffic(start, end,this.weatherData).subscribe(prediction => {
       console.log('Prédiction de trafic :', prediction);
-
       let trafficColor = 'green';
       const volume = prediction.prediction;
-      console.log(volume)
+      console.log(volume+this.weatherData)
       if (volume > 500) {
         trafficColor = 'red';
       } else if (volume > 200) {

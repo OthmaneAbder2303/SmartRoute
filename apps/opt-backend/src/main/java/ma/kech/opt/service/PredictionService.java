@@ -51,24 +51,24 @@ public class PredictionService {
   public Map<String, Object> getPredictionVolume(Map<String, Object> data) {
     System.out.println(data);
     Map<String, Object> formattedData = new LinkedHashMap<>();
-    formattedData.put("temp", new Object[]{25.32});
-    formattedData.put("rain_1h", new Object[]{10.0});
+    formattedData.put("temp", new Object[]{data.get("temp")});
+    formattedData.put("rain_1h", new Object[]{0.0});
     formattedData.put("snow_1h", new Object[]{0.0});
-    formattedData.put("clouds_all", new Object[]{75});
+    formattedData.put("clouds_all", new Object[]{data.get("clouds_all")});
     formattedData.put("hour", new Object[]{data.get("hour")});
-    formattedData.put("day_of_week", new Object[]{data.get("dayofweek")});
-    formattedData.put("month", new Object[]{8});
-    formattedData.put("is_holiday", new Object[]{0});
-    formattedData.put("weather_main_Clouds", new Object[]{true});//until we get weather data from api's
-    formattedData.put("weather_main_Drizzle", new Object[]{false});
-    formattedData.put("weather_main_Fog", new Object[]{false});
-    formattedData.put("weather_main_Haze", new Object[]{false});
-    formattedData.put("weather_main_Mist", new Object[]{false});
-    formattedData.put("weather_main_Rain", new Object[]{false});
-    formattedData.put("weather_main_Smoke", new Object[]{false});
-    formattedData.put("weather_main_Snow", new Object[]{true});
-    formattedData.put("weather_main_Squall", new Object[]{false});
-    formattedData.put("weather_main_Thunderstorm", new Object[]{false});
+    formattedData.put("day_of_week", new Object[]{data.get("day_of_week")});
+    formattedData.put("month", new Object[]{data.get("month")});
+    formattedData.put("is_holiday", new Object[]{data.get("is_holiday")});
+    formattedData.put("weather_main_Clouds", new Object[]{data.get("weather_main_Clouds")});
+    formattedData.put("weather_main_Drizzle", new Object[]{data.get("weather_main_Drizzle")});
+    formattedData.put("weather_main_Fog", new Object[]{data.get("weather_main_Fog")});
+    formattedData.put("weather_main_Haze", new Object[]{data.get("weather_main_Haze")});
+    formattedData.put("weather_main_Mist", new Object[]{data.get("weather_main_Mist")});
+    formattedData.put("weather_main_Rain", new Object[]{data.get("weather_main_Rain")});
+    formattedData.put("weather_main_Smoke", new Object[]{data.get("weather_main_Smoke")});
+    formattedData.put("weather_main_Snow", new Object[]{data.get("weather_main_Snow")});
+    formattedData.put("weather_main_Squall", new Object[]{data.get("weather_main_Squall")});
+    formattedData.put("weather_main_Thunderstorm", new Object[]{data.get("weather_main_Thunderstorm")});
     String[] descriptions = {
       "Sky is Clear", "broken clouds", "drizzle", "few clouds", "fog",
       "freezing rain", "haze", "heavy intensity drizzle", "heavy intensity rain", "heavy snow",
@@ -82,20 +82,18 @@ public class PredictionService {
     };
     for (String desc : descriptions) {
       String key = "weather_description_" + desc;
-      if (desc.equals("broken clouds")) {
-        formattedData.put(key, new Object[]{true});
-      } else {
-        formattedData.put(key, new Object[]{false});
-      }
+      formattedData.put(key, new Object[]{data.getOrDefault(key, false)});
     }
     formattedData.put("traffic_volume_lag1", new Object[]{1800.0});
     formattedData.put("traffic_volume_lag2", new Object[]{1700.0});
-    formattedData.put("year", new Object[]{2018});
-    formattedData.put("day_of_month", new Object[]{1});
-    formattedData.put("road_km", data.get("distance"));
-    formattedData.put("road_width", 0.0086);//average road width in marrakech
+    formattedData.put("year", new Object[]{data.get("year")});
+    formattedData.put("day_of_month", new Object[]{data.get("day_of_month")});
+    formattedData.put("road_km", new Object[]{data.get("road_km")});
+    formattedData.put("road_width", new Object[]{0.0086});
+    Map<String, Object> response = restTemplate.postForObject(flaskUrl + "Volume", formattedData, Map.class);
+    System.out.println("Response from /predictVolume: " + response);
     //data filled here is from imagination we should make sure that we get some (we cannot get all of that data )data to replace the data here ,i need the road distance and width also
-    return restTemplate.postForObject(flaskUrl+"Volume", formattedData, Map.class);
+    return response;
   }
 
 }

@@ -10,8 +10,14 @@ from huggingface_hub import hf_hub_download
 import geopandas as gpd
 import networkx as nx
 from shapely.geometry import Point, LineString
+import requests
+from flask_cors import CORS
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 app=Flask(__name__)
+CORS(app, supports_credentials=True, allow_headers=['Content-Type', 'Authorization', 'X-XSRF-TOKEN'])
 import joblib
 max_volume=7280
 from pathlib import Path
@@ -91,8 +97,17 @@ def predictVolume():
     drop=['road_km', 'road_width']
     df=df.drop(columns=drop, errors='ignore')
     prediction=adjust_volume_by_distance_and_width(model.predict(df)*max_volume,extra["road_km"],extra["road_width"])
+    print(prediction.tolist())
     return jsonify({'prediction':prediction.tolist()})
 
-
+@app.route('/api/weather')
+def get_weather():
+    city = "Marrakech"
+    country = "ma"
+    api_key = os.getenv('OPENWEATHER_API_KEY')
+    url = f'https://api.openweathermap.org/data/2.5/weather?q={city},{country}&APPID={api_key}'
+    response = requests.get(url)
+    print(response)
+    return jsonify(response.json())
 if __name__=='__main__':
     app.run(port=5000)
