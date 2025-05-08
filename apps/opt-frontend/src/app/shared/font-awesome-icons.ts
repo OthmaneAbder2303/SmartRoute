@@ -3,7 +3,9 @@ import {
   faTruckFast, faUser, faSignInAlt, faSignOutAlt,
   faUserPlus, faCog, faCreditCard, faHome, faInfoCircle,
   faMapMarkerAlt, faRoute, faMap, faEnvelope, faPhoneAlt, faHeadset,
-  faLock, faShieldAlt, faSun, faMoon
+  faLock, faShieldAlt, faSun, faMoon,
+  faPlus,
+  faMinus
 } from '@fortawesome/free-solid-svg-icons';
 
 import {
@@ -28,5 +30,7 @@ export const fontAwesomeIcons: IconDefinition[] = [
 
   // Sun & Moon
   faSun, faMoon,
+  
+  faRoute, faMapMarkerAlt, faMap, faPlus, faMinus
 ];
 
