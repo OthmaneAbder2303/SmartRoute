@@ -1,24 +1,113 @@
-<div class="flex flex-col items-center p-4">
-  <select
-    [(ngModel)]="startPlace"
-    (change)="onSelectChange()"
-    class="m-2 px-4 py-2 text-base rounded-lg border border-gray-300 bg-gray-100 focus:outline-none focus:border-blue-500  text-black"
-  >
-    <option [ngValue]="null" disabled selected>Select start</option>
-    <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
-    
-  </select>
-  
-  <select
-    [(ngModel)]="endPlace"
-    (change)="onSelectChange()"
-    class="m-2 px-4 py-2 text-base rounded-lg border border-gray-300 bg-gray-100 focus:outline-none focus:border-blue-500 text-black"
-  >
-    <option [ngValue]="null" disabled selected>Select destination</option>
-    <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
-  </select>
+<div class="relative w-screen h-screen overflow-hidden bg-gray-50">
 
+  <!-- Bouton pour changer de couche -->
+  <button class="bg-white rounded-full shadow-lg p-3 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all absolute top-4 right-4 z-20" 
+  (click)="isLayerMenuVisible = !isLayerMenuVisible" 
+  aria-label="Change Layer">
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+  </svg>
+  </button>
+
+  <!-- Menu de sélection de la couche -->
+  <div *ngIf="isLayerMenuVisible" class="bg-white shadow-lg rounded-lg p-3 absolute top-16 right-4 w-48 z-30 transition-all ease-in-out duration-300">
+    <button (click)="changeLayer('standard')" class="w-full text-left py-1 px-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">
+      <img src="assets/layers/standard.jpg" alt="Standard Layer" class="inline-block w-5 h-5 mr-2"> Standard
+    </button>
+    <button (click)="changeLayer('satellite')" class="w-full text-left py-1 px-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">
+      <img src="assets/layers/satellite.jpg" alt="Satellite Layer" class="inline-block w-5 h-5 mr-2"> Satellite
+    </button>
+    <button (click)="changeLayer('terrain')" class="w-full text-left py-1 px-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">
+      <img src="assets/layers/terrain.jpg" alt="Terrain Layer" class="inline-block w-5 h-5 mr-2"> Terrain
+    </button>
+    <button (click)="changeLayer('night')" class="w-full text-left py-1 px-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">
+      <img src="assets/layers/night.jpg" alt="Night Layer" class="inline-block w-5 h-5 mr-2"> Night
+    </button>
+  </div>
+
+  <!-- Barre de recherche style Google Maps -->
+  <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 w-11/12 md:w-3/4 lg:w-2/3 max-w-2xl">
+    <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
+      <!-- Barre de recherche départ -->
+      <div class="flex items-center p-3 border-b border-gray-200">
+        <div class="flex-shrink-0 mr-3">
+          <div class="h-2 w-2 rounded-full bg-green-500 ring-4 ring-green-100"></div>
+        </div>
+        <select 
+          [(ngModel)]="startPlace" 
+          (change)="onSelectChange()" 
+          class="w-full bg-transparent text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-green-300 transition-all"
+        >
+          <option [ngValue]="null" disabled selected>Choisir un point de départ</option>
+          <option [ngValue]="'current-location'">Ma position actuelle</option>
+          <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
+        </select>
+      </div>
+      
+      <!-- Barre de recherche destination -->
+      <div class="flex items-center p-3">
+        <div class="flex-shrink-0 mr-3">
+          <div class="h-2 w-2 rounded-full bg-red-500 ring-4 ring-red-100"></div>
+        </div>
+        <select 
+          [(ngModel)]="endPlace" 
+          (change)="onSelectChange()" 
+          class="w-full bg-transparent text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-red-300 transition-all"
+        >
+          <option [ngValue]="null" disabled selected>Choisir une destination</option>
+          <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
   
-  <div id="map" class="h-[500px] w-[90%] max-w-[800px] mt-4 border-2 border-gray-300 rounded-lg overflow-hidden"></div>
+  <!-- Panneau flottant pour les contrôles de carte -->
+  <div class="absolute top-24 right-4 z-10 flex flex-col space-y-3">
+    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+      <!-- Boutons de zoom -->
+      <div class="border-b border-gray-200">
+        <!-- Bouton Zoom In -->
+        <button
+          class="p-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all"
+          aria-label="Zoom in"
+          (click)="zoomIn()"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </button>
+      
+        <!-- Bouton Zoom Out -->
+        <button
+          class="p-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all"
+          aria-label="Zoom out"
+          (click)="zoomOut()"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 12H6" />
+          </svg>
+        </button>
+      </div>
+
+
+      <!-- Bouton de géolocalisation -->
+      <button 
+        (click)="centerToCurrentLocation()" 
+        class="p-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all" 
+        aria-label="Ma position"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="map" class="absolute inset-0 w-full h-full z-0"></div>
+  
+  <!-- Attributions -->
+  <div class="absolute bottom-1 left-1 z-10 text-xs text-gray-600 bg-white bg-opacity-75 px-1 rounded">
+    © OpenStreetMap contributors
+  </div>
 </div>
-
