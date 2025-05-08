@@ -5,7 +5,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { MapService } from '../../shared/services/mapService/map.service';
-import { TrafficService } from '../../EventService_TEST_ONLY/traffic.service';
+import { TrafficService } from '../../shared/services/TrafficcService/traffic.service';
 
 @Component({
   selector: 'app-map',
