@@ -2,36 +2,76 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
+import { WeatherResponse, WeatherService } from '../WeatherService/Weather.service';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class TrafficService {
-
   private apiUrl =  'http://localhost:8080/predict';
 
-  constructor(private http: HttpClient) { }
-  getRouteTraffic(start: any, end: any): Observable<any> {
+  constructor(private http: HttpClient,private Weather:WeatherService) { }
+  getRouteTraffic(start: any, end: any, wea: any): Observable<any> {
+    if (!wea || !wea.weather || !wea.weather[0] || !wea.main || !wea.clouds) {
+      console.error("Invalid weather data passed to getRouteTraffic:", wea);
+      return of({ error: "Invalid weather data" }); 
+    }
     const currentHour = new Date().getHours();
     const currentDay = new Date().getDay();
-    const requestData = {
-        distance:this.calculateDistance(start.lat, start.lng, end.lat, end.lng),
+    const currentMonth = new Date().getMonth() + 1;
+    const dayOfMonth = new Date().getDate();
+    const currentYear = new Date().getFullYear();
+    
+    const weathere = wea.weather[0];
+    const temperatureCelsius = wea.main.temp - 273.15;
+    const distance = this.calculateDistance(start.lat, start.lng, end.lat, end.lng);
+  
+    const weatherMain = weathere.main;
+    const weatherDescription = weathere.description;
+  
+    const requestData: any = {
+      temp: temperatureCelsius,
+      clouds_all: wea.clouds.all,
       hour: currentHour,
-      dayofweek: currentDay,
+      day_of_week: currentDay,
+      month: currentMonth,
+      is_holiday: 0,
+      year: currentYear,
+      day_of_month: dayOfMonth,
+      road_km: distance,
     };
+  
+    const weatherMainOptions = [
+      "Clouds", "Drizzle", "Fog", "Haze", "Mist",
+      "Rain", "Smoke", "Snow", "Squall", "Thunderstorm"
+    ];
+  
+    weatherMainOptions.forEach((main) => {
+      requestData[`weather_main_${main}`] = weatherMain === main;
+    });
+  
+    const descriptions = [
+      "Sky is Clear", "broken clouds", "drizzle", "few clouds", "fog",
+      "freezing rain", "haze", "heavy intensity drizzle", "heavy intensity rain", "heavy snow",
+      "light intensity drizzle", "light intensity shower rain", "light rain", "light rain and snow",
+      "light shower snow", "light snow", "mist", "moderate rain", "overcast clouds",
+      "proximity shower rain", "proximity thunderstorm", "proximity thunderstorm with drizzle",
+      "proximity thunderstorm with rain", "scattered clouds", "shower drizzle", "shower snow",
+      "sky is clear", "sleet", "smoke", "snow", "thunderstorm", "thunderstorm with drizzle",
+      "thunderstorm with heavy rain", "thunderstorm with light drizzle", "thunderstorm with light rain",
+      "thunderstorm with rain", "very heavy rain"
+    ];
+  
+    descriptions.forEach((desc) => {
+      requestData[`weather_description_${desc}`] = weatherDescription === desc;
+    });
+  
     return this.http.post<any>(this.apiUrl, requestData).pipe(
-      map(response => {
-        return response;
-        // return this.formatPredictionResponse(response);
-      }),
-    //   catchError(error => {
-    //     console.error('Error fetching traffic prediction from Flask API:', error);
-        
-    //     // return this.getFallbackTrafficData(start, end);
-    //   })
+      map(response => response)
     );
-}
+  }
+  
 //   private formatPredictionResponse(response: any): any {
     
 //     const volume = response.prediction ?? response.traffic_volume ?? 50;
