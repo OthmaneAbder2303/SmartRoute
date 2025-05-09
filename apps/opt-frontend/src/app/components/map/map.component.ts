@@ -6,14 +6,15 @@ import { FormsModule } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { MapService } from '../../shared/services/mapService/map.service';
 import { TrafficService } from '../../shared/services/TrafficcService/traffic.service';
-import { WeatherResponse, WeatherService } from '../../shared/services/WeatherService/Weather.service';
+import { WeatherService, WeatherResponse } from '../../shared/services/WeatherService/Weather.service';
 import { catchError, map } from 'rxjs/operators';
 
 interface RouteHistory {
   start: { lat: number, lng: number, name?: string };
   end: { lat: number, lng: number, name?: string };
-  timestamp: number;
+  timestamp: string;
 }
+
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -44,17 +45,24 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   currentZoom: number = 13;
 
   L: any;
+  weatherData: WeatherResponse | null = null;
 
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private mapService: MapService,private trafficS:TrafficService,private Weather:WeatherService) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private mapService: MapService,
+    private trafficS: TrafficService,
+    private weatherService: WeatherService
+  ) {}
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }
-  weatherData:any
+
   ngOnInit(): void {
     if (this.isBrowser) {
-      this.Weather.getWeatherByCity().subscribe(
-        (data) => {
+      this.weatherService.getWeatherByCity().subscribe(
+        (data: WeatherResponse) => {
           console.log("Weather data loaded at initialization:", data);
           this.weatherData = data;
         },
@@ -62,10 +70,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           console.error("Error loading weather data:", error);
         }
       );
-
       this.loadRouteHistory();
     }
   }
+
   ngAfterViewInit(): void {
     if (this.isBrowser) {
       setTimeout(() => this.initMap(), 100);
@@ -77,11 +85,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this.map) {
       this.map.invalidateSize();
     }
-
   }
 
   private initMap(): void {
-
     import('leaflet').then((L) => {
       this.L = L;
 
@@ -129,7 +135,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }).catch(error => {
       console.error('Error loading Leaflet:', error);
     });
-
   }
 
   ngOnDestroy(): void {
@@ -152,7 +157,6 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (this.routeLine) this.map.removeLayer(this.routeLine);
       this.startMarker = this.endMarker = this.routeLine = null;
     }
-
   }
 
   onSelectChange() {
@@ -187,6 +191,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   updateMapStart(place: { name: string, lat: number, lng: number }) {
     console.log('Point de départ mis à jour :', place);
+    if (!this.L || !this.map) return;
+
+    const position = this.L.latLng(place.lat, place.lng);
+
+    if (this.startMarker) {
+      this.map.removeLayer(this.startMarker);
+    }
+    this.startMarker = this.L.marker(position, { icon: this.customIcon }).addTo(this.map);
+
+    this.startMarker.bindPopup(`Départ: ${place.name}`).openPopup();
+    this.map.setView(position, 15);
   }
 
   setMapMarkersAndRoute(start: any, end: any) {
@@ -202,59 +217,82 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.requestRoute();
   }
 
-
+  routeInfo: any = null;
+  weatherInfo: any = null;
 
   requestRoute() {
     if (!this.startMarker || !this.endMarker || !this.L || !this.map || !this.isBrowser) return;
-
+  
     const start = this.startMarker.getLatLng();
     const end = this.endMarker.getLatLng();
-
-    console.log("Requesting route...",this.weatherData);
-
-
-    this.trafficS.getRouteTraffic(start, end,this.weatherData).subscribe(prediction => {
+  
+    console.log("Requesting route...", this.weatherData);
+  
+    this.trafficS.getRouteTraffic(start, end, this.weatherData).subscribe(prediction => {
       console.log('Prédiction de trafic :', prediction);
-      let trafficColor = 'orange';
-      const volume = prediction.prediction;
-      console.log(volume+this.weatherData)
-      if (volume > 500) {
-        trafficColor = 'red';
-      } else if (volume > 200) {
-        trafficColor = 'orange';
-      }
+      let trafficColor = 'green';
 
+      const volume = prediction.prediction;
+      console.log(volume + this.weatherData);
+
+      if (volume > 500) trafficColor = 'red'; 
+      else if (volume > 200) trafficColor = 'orange';
+  
       this.isLoading = true;
+  
       this.mapService.getRoute(start, end).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log(response)
-          console.log("Prediction Time:", response[0].predictionTime);
-          console.log("Route Coordinates:", response[1].routeCords);
-          console.log("Traffic Volume:", response[2].Trafficvolume);
-          console.log("Distance:", response[3].distance);
-      
-          // Directly use routeCords as lat/lng pairs
+  
+          const timeMin = response.find((item: any) => item.predictionTime)?.predictionTime;
+          const distanceKm = response.find((item: any) => item.distance)?.distance;
+  
+          this.weatherInfo = {
+            description: this.weatherData?.weather[0].description,
+            temperature: (this.weatherData?.main?.temp! - 273.15).toFixed(1), // Kelvin to °C
+            humidity: this.weatherData?.main.humidity,
+            windSpeed: this.weatherData?.wind.speed,
+            clouds: this.weatherData?.clouds.all
+          };
+  
+          this.routeInfo = {
+            predictionTime: timeMin,
+            distance: distanceKm,
+            durationStr: this.convertMinutesToReadable(timeMin),
+            distanceStr: this.formatDistance(distanceKm),
+            weather: this.weatherData
+          };
+  
           const latlngs = response[1].routeCords.map((p: any) => [p[0], p[1]]);
-      
-          // Remove the previous route if exists
+          let routeCoords = latlngs;
+          if (latlngs.length < 2) {
+            const start = this.startMarker.getLatLng();
+            const end = this.endMarker.getLatLng();
+            console.warn('Fallback route used for short distance');
+
+            routeCoords = [
+              [start.lat, start.lng],
+              [end.lat, end.lng]
+            ];
+          }
+  
           if (this.routeLine) {
             this.map.removeLayer(this.routeLine);
           }
-      
-          // Draw the new route polyline
+  
           this.routeLine = this.L.polyline(latlngs, {
             color: trafficColor,
             weight: 5,
             opacity: 0.8,
             lineJoin: 'round'
           }).addTo(this.map);
-
+  
           this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
         },
         error: (error) => {
-          this. isLoading = false;
+          this.isLoading = false;
           console.error('Error fetching route:', error);
+          alert('Failed to fetch route from the server.');
         }
       });
     });
@@ -363,7 +401,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const entry: RouteHistory = {
       start: { lat: start.lat, lng: start.lng, name: start.name },
       end: { lat: end.lat, lng: end.lng, name: end.name },
-      timestamp: Date.now()
+      timestamp : new Date(Date.now()).toLocaleString()
     };
 
     // Prevent duplicates
@@ -392,6 +430,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   clearHistory() {
     this.routeHistory = [];
     localStorage.removeItem('routeHistory');
+  }
+
+
+  convertMinutesToReadable(minutes: number): string {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours} hr${mins > 0 ? ` ${mins} min` : ''}`;
+  }
+  formatDistance(km: number): string {
+    return km.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' km';
   }
   
   
