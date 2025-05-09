@@ -181,7 +181,6 @@ def predict():
     response = Find_Shortest_Path_Distance(data["StartPoint"],data["EndPoint"])  
     distance = response[1]["distance"]
     print("here is the distance:",distance)
-    #volume hna : hadhi ma3rftch ach kayretourner 3nd zaki
     traffic_response = predictVolumefile(data["Weather"],distance)
     # traffic = traffic_response['prediction'] 
     df["Distance_km"] = [distance]
@@ -197,7 +196,6 @@ def predict():
 
 @app.route('/predictVolume', methods=['POST'])
 def predictVolume():
-    print("je clcule volume wa ......")
     if model==None:
         return jsonify({'prediction':"no model uploaded in the flask app"})
     data=request.json
@@ -208,6 +206,7 @@ def predictVolume():
     prediction=adjust_volume_by_distance_and_width(model.predict(df)*max_volume,extra["road_km"],extra["road_width"])
     print(prediction.tolist())
     return jsonify({'prediction':prediction.tolist()})
+
 def fetchweather():
     city = "Marrakech"
     country = "ma"
@@ -215,11 +214,13 @@ def fetchweather():
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city},{country}&APPID={api_key}'
     response = requests.get(url)
     return response
+
 @app.route('/api/weather')
 def get_weather():
     response = fetchweather()
     print(response)
     return jsonify(response.json())
+
 if __name__=='__main__':
     app.run(port=5000,debug=True)
     # Il tra Un probleme f chi model ola nkhedmo b API mea map :)
