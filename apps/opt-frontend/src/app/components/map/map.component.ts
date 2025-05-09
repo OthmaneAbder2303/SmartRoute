@@ -42,7 +42,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   currentLocationMarker: any = null;
   geolocationCircle: any = null;
   currentZoom: number = 13;
-
+  dis:any
   L: any;
 
   constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private mapService: MapService,private trafficS:TrafficService,private Weather:WeatherService) {}
@@ -223,7 +223,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   console.log("Requesting route...", this.weatherData);
 
-  this.trafficS.getRouteTraffic(start, end, this.weatherData).subscribe({
+  this.trafficS.getRouteTraffic(start, end, this.weatherData,this.dis).subscribe({
     next: (prediction) => {
       console.log('Prédiction de trafic :', prediction);
       let trafficColor = 'green';
@@ -244,7 +244,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           console.log("Route Coordinates:", response[1].routeCords);
           console.log("Traffic Volume:", response[2].Trafficvolume);
           console.log("Distance:", response[3].distance);
-
+          this.dis=response[3].distance
           const latlngs = response[1].routeCords.map((p: any) => [p[0], p[1]]);
           let routeCoords = latlngs;
           if (latlngs.length < 2) {

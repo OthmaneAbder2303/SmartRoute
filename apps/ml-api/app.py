@@ -70,76 +70,100 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
         {"distance":distance/10} #km
     ]
     return response
-def predictVolumefile(dataWeather,distance):
+def predictVolumefile(distance, data):
+    response = fetchweather()
     now = datetime.now()
-
-    hour = now.hour
-    day_of_week = now.weekday()      # Monday = 0, Sunday = 6
-    day_of_month = now.day
-    month = now.month
+    temp = response["main"]["temp"]
+    rain_1h = response.get("rain", {}).get("1h", 0.0)
+    snow_1h = response.get("snow", {}).get("1h", 0.0)
+    clouds_all = response["clouds"]["all"]
+    weather_description = response["weather"][0]["description"].lower()
+    weather_flags = {
+        "Clouds": "clouds" in weather_description,
+        "Drizzle": "drizzle" in weather_description,
+        "Fog": "fog" in weather_description,
+        "Haze": "haze" in weather_description,
+        "Mist": "mist" in weather_description,
+        "Rain": "rain" in weather_description,
+        "Smoke": "smoke" in weather_description,
+        "Snow": "snow" in weather_description,
+        "Squall": "squall" in weather_description,
+        "Thunderstorm": "thunderstorm" in weather_description
+    }
+    all_weather_descriptions = [
+        "Sky is Clear", "broken clouds", "drizzle", "few clouds", "fog",
+        "freezing rain", "haze", "heavy intensity drizzle", "heavy intensity rain", "heavy snow",
+        "light intensity drizzle", "light intensity shower rain", "light rain", "light rain and snow",
+        "light shower snow", "light snow", "mist", "moderate rain", "overcast clouds",
+        "proximity shower rain", "proximity thunderstorm", "proximity thunderstorm with drizzle",
+        "proximity thunderstorm with rain", "scattered clouds", "shower drizzle", "shower snow",
+        "sky is clear", "sleet", "smoke", "snow", "thunderstorm", "thunderstorm with drizzle",
+        "thunderstorm with heavy rain", "thunderstorm with light drizzle", "thunderstorm with light rain",
+        "thunderstorm with rain", "very heavy rain"
+    ]
     sample = pd.DataFrame({
-    'temp': [285.32],
-    'rain_1h': [0.0],
-    'snow_1h': [0.0],
-    'clouds_all': [75],
-    'hour': [hour],
-    'day_of_week': [day_of_week],  # Tuesday
-    'month': [month],
-    'is_holiday': [0],
-    'weather_main_Clouds': [True],
-    'weather_main_Drizzle': [False],
-    'weather_main_Fog': [False],
-    'weather_main_Haze': [False],
-    'weather_main_Mist': [False],
-    'weather_main_Rain': [False],
-    'weather_main_Smoke': [False],
-    'weather_main_Snow': [False],
-    'weather_main_Squall': [False],
-    'weather_main_Thunderstorm': [False],
-    'weather_description_Sky is Clear': [False],
-    'weather_description_broken clouds': [True],  # Assume broken clouds
-    'weather_description_drizzle': [False],
-    'weather_description_few clouds': [False],
-    'weather_description_fog': [False],
-    'weather_description_freezing rain': [False],
-    'weather_description_haze': [False],
-    'weather_description_heavy intensity drizzle': [False],
-    'weather_description_heavy intensity rain': [False],
-    'weather_description_heavy snow': [False],
-    'weather_description_light intensity drizzle': [False],
-    'weather_description_light intensity shower rain': [False],
-    'weather_description_light rain': [False],
-    'weather_description_light rain and snow': [False],
-    'weather_description_light shower snow': [False],
-    'weather_description_light snow': [False],
-    'weather_description_mist': [False],
-    'weather_description_moderate rain': [False],
-    'weather_description_overcast clouds': [False],
-    'weather_description_proximity shower rain': [False],
-    'weather_description_proximity thunderstorm': [False],
-    'weather_description_proximity thunderstorm with drizzle': [False],
-    'weather_description_proximity thunderstorm with rain': [False],
-    'weather_description_scattered clouds': [False],
-    'weather_description_shower drizzle': [False],
-    'weather_description_shower snow': [False],
-    'weather_description_sky is clear': [False],
-    'weather_description_sleet': [False],
-    'weather_description_smoke': [False],
-    'weather_description_snow': [False],
-    'weather_description_thunderstorm': [False],
-    'weather_description_thunderstorm with drizzle': [False],
-    'weather_description_thunderstorm with heavy rain': [False],
-    'weather_description_thunderstorm with light drizzle': [False],
-    'weather_description_thunderstorm with light rain': [False],
-    'weather_description_thunderstorm with rain': [False],
-    'weather_description_very heavy rain': [False],
-    'traffic_volume_lag1': [1800.0],
-    'traffic_volume_lag2': [1700.0],
-    'year': [now.year],
-    'day_of_month': [day_of_month],
+        'temp': [temp],
+        'rain_1h': [rain_1h],
+        'snow_1h': [snow_1h],
+        'clouds_all': [clouds_all],
+        'hour': [now.hour],
+        'day_of_week': [now.weekday()],
+        'month': [now.month],
+        'is_holiday': [0],
+        **{f"weather_main_{k}": [v] for k, v in weather_flags.items()},
+        **{f"weather_description_{desc}": [desc.lower() in weather_description] for desc in all_weather_descriptions},
+        'traffic_volume_lag1': [1800.0],
+        'traffic_volume_lag2': [1700.0],
+        'year': [now.year],
+        'day_of_month': [now.day],
     }, index=[pd.to_datetime('2018-10-02 14:00:00')])
-    prediction=adjust_volume_by_distance_and_width(model.predict(sample)*max_volume,distance,0.0086)
+    for col in [
+        'weather_main_Clouds', 'weather_main_Drizzle', 'weather_main_Fog',
+        'weather_main_Haze', 'weather_main_Mist', 'weather_main_Rain',
+        'weather_main_Smoke', 'weather_main_Snow', 'weather_main_Squall',
+        'weather_main_Thunderstorm'
+    ]:
+        if col not in sample.columns:
+            sample[col] = [False]
+
+    for desc in all_weather_descriptions:
+        col = f'weather_description_{desc}'
+        if col not in sample.columns:
+            sample[col] = [False]
+    sample = sample.reindex(columns=[
+        'temp', 'rain_1h', 'snow_1h', 'clouds_all', 'hour', 'day_of_week', 'month', 'is_holiday',
+        'weather_main_Clouds', 'weather_main_Drizzle', 'weather_main_Fog', 'weather_main_Haze',
+        'weather_main_Mist', 'weather_main_Rain', 'weather_main_Smoke', 'weather_main_Snow',
+        'weather_main_Squall', 'weather_main_Thunderstorm',
+        'weather_description_Sky is Clear', 'weather_description_broken clouds',
+        'weather_description_drizzle', 'weather_description_few clouds', 'weather_description_fog',
+        'weather_description_freezing rain', 'weather_description_haze',
+        'weather_description_heavy intensity drizzle', 'weather_description_heavy intensity rain',
+        'weather_description_heavy snow', 'weather_description_light intensity drizzle',
+        'weather_description_light intensity shower rain', 'weather_description_light rain',
+        'weather_description_light rain and snow', 'weather_description_light shower snow',
+        'weather_description_light snow', 'weather_description_mist',
+        'weather_description_moderate rain', 'weather_description_overcast clouds',
+        'weather_description_proximity shower rain', 'weather_description_proximity thunderstorm',
+        'weather_description_proximity thunderstorm with drizzle',
+        'weather_description_proximity thunderstorm with rain',
+        'weather_description_scattered clouds', 'weather_description_shower drizzle',
+        'weather_description_shower snow', 'weather_description_sky is clear',
+        'weather_description_sleet', 'weather_description_smoke', 'weather_description_snow',
+        'weather_description_thunderstorm', 'weather_description_thunderstorm with drizzle',
+        'weather_description_thunderstorm with heavy rain',
+        'weather_description_thunderstorm with light drizzle',
+        'weather_description_thunderstorm with light rain',
+        'weather_description_thunderstorm with rain', 'weather_description_very heavy rain',
+        'traffic_volume_lag1', 'traffic_volume_lag2', 'year', 'day_of_month'
+    ])
+    print(distance)
+    prediction = adjust_volume_by_distance_and_width(model.predict(sample) * max_volume, distance, 0.0086)
     return prediction
+
+
+
+
 
 
 def adjust_volume_by_distance_and_width(predicted_volume, my_road_km, my_road_width):
@@ -157,7 +181,7 @@ def adjust_volume_by_distance_and_width(predicted_volume, my_road_km, my_road_wi
         float: Adjusted traffic volume.
     """
     distance_ratio = my_road_km / 12.87
-    width_ratio = my_road_width / 0.0355 #data of the road that has been researched aboout
+    width_ratio = my_road_width / 0.0355 
     adjustment_factor = distance_ratio * width_ratio
     adjusted_volume = predicted_volume * adjustment_factor
     return adjusted_volume
@@ -181,7 +205,7 @@ def predict():
     response = Find_Shortest_Path_Distance(data["StartPoint"],data["EndPoint"])  
     distance = response[1]["distance"]
     print("here is the distance:",distance)
-    traffic_response = predictVolumefile(data["Weather"],distance)
+    traffic_response = predictVolumefile(distance,11)
     # traffic = traffic_response['prediction'] 
     df["Distance_km"] = [distance]
     df["Traffic"] = ["low"]
@@ -213,14 +237,50 @@ def fetchweather():
     country = "ma"
     api_key = os.getenv('OPENWEATHER_API_KEY')
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city},{country}&APPID={api_key}'
-    response = requests.get(url)
-    return response
+    
+    try:
+        response = requests.get(url)
+        if response.status_code == 200:
+            return response.json()
+        else:
+            print(f"Error fetching weather data: {response.status_code}")
+            return get_default_weather_data()
+    except requests.exceptions.RequestException as e:
+        print(f"Error: {str(e)}")
+        return get_default_weather_data()
+
+def get_default_weather_data():
+    """
+    Returns default weather data in case the API fails.
+    """
+    return {
+        "main": {
+            "temp": 300.0,  
+            "humidity": 50,  
+            "pressure": 1015 
+        },
+        "clouds": {
+            "all": 50 
+        },
+        "weather": [
+            {
+                "description": "few clouds",
+                "icon": "01d",
+                "main": "Clear"
+            }
+        ],
+        "wind": {
+            "speed": 5.0,  
+            "deg": 270  
+        }
+    }
+
 
 @app.route('/api/weather')
 def get_weather():
     response = fetchweather()
-    print(response)
-    return jsonify(response.json())
+    # print(jsonify(response.json()))
+    return jsonify(response)
 
 if __name__=='__main__':
     app.run(port=5000,debug=True)
