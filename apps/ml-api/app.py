@@ -102,7 +102,7 @@ def predictVolumefile(distance, data):
         "thunderstorm with rain", "very heavy rain"
     ]
     sample = pd.DataFrame({
-        'temp': [temp],
+        'temp': [temp-273.15],
         'rain_1h': [rain_1h],
         'snow_1h': [snow_1h],
         'clouds_all': [clouds_all],
