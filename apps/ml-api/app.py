@@ -208,6 +208,9 @@ def predictVolume():
     prediction=adjust_volume_by_distance_and_width(model.predict(df)*max_volume,extra["road_km"],extra["road_width"])
     print(prediction.tolist())
     return jsonify({'prediction':prediction.tolist()})
+
+
+    
 def fetchweather():
     city = "Marrakech"
     country = "ma"
