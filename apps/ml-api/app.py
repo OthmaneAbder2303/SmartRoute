@@ -193,10 +193,12 @@ with open("xgboost_model.pkl","rb") as f:
 @app.route('/predict', methods=['POST'])
 def predict():
     response = fetchweather()
-    print(response)
+    
     data=request.json 
+    print("hnaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print(data["Weather"][0].lower())
     weather_speed_data = {
-        "Weather": data["Weather"],
+        "Weather": data["Weather"][0].lower(),
         "Speed_kmh": data["Speed_kmh"]
     }
     df=pd.DataFrame(weather_speed_data)

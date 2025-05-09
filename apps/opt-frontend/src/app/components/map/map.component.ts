@@ -234,7 +234,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   console.log("Requesting route...", this.weatherData);
 
   this.isLoading = true;
-  this.mapService.getRoute(start, end).subscribe({
+  this.mapService.getRoute(start, end,this.weatherData?.weather[0].main).subscribe({
     next: (response) => {
       this.isLoading = false;
       console.log(response);
