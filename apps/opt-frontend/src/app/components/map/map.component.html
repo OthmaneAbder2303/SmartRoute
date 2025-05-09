@@ -12,6 +12,7 @@
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
     </svg>
   </button>
+  
 
   <!-- Menu de sélection de la couche -->
   <div *ngIf="isLayerMenuVisible" class="bg-white shadow-lg rounded-lg p-3 absolute top-16 right-4 w-48 z-30 transition-all ease-in-out duration-300">
@@ -106,6 +107,33 @@
       </button>
     </div>
   </div>
+
+  <!-- Bouton pour voir l'historique -->
+  <button
+  class="bg-white rounded-full shadow-lg p-3 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all absolute top-4 right-20 z-20"
+  (click)="isHistoryVisible = !isHistoryVisible"
+  aria-label="Voir l'historique"
+  >
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+  </svg>
+  </button>
+
+  <!-- Panneau d'historique -->
+  <div
+  *ngIf="isHistoryVisible"
+  class="absolute bottom-24 right-4 bg-white shadow-lg rounded-lg p-4 w-72 max-h-64 overflow-y-auto z-30"
+  >
+  <h3 class="text-gray-800 font-semibold mb-2">Historique des trajets</h3>
+  <ul class="space-y-2">
+    <li *ngFor="let item of routeHistory" class="text-sm text-gray-700 border-b pb-1">
+      {{ item.start.name }} → {{ item.end.name }}
+    </li>
+  </ul>
+  <button class="mt-2 text-sm text-red-500 hover:underline" (click)="clearHistory()">Effacer l'historique</button>
+  </div>
+
 
   <!-- Map container -->
   <div id="map" class="absolute inset-0 w-full h-full z-0"></div>

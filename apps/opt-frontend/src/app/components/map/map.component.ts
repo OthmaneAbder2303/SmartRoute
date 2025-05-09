@@ -9,6 +9,11 @@ import { TrafficService } from '../../shared/services/TrafficcService/traffic.se
 import { WeatherResponse, WeatherService } from '../../shared/services/WeatherService/Weather.service';
 import { catchError, map } from 'rxjs/operators';
 
+interface RouteHistory {
+  start: { lat: number, lng: number, name?: string };
+  end: { lat: number, lng: number, name?: string };
+  timestamp: number;
+}
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -57,6 +62,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           console.error("Error loading weather data:", error);
         }
       );
+
+      this.loadRouteHistory();
     }
   }
   ngAfterViewInit(): void {
@@ -191,6 +198,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.startMarker = this.L.marker([start.lat, start.lng], { icon: this.customIcon }).addTo(this.map);
     this.endMarker = this.L.marker([end.lat, end.lng], { icon: this.customIcon }).addTo(this.map);
 
+    this.saveRouteToHistory(start, end); // 3la 9ibal historique
     this.requestRoute();
   }
 
@@ -337,4 +345,54 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.mapLayers[layer].addTo(this.map);
   }
+
+
+  // gerer l'historique de recherche
+  routeHistory: RouteHistory[] = [];
+  isHistoryVisible = false;
+
+  loadRouteHistory() {
+    const saved = localStorage.getItem('routeHistory');
+    if (saved) {
+      this.routeHistory = JSON.parse(saved);
+    }
+  }
+
+  saveRouteToHistory(start: any, end: any) {
+    const entry: RouteHistory = {
+      start: { lat: start.lat, lng: start.lng, name: start.name },
+      end: { lat: end.lat, lng: end.lng, name: end.name },
+      timestamp: Date.now()
+    };
+
+    // Prevent duplicates
+    this.routeHistory = this.routeHistory.filter(
+      e =>
+        e.start.lat !== entry.start.lat ||
+        e.start.lng !== entry.start.lng ||
+        e.end.lat !== entry.end.lat ||
+        e.end.lng !== entry.end.lng
+    );
+
+    // Add to top
+    this.routeHistory.unshift(entry);
+    // Limit size
+    this.routeHistory = this.routeHistory.slice(0, 10);
+
+    localStorage.setItem('routeHistory', JSON.stringify(this.routeHistory));
+  }
+
+  selectHistory(entry: RouteHistory) {
+    this.startPlace = entry.start;
+    this.endPlace = entry.end;
+    this.setMapMarkersAndRoute(entry.start, entry.end);
+  }
+
+  clearHistory() {
+    this.routeHistory = [];
+    localStorage.removeItem('routeHistory');
+  }
+  
+  
+
 }
