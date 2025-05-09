@@ -5,7 +5,6 @@ import pickle
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
 from sklearn.compose import ColumnTransformer
 import pandas as pd
-import os
 from huggingface_hub import hf_hub_download
 import geopandas as gpd
 import networkx as nx
@@ -15,7 +14,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 import os
 import osmnx as ox
-
+from datetime import datetime
 load_dotenv()
 app=Flask(__name__)
 CORS(app, supports_credentials=True, allow_headers=['Content-Type', 'Authorization', 'X-XSRF-TOKEN'])
@@ -71,6 +70,76 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
         {"distance":distance/10} #km
     ]
     return response
+def predictVolumefile(dataWeather,distance):
+    now = datetime.now()
+
+    hour = now.hour
+    day_of_week = now.weekday()      # Monday = 0, Sunday = 6
+    day_of_month = now.day
+    month = now.month
+    sample = pd.DataFrame({
+    'temp': [285.32],
+    'rain_1h': [0.0],
+    'snow_1h': [0.0],
+    'clouds_all': [75],
+    'hour': [hour],
+    'day_of_week': [day_of_week],  # Tuesday
+    'month': [month],
+    'is_holiday': [0],
+    'weather_main_Clouds': [True],
+    'weather_main_Drizzle': [False],
+    'weather_main_Fog': [False],
+    'weather_main_Haze': [False],
+    'weather_main_Mist': [False],
+    'weather_main_Rain': [False],
+    'weather_main_Smoke': [False],
+    'weather_main_Snow': [False],
+    'weather_main_Squall': [False],
+    'weather_main_Thunderstorm': [False],
+    'weather_description_Sky is Clear': [False],
+    'weather_description_broken clouds': [True],  # Assume broken clouds
+    'weather_description_drizzle': [False],
+    'weather_description_few clouds': [False],
+    'weather_description_fog': [False],
+    'weather_description_freezing rain': [False],
+    'weather_description_haze': [False],
+    'weather_description_heavy intensity drizzle': [False],
+    'weather_description_heavy intensity rain': [False],
+    'weather_description_heavy snow': [False],
+    'weather_description_light intensity drizzle': [False],
+    'weather_description_light intensity shower rain': [False],
+    'weather_description_light rain': [False],
+    'weather_description_light rain and snow': [False],
+    'weather_description_light shower snow': [False],
+    'weather_description_light snow': [False],
+    'weather_description_mist': [False],
+    'weather_description_moderate rain': [False],
+    'weather_description_overcast clouds': [False],
+    'weather_description_proximity shower rain': [False],
+    'weather_description_proximity thunderstorm': [False],
+    'weather_description_proximity thunderstorm with drizzle': [False],
+    'weather_description_proximity thunderstorm with rain': [False],
+    'weather_description_scattered clouds': [False],
+    'weather_description_shower drizzle': [False],
+    'weather_description_shower snow': [False],
+    'weather_description_sky is clear': [False],
+    'weather_description_sleet': [False],
+    'weather_description_smoke': [False],
+    'weather_description_snow': [False],
+    'weather_description_thunderstorm': [False],
+    'weather_description_thunderstorm with drizzle': [False],
+    'weather_description_thunderstorm with heavy rain': [False],
+    'weather_description_thunderstorm with light drizzle': [False],
+    'weather_description_thunderstorm with light rain': [False],
+    'weather_description_thunderstorm with rain': [False],
+    'weather_description_very heavy rain': [False],
+    'traffic_volume_lag1': [1800.0],
+    'traffic_volume_lag2': [1700.0],
+    'year': [now.year],
+    'day_of_month': [day_of_month],
+    }, index=[pd.to_datetime('2018-10-02 14:00:00')])
+    prediction=adjust_volume_by_distance_and_width(model.predict(sample)*max_volume,distance,0.0086)
+    return prediction
 
 
 def adjust_volume_by_distance_and_width(predicted_volume, my_road_km, my_road_width):
@@ -99,6 +168,8 @@ with open("xgboost_model.pkl","rb") as f:
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    response = fetchweather()
+    print(response)
     data=request.json 
     weather_speed_data = {
         "Weather": data["Weather"],
@@ -111,19 +182,18 @@ def predict():
     distance = response[1]["distance"]
     print("here is the distance:",distance)
     #volume hna : hadhi ma3rftch ach kayretourner 3nd zaki
-    # traffic_response = predictVolume(data["Weather"],data["Speed_kmh"],distance)
+    traffic_response = predictVolumefile(data["Weather"],distance)
     # traffic = traffic_response['prediction'] 
     df["Distance_km"] = [distance]
     df["Traffic"] = ["low"]
     # {"Weather": ["clear"], "Speed_kmh": [60], "Distance_km": [10.0], "Traffic": ["low"]}
     prediction=int(pipeline.predict(df)*1.2)
-    return jsonify({
-            'predictionTime': prediction,
-            'routeCords': response[0]["route"],
-            'Trafficvolume': 2000,
-            'distance': distance
-        })
-
+    return jsonify([
+        {'predictionTime':prediction},
+        {'routeCords':response[0]["route"]},
+        {'Trafficvolume': int(traffic_response[0])},
+        {"distance":distance}
+        ])
 
 @app.route('/predictVolume', methods=['POST'])
 def predictVolume():
@@ -137,17 +207,17 @@ def predictVolume():
     df=df.drop(columns=drop, errors='ignore')
     prediction=adjust_volume_by_distance_and_width(model.predict(df)*max_volume,extra["road_km"],extra["road_width"])
     print(prediction.tolist())
-    prediction=adjust_volume_by_distance_and_width(model.predict(df)*max_volume,extra["road_km"],extra["road_width"])
-    print(prediction.tolist())
     return jsonify({'prediction':prediction.tolist()})
-
-@app.route('/api/weather')
-def get_weather():
+def fetchweather():
     city = "Marrakech"
     country = "ma"
     api_key = os.getenv('OPENWEATHER_API_KEY')
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city},{country}&APPID={api_key}'
     response = requests.get(url)
+    return response
+@app.route('/api/weather')
+def get_weather():
+    response = fetchweather()
     print(response)
     return jsonify(response.json())
 if __name__=='__main__':
