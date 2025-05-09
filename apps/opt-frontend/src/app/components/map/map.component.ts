@@ -291,20 +291,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         },
         error: (error) => {
           this.isLoading = false;
-          this.isLoading = false;
           console.error('Error fetching route:', error);
-          alert('Failed to fetch route from the server.');
           alert('Failed to fetch route from the server.');
         }
       });
-    },
-    error: (error) => {
-      console.error('Error fetching traffic prediction:', error);
-      alert('Could not retrieve traffic prediction. Please try again.');
-    }
-  });
-}
-
+    });
+  }
 
   changeMapStyle() {
     if (!this.L || !this.map || !this.isBrowser || !this.mapLayers) return;
@@ -338,8 +330,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               iconSize: [20, 20],
               iconAnchor: [10, 10]
             });
-  // this.L.marker([start.lat, start.lng], { icon: this.customIcon }).addTo(this.map)
-            this.currentLocationMarker = this.L.marker([lat, lng], { icon: this.customIcon })
+
+            this.currentLocationMarker = this.L.marker([lat, lng], { icon: currentPosIcon })
               .addTo(this.map)
               .bindPopup('Votre position actuelle');
           }
