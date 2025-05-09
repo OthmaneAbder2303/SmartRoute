@@ -253,7 +253,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
           const timeMin = response.find((item: any) => item.predictionTime)?.predictionTime;
           const distanceKm = response.find((item: any) => item.distance)?.distance;
-
+          console.log(this.weatherData?.main.humidity)
           this.weatherInfo = {
             description: this.weatherData?.weather[0].description,
             temperature: (this.weatherData?.main?.temp! - 273.15).toFixed(1), // Kelvin to °C
