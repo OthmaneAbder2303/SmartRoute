@@ -14,6 +14,7 @@ import requests
 from flask_cors import CORS
 from dotenv import load_dotenv
 import os
+import osmnx as ox
 
 load_dotenv()
 app=Flask(__name__)
@@ -116,12 +117,13 @@ def predict():
     df["Traffic"] = ["low"]
     # {"Weather": ["clear"], "Speed_kmh": [60], "Distance_km": [10.0], "Traffic": ["low"]}
     prediction=int(pipeline.predict(df)*1.2)
-    return jsonify([
-        {'predictionTime':prediction},
-        {'routeCords':response[0]["route"]},
-        {'Trafficvolume':2000},
-        {"distance":distance}
-        ])
+    return jsonify({
+            'predictionTime': prediction,
+            'routeCords': response[0]["route"],
+            'Trafficvolume': 2000,
+            'distance': distance
+        })
+
 
 @app.route('/predictVolume', methods=['POST'])
 def predictVolume():

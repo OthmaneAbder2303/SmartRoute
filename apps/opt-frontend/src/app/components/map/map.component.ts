@@ -23,6 +23,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     { name: 'Majorelle Garden', lat: 31.637, lng: -8.002 },
   ];
 
+  isLoading = false;
   startPlace: any = null;
   endPlace: any = null;
   map: any;
@@ -206,7 +207,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.trafficS.getRouteTraffic(start, end,this.weatherData).subscribe(prediction => {
       console.log('Prédiction de trafic :', prediction);
-      let trafficColor = 'green';
+      let trafficColor = 'orange';
       const volume = prediction.prediction;
       console.log(volume+this.weatherData)
       if (volume > 500) {
@@ -215,11 +216,24 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         trafficColor = 'orange';
       }
 
+      this.isLoading = true;
       this.mapService.getRoute(start, end).subscribe({
         next: (response) => {
-          const latlngs = response.route.map((p: any) => [p.lat, p.lng]);
-
-          if (this.routeLine) this.map.removeLayer(this.routeLine);
+          this.isLoading = false;
+          console.log("Prediction Time:", response.predictionTime);
+          console.log("Route Coordinates:", response.routeCords);
+          console.log("Traffic Volume:", response.Trafficvolume);
+          console.log("Distance:", response.distance);
+      
+          // Directly use routeCords as lat/lng pairs
+          const latlngs = response.routeCords.map((p: any) => [p[0], p[1]]);
+      
+          // Remove the previous route if exists
+          if (this.routeLine) {
+            this.map.removeLayer(this.routeLine);
+          }
+      
+          // Draw the new route polyline
           this.routeLine = this.L.polyline(latlngs, {
             color: trafficColor,
             weight: 5,
@@ -230,6 +244,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
         },
         error: (error) => {
+          this. isLoading = false;
           console.error('Error fetching route:', error);
         }
       });
