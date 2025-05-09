@@ -187,6 +187,7 @@ def predict():
     df["Traffic"] = ["low"]
     # {"Weather": ["clear"], "Speed_kmh": [60], "Distance_km": [10.0], "Traffic": ["low"]}
     prediction=int(pipeline.predict(df)*1.2)
+    print(prediction)
     return jsonify([
         {'predictionTime':prediction},
         {'routeCords':response[0]["route"]},

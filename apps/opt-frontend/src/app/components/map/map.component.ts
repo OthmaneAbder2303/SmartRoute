@@ -228,13 +228,14 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.mapService.getRoute(start, end).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log("Prediction Time:", response.predictionTime);
-          console.log("Route Coordinates:", response.routeCords);
-          console.log("Traffic Volume:", response.Trafficvolume);
-          console.log("Distance:", response.distance);
+          console.log(response)
+          console.log("Prediction Time:", response[0].predictionTime);
+          console.log("Route Coordinates:", response[1].routeCords);
+          console.log("Traffic Volume:", response[2].Trafficvolume);
+          console.log("Distance:", response[3].distance);
       
           // Directly use routeCords as lat/lng pairs
-          const latlngs = response.routeCords.map((p: any) => [p[0], p[1]]);
+          const latlngs = response[1].routeCords.map((p: any) => [p[0], p[1]]);
       
           // Remove the previous route if exists
           if (this.routeLine) {
