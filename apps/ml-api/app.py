@@ -102,7 +102,7 @@ def predictVolumefile(distance, data):
         "thunderstorm with rain", "very heavy rain"
     ]
     sample = pd.DataFrame({
-        'temp': [temp],
+        'temp': [temp-273.15],
         'rain_1h': [rain_1h],
         'snow_1h': [snow_1h],
         'clouds_all': [clouds_all],
@@ -193,10 +193,12 @@ with open("xgboost_model.pkl","rb") as f:
 @app.route('/predict', methods=['POST'])
 def predict():
     response = fetchweather()
-    print(response)
+    
     data=request.json 
+    print("hnaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
+    print(data["Weather"][0].lower())
     weather_speed_data = {
-        "Weather": data["Weather"],
+        "Weather": data["Weather"][0].lower(),
         "Speed_kmh": data["Speed_kmh"]
     }
     df=pd.DataFrame(weather_speed_data)

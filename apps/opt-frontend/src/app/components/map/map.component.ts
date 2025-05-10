@@ -223,7 +223,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   routeInfo: any = null;
   weatherInfo: any = null;
-
+  routes:any
+  routeCoords :any
   requestRoute() {
   if (!this.startMarker || !this.endMarker || !this.L || !this.map || !this.isBrowser) return;
 
@@ -232,83 +233,72 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   console.log("Requesting route...", this.weatherData);
 
-  this.trafficS.getRouteTraffic(start, end, this.weatherData,this.dis).subscribe({
-    next: (prediction) => {
-      console.log('Prédiction de trafic :', prediction);
-      let trafficColor = 'green';
+  this.isLoading = true;
+  this.mapService.getRoute(start, end,this.weatherData?.weather[0].main).subscribe({
+    next: (response) => {
+      this.isLoading = false;
+      console.log(response);
 
-      const volume = prediction.prediction;
-      console.log(volume + this.weatherData);
+      this.dis = response[3]?.distance;
+      const timeMin = response[0]?.predictionTime;
+      const distanceKm = response[3]?.distance;
+      const volume = response[2]?.Trafficvolume;
+      console.log("Prédiction de trafic :", volume, this.weatherData);
+
+      let trafficColor = 'green';
       if (volume > 500) {
         trafficColor = 'red';
       } else if (volume > 200) {
         trafficColor = 'orange';
       }
 
-      this.isLoading = true;
-      this.mapService.getRoute(start, end).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          this.dis=response[3].distance
+      this.weatherInfo = {
+        description: this.weatherData?.weather[0].description,
+        temperature: (this.weatherData?.main?.temp! - 273.15).toFixed(1), // Kelvin to °C
+        humidity: this.weatherData?.main.humidity,
+        windSpeed: this.weatherData?.wind.speed,
+        clouds: this.weatherData?.clouds.all
+      };
 
-          const timeMin = response.find((item: any) => item.predictionTime)?.predictionTime;
-          const distanceKm = response.find((item: any) => item.distance)?.distance;
+      this.routeInfo = {
+        predictionTime: timeMin,
+        distance: distanceKm,
+        durationStr: this.convertMinutesToReadable(timeMin),
+        distanceStr: this.formatDistance(distanceKm),
+        weather: this.weatherData
+      };
+      const routeData = response[1]?.routeCords;
+      let routeCoords: [number, number][];
+      if (Array.isArray(routeData) && routeData.length >= 2) {
+        routeCoords = routeData.map((p: any) => [p[0], p[1]]);
+      } else {
+        console.warn('Fallback route used for short distance');
+        routeCoords = [
+          [start.lat, start.lng],
+          [end.lat, end.lng]
+        ];
+      }
+      this.routeCoords = routeCoords;
+      if (this.routeLine) {
+        this.map.removeLayer(this.routeLine);
+      }
+      this.routeLine = this.L.polyline(this.routeCoords, {
+        color: trafficColor,
+        weight: 5,
+        opacity: 0.8,
+        lineJoin: 'round'
+      }).addTo(this.map);
 
-          this.weatherInfo = {
-            description: this.weatherData?.weather[0].description,
-            temperature: (this.weatherData?.main?.temp! - 273.15).toFixed(1), // Kelvin to °C
-            humidity: this.weatherData?.main.humidity,
-            windSpeed: this.weatherData?.wind.speed,
-            clouds: this.weatherData?.clouds.all
-          };
-
-          this.routeInfo = {
-            predictionTime: timeMin,
-            distance: distanceKm,
-            durationStr: this.convertMinutesToReadable(timeMin),
-            distanceStr: this.formatDistance(distanceKm),
-            weather: this.weatherData
-          };
-
-          const latlngs = response[1].routeCords.map((p: any) => [p[0], p[1]]);
-          let routeCoords = latlngs;
-          if (latlngs.length < 2) {
-            const start = this.startMarker.getLatLng();
-            const end = this.endMarker.getLatLng();
-            console.warn('Fallback route used for short distance');
-
-            routeCoords = [
-              [start.lat, start.lng],
-              [end.lat, end.lng]
-            ];
-          }
-
-          if (this.routeLine) {
-            this.map.removeLayer(this.routeLine);
-          }
-
-          this.routeLine = this.L.polyline(routeCoords, {
-            color: trafficColor,
-            weight: 5,
-            opacity: 0.8,
-            lineJoin: 'round'
-          }).addTo(this.map);
-
-          this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Error fetching route:', error);
-          alert('Failed to fetch route from the server.');
-        }
-      });
+      this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
     },
     error: (error) => {
-      console.error('Error fetching traffic prediction:', error);
-      alert('Could not retrieve traffic prediction. Please try again.');
+      this.isLoading = false;
+      console.error('Error fetching route:', error);
+      alert('Failed to fetch route from the server.');
     }
   });
 }
+
 
 
   changeMapStyle() {
