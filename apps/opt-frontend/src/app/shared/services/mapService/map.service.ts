@@ -13,7 +13,7 @@ export class MapService {
     const requestData = {
       StartPoint: [start.lat, start.lng],
       EndPoint: [end.lat, end.lng],
-      Weather: [weatherdata],         
+      Weather: ["Rain".toLowerCase()],//hna khass tkon weatherData ms model d prediction du temps maghaysupportich ga3 les etat d weather         
       Speed_kmh: [40] 
     };
   

@@ -196,9 +196,9 @@ def predict():
     
     data=request.json 
     print("hnaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    print(data["Weather"][0].lower())
+    print()
     weather_speed_data = {
-        "Weather": data["Weather"][0].lower(),
+        "Weather": data["Weather"],
         "Speed_kmh": data["Speed_kmh"]
     }
     df=pd.DataFrame(weather_speed_data)
