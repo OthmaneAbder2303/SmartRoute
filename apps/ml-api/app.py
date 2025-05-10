@@ -24,6 +24,11 @@ from pathlib import Path
 model_path = hf_hub_download(repo_id="zzzzakaria/traffic-volume-predictor", filename="traffic_volume_model.joblib")
 model = joblib.load(model_path)
 G = ox.graph_from_place("Marrakech, Morocco", network_type="all")
+print("loading graph edges and nodes ......")
+    # Load   (streets)
+edges = gpd.read_file("marrakech_streets.gpkg", layer="edges")
+    # Load   (intersections)
+nodes = gpd.read_file("marrakech_streets.gpkg", layer="nodes")
 
 
 
@@ -35,12 +40,6 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
 
     print(os.path.exists('marrakech_streets.gpkg'))
     # graph
-    print("loading graph......")
-    # Load   (streets)
-    edges = gpd.read_file("marrakech_streets.gpkg", layer="edges")
-
-    # Load   (intersections)
-    nodes = gpd.read_file("marrakech_streets.gpkg", layer="nodes")
     print("here we go")
     #  first rows
     # print(edges.head())
@@ -52,17 +51,18 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
     print(f'start: {origin_node} /n the destination: {destination_node}')
     if not nx.has_path(G, origin_node, destination_node):
         print("Les deux nœuds ne sont pas connectés !")
+        #here we gonna use Map API
 
     else:
         print(f'les deux points sont accessible')
         #  plus court chemin  de la distance
-        shortest_path = nx.shortest_path(G, source=origin_node, target=destination_node, weight='length')
+        shortest_path = nx.astar_path(G, source=origin_node, target=destination_node, weight='length')
         #print("shortest_path is :",shortest_path)
         # Tracer le graphe 
-        # fig, ax = ox.plot_graph_route(G, shortest_path, route_linewidth=3, node_size=10, edge_linewidth=0.5)
+        git fig, ax = ox.plot_graph_route(G, shortest_path, route_linewidth=3, node_size=10, edge_linewidth=0.5)
 
     route_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
-    distance = nx.dijkstra_path_length(G, origin_node, destination_node)
+    distance = nx.astar_path_length(G, origin_node, destination_node)
     # print("distance tfooo:",distance/10)
 
     response=[
@@ -168,6 +168,7 @@ with open("xgboost_model.pkl","rb") as f:
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    print("hello I am calling the weather ..... I will wait for :")
     response = fetchweather()
     print(response)
     data=request.json 
@@ -181,13 +182,13 @@ def predict():
     response = Find_Shortest_Path_Distance(data["StartPoint"],data["EndPoint"])  
     distance = response[1]["distance"]
     print("here is the distance:",distance)
-    #volume hna : hadhi ma3rftch ach kayretourner 3nd zaki
     traffic_response = predictVolumefile(data["Weather"],distance)
     # traffic = traffic_response['prediction'] 
     df["Distance_km"] = [distance]
     df["Traffic"] = ["low"]
     # {"Weather": ["clear"], "Speed_kmh": [60], "Distance_km": [10.0], "Traffic": ["low"]}
     prediction=int(pipeline.predict(df)*1.2)
+    print(prediction)
     return jsonify([
         {'predictionTime':prediction},
         {'routeCords':response[0]["route"]},
@@ -197,7 +198,6 @@ def predict():
 
 @app.route('/predictVolume', methods=['POST'])
 def predictVolume():
-    print("je clcule volume wa ......")
     if model==None:
         return jsonify({'prediction':"no model uploaded in the flask app"})
     data=request.json
@@ -218,11 +218,13 @@ def fetchweather():
     url = f'https://api.openweathermap.org/data/2.5/weather?q={city},{country}&APPID={api_key}'
     response = requests.get(url)
     return response
+
 @app.route('/api/weather')
 def get_weather():
     response = fetchweather()
     print(response)
     return jsonify(response.json())
+
 if __name__=='__main__':
-    app.run(port=5000,debug=True)
+    app.run(host='0.0.0.0',port=5000,debug=True)
     # Il tra Un probleme f chi model ola nkhedmo b API mea map :)

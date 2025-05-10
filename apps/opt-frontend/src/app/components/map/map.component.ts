@@ -9,6 +9,11 @@ import { TrafficService } from '../../shared/services/TrafficcService/traffic.se
 import { WeatherResponse, WeatherService } from '../../shared/services/WeatherService/Weather.service';
 import { catchError, map } from 'rxjs/operators';
 
+interface RouteHistory {
+  start: { lat: number, lng: number, name?: string };
+  end: { lat: number, lng: number, name?: string };
+  timestamp: number;
+}
 @Component({
   selector: 'app-map',
   standalone: true,
@@ -57,6 +62,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           console.error("Error loading weather data:", error);
         }
       );
+
+      this.loadRouteHistory();
     }
   }
   ngAfterViewInit(): void {
@@ -180,6 +187,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   updateMapStart(place: { name: string, lat: number, lng: number }) {
     console.log('Point de départ mis à jour :', place);
+    if (!this.L || !this.map) return;
+
+  const position = this.L.latLng(place.lat, place.lng);
+
+  if (this.startMarker) {
+    this.map.removeLayer(this.startMarker);
+  }
+  this.startMarker = this.L.marker(position, { icon: this.customIcon }).addTo(this.map);
+
+  this.startMarker.bindPopup(`Départ: ${place.name}`).openPopup();
+  this.map.setView(position, 15);
   }
 
   setMapMarkersAndRoute(start: any, end: any) {
@@ -191,25 +209,26 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.startMarker = this.L.marker([start.lat, start.lng], { icon: this.customIcon }).addTo(this.map);
     this.endMarker = this.L.marker([end.lat, end.lng], { icon: this.customIcon }).addTo(this.map);
 
+    this.saveRouteToHistory(start, end); // 3la 9ibal historique
     this.requestRoute();
   }
 
 
 
   requestRoute() {
-    if (!this.startMarker || !this.endMarker || !this.L || !this.map || !this.isBrowser) return;
+  if (!this.startMarker || !this.endMarker || !this.L || !this.map || !this.isBrowser) return;
 
-    const start = this.startMarker.getLatLng();
-    const end = this.endMarker.getLatLng();
+  const start = this.startMarker.getLatLng();
+  const end = this.endMarker.getLatLng();
 
-    console.log("Requesting route...",this.weatherData);
+  console.log("Requesting route...", this.weatherData);
 
-
-    this.trafficS.getRouteTraffic(start, end,this.weatherData).subscribe(prediction => {
+  this.trafficS.getRouteTraffic(start, end, this.weatherData).subscribe({
+    next: (prediction) => {
       console.log('Prédiction de trafic :', prediction);
-      let trafficColor = 'orange';
+      let trafficColor = 'green';
       const volume = prediction.prediction;
-      console.log(volume+this.weatherData)
+      console.log(volume + this.weatherData);
       if (volume > 500) {
         trafficColor = 'red';
       } else if (volume > 200) {
@@ -220,21 +239,30 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       this.mapService.getRoute(start, end).subscribe({
         next: (response) => {
           this.isLoading = false;
-          console.log("Prediction Time:", response.predictionTime);
-          console.log("Route Coordinates:", response.routeCords);
-          console.log("Traffic Volume:", response.Trafficvolume);
-          console.log("Distance:", response.distance);
-      
-          // Directly use routeCords as lat/lng pairs
-          const latlngs = response.routeCords.map((p: any) => [p[0], p[1]]);
-      
-          // Remove the previous route if exists
+          console.log(response);
+          console.log("Prediction Time:", response[0].predictionTime);
+          console.log("Route Coordinates:", response[1].routeCords);
+          console.log("Traffic Volume:", response[2].Trafficvolume);
+          console.log("Distance:", response[3].distance);
+
+          const latlngs = response[1].routeCords.map((p: any) => [p[0], p[1]]);
+          let routeCoords = latlngs;
+          if (latlngs.length < 2) {
+            const start = this.startMarker.getLatLng();
+            const end = this.endMarker.getLatLng();
+            console.warn('Fallback route used for short distance');
+
+            routeCoords = [
+              [start.lat, start.lng],
+              [end.lat, end.lng]
+            ];
+          }
+
           if (this.routeLine) {
             this.map.removeLayer(this.routeLine);
           }
-      
-          // Draw the new route polyline
-          this.routeLine = this.L.polyline(latlngs, {
+
+          this.routeLine = this.L.polyline(routeCoords, {
             color: trafficColor,
             weight: 5,
             opacity: 0.8,
@@ -244,12 +272,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
         },
         error: (error) => {
-          this. isLoading = false;
+          this.isLoading = false;
           console.error('Error fetching route:', error);
+          alert('Failed to fetch route from the server.');
         }
       });
-    });
-  }
+    },
+    error: (error) => {
+      console.error('Error fetching traffic prediction:', error);
+      alert('Could not retrieve traffic prediction. Please try again.');
+    }
+  });
+}
+
 
   changeMapStyle() {
     if (!this.L || !this.map || !this.isBrowser || !this.mapLayers) return;
@@ -283,8 +318,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               iconSize: [20, 20],
               iconAnchor: [10, 10]
             });
-
-            this.currentLocationMarker = this.L.marker([lat, lng], { icon: currentPosIcon })
+  // this.L.marker([start.lat, start.lng], { icon: this.customIcon }).addTo(this.map)
+            this.currentLocationMarker = this.L.marker([lat, lng], { icon: this.customIcon })
               .addTo(this.map)
               .bindPopup('Votre position actuelle');
           }
@@ -337,4 +372,54 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
     this.mapLayers[layer].addTo(this.map);
   }
+
+
+  // gerer l'historique de recherche
+  routeHistory: RouteHistory[] = [];
+  isHistoryVisible = false;
+
+  loadRouteHistory() {
+    const saved = localStorage.getItem('routeHistory');
+    if (saved) {
+      this.routeHistory = JSON.parse(saved);
+    }
+  }
+
+  saveRouteToHistory(start: any, end: any) {
+    const entry: RouteHistory = {
+      start: { lat: start.lat, lng: start.lng, name: start.name },
+      end: { lat: end.lat, lng: end.lng, name: end.name },
+      timestamp: Date.now()
+    };
+
+    // Prevent duplicates
+    this.routeHistory = this.routeHistory.filter(
+      e =>
+        e.start.lat !== entry.start.lat ||
+        e.start.lng !== entry.start.lng ||
+        e.end.lat !== entry.end.lat ||
+        e.end.lng !== entry.end.lng
+    );
+
+    // Add to top
+    this.routeHistory.unshift(entry);
+    // Limit size
+    this.routeHistory = this.routeHistory.slice(0, 10);
+
+    localStorage.setItem('routeHistory', JSON.stringify(this.routeHistory));
+  }
+
+  selectHistory(entry: RouteHistory) {
+    this.startPlace = entry.start;
+    this.endPlace = entry.end;
+    this.setMapMarkersAndRoute(entry.start, entry.end);
+  }
+
+  clearHistory() {
+    this.routeHistory = [];
+    localStorage.removeItem('routeHistory');
+  }
+  
+  
+
 }
