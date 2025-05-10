@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -6,18 +6,18 @@ import { FormsModule } from '@angular/forms';
 import { Inject, PLATFORM_ID } from '@angular/core';
 import { MapService } from '../../shared/services/mapService/map.service';
 import { TrafficService } from '../../shared/services/TrafficcService/traffic.service';
-import { WeatherResponse, WeatherService } from '../../shared/services/WeatherService/Weather.service';
-import { catchError, map } from 'rxjs/operators';
+import { WeatherService, WeatherResponse } from '../../shared/services/WeatherService/Weather.service';
+import { ErrorPopupComponent } from '../Error-Popup/error-popup.component';
 
 interface RouteHistory {
   start: { lat: number, lng: number, name?: string };
   end: { lat: number, lng: number, name?: string };
-  timestamp: number;
+  timestamp: string;
 }
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule,ErrorPopupComponent],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
@@ -27,7 +27,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     { name: 'Menara Gardens', lat: 31.616, lng: -8.012 },
     { name: 'Majorelle Garden', lat: 31.637, lng: -8.002 },
   ];
-
+  isErrorVisible: boolean = false;
+  errorMessage: string = '';
   isLoading = false;
   startPlace: any = null;
   endPlace: any = null;
@@ -42,30 +43,40 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   currentLocationMarker: any = null;
   geolocationCircle: any = null;
   currentZoom: number = 13;
-
+  dis:any
   L: any;
+  weatherData: WeatherResponse | null = null;
 
-  constructor(private http: HttpClient, @Inject(PLATFORM_ID) private platformId: Object, private mapService: MapService,private trafficS:TrafficService,private Weather:WeatherService) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private mapService: MapService,
+    private trafficS: TrafficService,
+    private weatherService: WeatherService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   get isBrowser(): boolean {
     return isPlatformBrowser(this.platformId);
   }
-  weatherData:any
+
   ngOnInit(): void {
     if (this.isBrowser) {
-      this.Weather.getWeatherByCity().subscribe(
-        (data) => {
+      this.weatherService.getWeatherByCity().subscribe(
+        (data: WeatherResponse) => {
           console.log("Weather data loaded at initialization:", data);
           this.weatherData = data;
         },
         (error) => {
           console.error("Error loading weather data:", error);
+          this.showError('Oops something got wrong try again...');
         }
       );
 
       this.loadRouteHistory();
     }
   }
+
   ngAfterViewInit(): void {
     if (this.isBrowser) {
       setTimeout(() => this.initMap(), 100);
@@ -128,6 +139,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       setTimeout(() => this.map.invalidateSize(), 200);
     }).catch(error => {
       console.error('Error loading Leaflet:', error);
+      this.showError('Oops something got wrong try again...');
     });
 
   }
@@ -176,6 +188,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           console.error('Erreur de géolocalisation :', error);
           alert('Impossible d’accéder à votre position.');
           this.startPlace = null;
+           this.showError('Oops something got wrong try again...');
         }
       );
     } else {
@@ -189,15 +202,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     console.log('Point de départ mis à jour :', place);
     if (!this.L || !this.map) return;
 
-  const position = this.L.latLng(place.lat, place.lng);
+    const position = this.L.latLng(place.lat, place.lng);
 
-  if (this.startMarker) {
-    this.map.removeLayer(this.startMarker);
-  }
-  this.startMarker = this.L.marker(position, { icon: this.customIcon }).addTo(this.map);
+    if (this.startMarker) {
+      this.map.removeLayer(this.startMarker);
+    }
+    this.startMarker = this.L.marker(position, { icon: this.customIcon }).addTo(this.map);
 
-  this.startMarker.bindPopup(`Départ: ${place.name}`).openPopup();
-  this.map.setView(position, 15);
+    this.startMarker.bindPopup(`Départ: ${place.name}`).openPopup();
+    this.map.setView(position, 15);
   }
 
   setMapMarkersAndRoute(start: any, end: any) {
@@ -213,8 +226,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.requestRoute();
   }
 
-
-
+  routeInfo: any = null;
+  weatherInfo: any = null;
+  routes:any
+  routeCoords :any
   requestRoute() {
   if (!this.startMarker || !this.endMarker || !this.L || !this.map || !this.isBrowser) return;
 
@@ -223,69 +238,86 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   console.log("Requesting route...", this.weatherData);
 
-  this.trafficS.getRouteTraffic(start, end, this.weatherData).subscribe({
-    next: (prediction) => {
-      console.log('Prédiction de trafic :', prediction);
+  this.isLoading = true;
+  this.mapService.getRoute(start, end,this.weatherData?.weather[0].main).subscribe({
+    next: (response) => {
+      this.isLoading = false;
+      console.log(response);
+
+      this.dis = response[3]?.distance;
+      const timeMin = response[0]?.predictionTime;
+      const distanceKm = response[3]?.distance;
+      const volume = response[2]?.Trafficvolume;
+      console.log("Prédiction de trafic :", volume, this.weatherData);
+
       let trafficColor = 'green';
-      const volume = prediction.prediction;
-      console.log(volume + this.weatherData);
       if (volume > 500) {
         trafficColor = 'red';
       } else if (volume > 200) {
         trafficColor = 'orange';
       }
 
-      this.isLoading = true;
-      this.mapService.getRoute(start, end).subscribe({
-        next: (response) => {
-          this.isLoading = false;
-          console.log(response);
-          console.log("Prediction Time:", response[0].predictionTime);
-          console.log("Route Coordinates:", response[1].routeCords);
-          console.log("Traffic Volume:", response[2].Trafficvolume);
-          console.log("Distance:", response[3].distance);
+      this.weatherInfo = {
+        description: this.weatherData?.weather[0].description,
+        temperature: (this.weatherData?.main?.temp! - 273.15).toFixed(1), // Kelvin to °C
+        humidity: this.weatherData?.main.humidity,
+        windSpeed: this.weatherData?.wind.speed,
+        clouds: this.weatherData?.clouds.all
+      };
 
-          const latlngs = response[1].routeCords.map((p: any) => [p[0], p[1]]);
-          let routeCoords = latlngs;
-          if (latlngs.length < 2) {
-            const start = this.startMarker.getLatLng();
-            const end = this.endMarker.getLatLng();
-            console.warn('Fallback route used for short distance');
+      this.routeInfo = {
+        predictionTime: timeMin,
+        distance: distanceKm,
+        durationStr: this.convertMinutesToReadable(timeMin),
+        distanceStr: this.formatDistance(distanceKm),
+        weather: this.weatherData
+      };
+      const routeData = response[1]?.routeCords;
+      let routeCoords: [number, number][];
+      if (Array.isArray(routeData) && routeData.length >= 2) {
+        routeCoords = routeData.map((p: any) => [p[0], p[1]]);
+      } else {
+        console.warn('Fallback route used for short distance');
+        routeCoords = [
+          [start.lat, start.lng],
+          [end.lat, end.lng]
+        ];
+      }
+      this.routeCoords = routeCoords;
+      if (this.routeLine) {
+        this.map.removeLayer(this.routeLine);
+      }
+      this.routeLine = this.L.polyline(this.routeCoords, {
+        color: trafficColor,
+        weight: 5,
+        opacity: 0.8,
+        lineJoin: 'round'
+      }).addTo(this.map);
 
-            routeCoords = [
-              [start.lat, start.lng],
-              [end.lat, end.lng]
-            ];
-          }
-
-          if (this.routeLine) {
-            this.map.removeLayer(this.routeLine);
-          }
-
-          this.routeLine = this.L.polyline(routeCoords, {
-            color: trafficColor,
-            weight: 5,
-            opacity: 0.8,
-            lineJoin: 'round'
-          }).addTo(this.map);
-
-          this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
-        },
-        error: (error) => {
-          this.isLoading = false;
-          console.error('Error fetching route:', error);
-          alert('Failed to fetch route from the server.');
-        }
-      });
+      this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
     },
     error: (error) => {
-      console.error('Error fetching traffic prediction:', error);
-      alert('Could not retrieve traffic prediction. Please try again.');
+      this.isLoading = false;
+      console.error('Error fetching route:', error);
+       this.showError('Oops something got wrong try again...');
     }
   });
 }
+   showError(message: string) {
+  this.isErrorVisible = false;
+  this.errorMessage = '';
+  this.cdr.detectChanges();
+  setTimeout(() => {
+    this.errorMessage = message;
+    this.isErrorVisible = true;
+    this.cdr.detectChanges();
+  }, 0);
+}
 
-
+  handleErrorPopupClosed(): void {
+  this.isErrorVisible = false;
+  this.errorMessage = '';
+}
   changeMapStyle() {
     if (!this.L || !this.map || !this.isBrowser || !this.mapLayers) return;
 
@@ -318,8 +350,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
               iconSize: [20, 20],
               iconAnchor: [10, 10]
             });
-  // this.L.marker([start.lat, start.lng], { icon: this.customIcon }).addTo(this.map)
-            this.currentLocationMarker = this.L.marker([lat, lng], { icon: this.customIcon })
+
+            this.currentLocationMarker = this.L.marker([lat, lng], { icon: currentPosIcon })
               .addTo(this.map)
               .bindPopup('Votre position actuelle');
           }
@@ -340,10 +372,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         (error) => {
           console.error('Erreur de géolocalisation:', error);
           alert('Impossible d\'obtenir votre position.');
+          this.showError('Oops something got wrong try again...');
         }
       );
     } else {
       alert('La géolocalisation n\'est pas prise en charge par votre navigateur.');
+      this.showError('Oops something got wrong try again...');
     }
   }
 
@@ -389,7 +423,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     const entry: RouteHistory = {
       start: { lat: start.lat, lng: start.lng, name: start.name },
       end: { lat: end.lat, lng: end.lng, name: end.name },
-      timestamp: Date.now()
+      timestamp : new Date(Date.now()).toLocaleString()
     };
 
     // Prevent duplicates
@@ -419,7 +453,16 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this.routeHistory = [];
     localStorage.removeItem('routeHistory');
   }
-  
-  
+
+
+  convertMinutesToReadable(minutes: number): string {
+    const hours = Math.floor(minutes / 60);
+    const mins = minutes % 60;
+    return `${hours} hr${mins > 0 ? ` ${mins} min` : ''}`;
+  }
+  formatDistance(km: number): string {
+    return km.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' km';
+  }
+
 
 }

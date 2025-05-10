@@ -12,7 +12,7 @@ export class TrafficService {
   private apiUrl =  'http://localhost:8080/predict';
 
   constructor(private http: HttpClient,private Weather:WeatherService) { }
-  getRouteTraffic(start: any, end: any, wea: any): Observable<any> {
+  getRouteTraffic(start: any, end: any, wea: any,distancee:any): Observable<any> {
     //in case the weather api didn'y work
   const fallbackWeather = {
     weather: [{ main: 'Clear', description: 'sky is clear' }],
@@ -31,7 +31,7 @@ export class TrafficService {
 
   const weathere = safeWeather.weather[0];
   const temperatureCelsius = safeWeather.main.temp - 273.15;
-  const distance = this.calculateDistance(start.lat, start.lng, end.lat, end.lng);
+  const distance =(!distancee)? this.calculateDistance(start.lat, start.lng, end.lat, end.lng):distancee;
 
   const weatherMain = weathere.main;
   const weatherDescription = weathere.description;

@@ -8,12 +8,12 @@ import { Observable } from 'rxjs';
 export class MapService {
   private baseUrl = 'http://localhost:5000';//ana khdam b 8090 If I forgot someday to change it 
   constructor(private http: HttpClient) {}
-  getRoute(start: { lat: number, lng: number }, end: { lat: number, lng: number }): Observable<any> {
+  getRoute(start: { lat: number, lng: number }, end: { lat: number, lng: number },weatherdata:any): Observable<any> {
     console.log("hello service map");
     const requestData = {
       StartPoint: [start.lat, start.lng],
       EndPoint: [end.lat, end.lng],
-      Weather: ["rain"],         
+      Weather: ["Rain".toLowerCase()],//hna khass tkon weatherData ms model d prediction du temps maghaysupportich ga3 les etat d weather         
       Speed_kmh: [40] 
     };
   

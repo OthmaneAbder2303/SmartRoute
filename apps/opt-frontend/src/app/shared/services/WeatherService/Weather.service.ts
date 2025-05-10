@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -8,12 +9,28 @@ import { Observable } from 'rxjs';
 export class WeatherService {
   private baseUrl = 'http://localhost:5000/api/weather';
 
+  private cachedWeather: WeatherResponse | null = null;
+  private cacheTimestamp: number = 0;
+  private cacheDuration = 10 * 60 * 1000;
+
   constructor(private http: HttpClient) {}
-  getWeatherByCity() {
-   let u=this.http.get<WeatherResponse>(this.baseUrl)
-    return u
+
+  getWeatherByCity(): Observable<WeatherResponse> {
+    const now = Date.now();
+
+    if (this.cachedWeather && now - this.cacheTimestamp < this.cacheDuration) {
+      return of(this.cachedWeather); 
+    }
+
+    return this.http.get<WeatherResponse>(this.baseUrl).pipe(
+      tap((data) => {
+        this.cachedWeather = data;
+        this.cacheTimestamp = now;
+      })
+    );
   }
 }
+
 export interface WeatherResponse {
     coord: {
       lon: number;
