@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, HostListener } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ElementRef, ViewChild, HostListener, ChangeDetectorRef } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -7,7 +7,7 @@ import { Inject, PLATFORM_ID } from '@angular/core';
 import { MapService } from '../../shared/services/mapService/map.service';
 import { TrafficService } from '../../shared/services/TrafficcService/traffic.service';
 import { WeatherService, WeatherResponse } from '../../shared/services/WeatherService/Weather.service';
-import { catchError, map } from 'rxjs/operators';
+import { ErrorPopupComponent } from '../Error-Popup/error-popup.component';
 
 interface RouteHistory {
   start: { lat: number, lng: number, name?: string };
@@ -17,7 +17,7 @@ interface RouteHistory {
 @Component({
   selector: 'app-map',
   standalone: true,
-  imports: [CommonModule, HttpClientModule, FormsModule],
+  imports: [CommonModule, HttpClientModule, FormsModule,ErrorPopupComponent],
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
@@ -27,7 +27,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     { name: 'Menara Gardens', lat: 31.616, lng: -8.012 },
     { name: 'Majorelle Garden', lat: 31.637, lng: -8.002 },
   ];
-
+  isErrorVisible: boolean = false;
+  errorMessage: string = '';
   isLoading = false;
   startPlace: any = null;
   endPlace: any = null;
@@ -51,7 +52,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     @Inject(PLATFORM_ID) private platformId: Object,
     private mapService: MapService,
     private trafficS: TrafficService,
-    private weatherService: WeatherService
+    private weatherService: WeatherService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   get isBrowser(): boolean {
@@ -67,6 +69,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         },
         (error) => {
           console.error("Error loading weather data:", error);
+          this.showError('Oops something got wrong try again...');
         }
       );
 
@@ -136,6 +139,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       setTimeout(() => this.map.invalidateSize(), 200);
     }).catch(error => {
       console.error('Error loading Leaflet:', error);
+      this.showError('Oops something got wrong try again...');
     });
 
   }
@@ -184,6 +188,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
           console.error('Erreur de géolocalisation :', error);
           alert('Impossible d’accéder à votre position.');
           this.startPlace = null;
+           this.showError('Oops something got wrong try again...');
         }
       );
     } else {
@@ -294,13 +299,25 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     error: (error) => {
       this.isLoading = false;
       console.error('Error fetching route:', error);
-      alert('Failed to fetch route from the server.');
+       this.showError('Oops something got wrong try again...');
     }
   });
 }
+   showError(message: string) {
+  this.isErrorVisible = false;
+  this.errorMessage = '';
+  this.cdr.detectChanges();
+  setTimeout(() => {
+    this.errorMessage = message;
+    this.isErrorVisible = true;
+    this.cdr.detectChanges();
+  }, 0);
+}
 
-
-
+  handleErrorPopupClosed(): void {
+  this.isErrorVisible = false;
+  this.errorMessage = '';
+}
   changeMapStyle() {
     if (!this.L || !this.map || !this.isBrowser || !this.mapLayers) return;
 
@@ -355,10 +372,12 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         (error) => {
           console.error('Erreur de géolocalisation:', error);
           alert('Impossible d\'obtenir votre position.');
+          this.showError('Oops something got wrong try again...');
         }
       );
     } else {
       alert('La géolocalisation n\'est pas prise en charge par votre navigateur.');
+      this.showError('Oops something got wrong try again...');
     }
   }
 

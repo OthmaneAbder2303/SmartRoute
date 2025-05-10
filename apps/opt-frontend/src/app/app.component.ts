@@ -9,6 +9,7 @@ import { AuthService } from './shared/services/authService/auth2.service';
 import { FormsModule } from '@angular/forms';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { NgIf } from '@angular/common';
+import { ErrorPopupComponent } from './components/Error-Popup/error-popup.component';
 
 
 @Component({
@@ -20,6 +21,7 @@ import { NgIf } from '@angular/common';
     FuncionalitiesComponent,
     CalendarComponent,
     NgIf,
+    ErrorPopupComponent
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',

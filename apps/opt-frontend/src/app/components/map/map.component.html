@@ -2,7 +2,11 @@
 <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
   <div class="loader border-4 border-t-4 border-gray-200 border-t-gray-600 w-16 h-16 rounded-full animate-spin"></div>
 </div>
-
+<app-error-popup 
+  [message]="errorMessage" 
+  [isVisible]="isErrorVisible" 
+  (closed)="handleErrorPopupClosed()">
+</app-error-popup>
 <div class="relative w-screen h-screen overflow-hidden bg-gray-50">
   <!-- Bouton pour changer de couche -->
   <button class="bg-white rounded-full shadow-lg p-3 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all absolute top-4 right-4 z-20" 
