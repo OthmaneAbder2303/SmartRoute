@@ -61,28 +61,38 @@ public class AuthController {
 
   @GetMapping("/me")
   public ResponseEntity<UserDTO> getCurrentUser(Authentication authentication) {
-    if (authentication == null) return ResponseEntity.status(401).build();
+    if (authentication == null) {
+      return ResponseEntity.status(401).build();
+    }
 
     Object principal = authentication.getPrincipal();
     UserDTO dto = new UserDTO();
 
-    if (principal instanceof UserDetails userDetails) {
-      User user = userRepository.findByEmail(userDetails.getUsername())
-        .orElseThrow(() -> new RuntimeException("User not found"));
-      dto = userService.mapToDTO(user);
-      dto.setProvider("local");
-    } else if (principal instanceof OAuth2User oauth2User) {
-      Map<String, Object> attributes = oauth2User.getAttributes();
-      String email = (String) attributes.get("email");
+    try {
+      if (principal instanceof UserDetails userDetails) {
+        // Récupération de l'utilisateur à partir de son email
+        User user = userRepository.findByEmail(userDetails.getUsername())
+          .orElseThrow(() -> new RuntimeException("User not found"));
+        dto = userService.mapToDTO(user);
+        dto.setProvider("LOCAL");
+      } else if (principal instanceof OAuth2User oauth2User) {
+        // Si l'utilisateur est authentifié via OAuth2 (ex: Google)
+        Map<String, Object> attributes = oauth2User.getAttributes();
+        String email = (String) attributes.get("email");
 
-      User user = userRepository.findByEmail(email)
-        .orElseThrow(() -> new RuntimeException("OAuth2 user not found in DB"));
-
-      dto = userService.mapToDTO(user);
-      dto.setProvider("oauth2");
-      dto.setProviderId((String) attributes.get("sub")); // pour Google
+        User user = userRepository.findByEmail(email)
+          .orElseThrow(() -> new RuntimeException("OAuth2 user not found in DB"));
+        dto = userService.mapToDTO(user);
+        dto.setProvider("oauth2");
+        dto.setProviderId((String) attributes.get("sub")); // Pour Google
+      } else {
+        return ResponseEntity.status(401).body(null); // Retourne une erreur 401 si le principal est inconnu
+      }
+    } catch (RuntimeException e) {
+      return ResponseEntity.status(404).body(null); // Retourne une erreur 404 si l'utilisateur n'est pas trouvé
     }
 
     return ResponseEntity.ok(dto);
   }
+
 }
