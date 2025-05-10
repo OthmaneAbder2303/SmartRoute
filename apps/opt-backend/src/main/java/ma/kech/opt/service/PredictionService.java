@@ -18,9 +18,15 @@ public class PredictionService {
     this.restTemplate=restTemplate;
   }
 
-  public Map<String,Object> getPrediction(Map<String,Object> data){
+  public Map<String, Object> getPrediction(Map<String,Object> data){
     // Get traffic volume prediction
     Map<String, Object> volumePrediction = getPredictionVolume(data);
+
+    if (volumePrediction == null || !volumePrediction.containsKey("prediction")) {
+      System.err.println("Prediction volume is null or missing 'prediction' key.");
+      return null; // ou throw une exception personnalisée
+    }
+
     Object trafficVolume = volumePrediction.get("prediction");
 
     String trafficLevel;
@@ -34,8 +40,9 @@ public class PredictionService {
         trafficLevel = "high";
       }
     } else {
-      trafficLevel = "medium"; //chwia Hriiff :)
+      trafficLevel = "medium"; // fallback
     }
+
     Map<String, Object> formattedData = new HashMap<>();
     formattedData.put("Distance_km", new Object[]{data.get("Distance_km")});
     formattedData.put("Weather", new Object[]{data.get("Weather")});
@@ -45,6 +52,7 @@ public class PredictionService {
     System.out.println("Formatted Data for Prediction: " + formattedData);
     return restTemplate.postForObject(flaskUrl, formattedData, Map.class);
   }
+
 
 
 
