@@ -47,6 +47,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   L: any;
   weatherData: WeatherResponse | null = null;
 
+  showRouteInfo = false;
+
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
@@ -230,6 +232,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   weatherInfo: any = null;
   routes:any
   routeCoords :any
+  
   requestRoute() {
   if (!this.startMarker || !this.endMarker || !this.L || !this.map || !this.isBrowser) return;
 
@@ -294,6 +297,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         lineJoin: 'round'
       }).addTo(this.map);
 
+      // Quand l'utilisateur clique sur le chemin
+      this.routeLine.on('click', () => {
+        this.showRouteInfo = true;
+      });
+
       this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
     },
     error: (error) => {
@@ -303,7 +311,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   });
 }
-   showError(message: string) {
+  showError(message: string) {
   this.isErrorVisible = false;
   this.errorMessage = '';
   this.cdr.detectChanges();
