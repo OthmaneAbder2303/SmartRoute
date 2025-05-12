@@ -298,8 +298,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       }).addTo(this.map);
 
       // Quand l'utilisateur clique sur le chemin
-      this.routeLine.on('click', () => {
+      this.routeLine.on('mouseover', () => {
         this.showRouteInfo = true;
+      });
+      this.routeLine.on('mouseout', () => {
+        this.showRouteInfo = false;
       });
 
       this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
