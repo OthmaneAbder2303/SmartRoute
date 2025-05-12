@@ -1,64 +1,66 @@
-<!-- Loading Indicator -->
+<!-- Logo en haut à gauche avec redirection -->
+<a href="/" class="absolute top-4 left-4 z-20">
+  <img [src]="'/assets/logo.png'" alt="Logo" class="w-12 h-12 rounded-full shadow-lg">
+</a>
+
+<!-- Indicateur de chargement -->
 <div *ngIf="isLoading" class="absolute inset-0 flex items-center justify-center bg-white bg-opacity-50 z-50">
   <div class="loader border-4 border-t-4 border-gray-200 border-t-gray-600 w-16 h-16 rounded-full animate-spin"></div>
 </div>
+
 <app-error-popup 
   [message]="errorMessage" 
   [isVisible]="isErrorVisible" 
   (closed)="handleErrorPopupClosed()">
 </app-error-popup>
+
 <div class="relative w-screen h-screen overflow-hidden bg-gray-50">
   <!-- Bouton pour changer de couche -->
   <button class="bg-white rounded-full shadow-lg p-3 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all absolute top-4 right-4 z-20" 
     (click)="isLayerMenuVisible = !isLayerMenuVisible" 
-    aria-label="Change Layer">
+    aria-label="Changer de couche">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
     </svg>
   </button>
-  
 
   <!-- Menu de sélection de la couche -->
   <div *ngIf="isLayerMenuVisible" class="bg-white shadow-lg rounded-lg p-3 absolute top-16 right-4 w-48 z-30 transition-all ease-in-out duration-300">
     <button (click)="changeLayer('standard')" class="w-full text-left py-1 px-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">
-      <img src="assets/layers/standard.jpg" alt="Standard Layer" class="inline-block w-5 h-5 mr-2"> Standard
+      <img src="assets/layers/standard.jpg" alt="Couche Standard" class="inline-block w-5 h-5 mr-2"> Standard
     </button>
     <button (click)="changeLayer('satellite')" class="w-full text-left py-1 px-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">
-      <img src="assets/layers/satellite.jpg" alt="Satellite Layer" class="inline-block w-5 h-5 mr-2"> Satellite
+      <img src="assets/layers/satellite.jpg" alt="Couche Satellite" class="inline-block w-5 h-5 mr-2"> Satellite
     </button>
     <button (click)="changeLayer('terrain')" class="w-full text-left py-1 px-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">
-      <img src="assets/layers/terrain.jpg" alt="Terrain Layer" class="inline-block w-5 h-5 mr-2"> Terrain
+      <img src="assets/layers/terrain.jpg" alt="Couche Terrain" class="inline-block w-5 h-5 mr-2"> Terrain
     </button>
     <button (click)="changeLayer('night')" class="w-full text-left py-1 px-2 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-300 transition-all">
-      <img src="assets/layers/night.jpg" alt="Night Layer" class="inline-block w-5 h-5 mr-2"> Night
+      <img src="assets/layers/night.jpg" alt="Couche Nuit" class="inline-block w-5 h-5 mr-2"> Nuit
     </button>
   </div>
 
   <!-- Panneau d'information sur l'itinéraire -->
-  <div *ngIf="routeInfo" class="absolute bottom-4 left-4 z-30 bg-white p-4 rounded-lg shadow-lg w-2/6 text-sm">
+  <div *ngIf="routeInfo && showRouteInfo" class="absolute bottom-4 left-4 z-30 bg-white p-4 rounded-lg shadow-lg w-2/6 text-sm">
     <div class="font-semibold text-gray-800 mb-2">
       {{ routeInfo.durationStr }} ({{ routeInfo.distanceStr }})
     </div>
 
-    <!-- Weather section -->
+    <!-- Section météo -->
     <div class="mt-4 border-t pt-3 text-gray-700">
-      <div class="font-semibold">Current Weather</div>
-      <div>Description: {{ weatherInfo.description }}</div>
-      <div>Temperature: {{ weatherInfo.temperature }}</div>
-      <div>Humidity: {{ weatherInfo }}%</div>
-      <div>Wind Speed: {{ weatherInfo.windSpeed }} m/s</div>
-      <div>Clouds: {{ weatherInfo.clouds }}%</div>
+      <div class="font-semibold">Météo actuelle</div>
+      <div>Description : {{ weatherInfo.description }}</div>
+      <div>Température : {{ weatherInfo.temperature }}</div>
+      <div>Humidité : {{ weatherInfo.humidity }}%</div>
+      <div>Vitesse du vent : {{ weatherInfo.windSpeed }} m/s</div>
+      <div>Nuages : {{ weatherInfo.clouds }}%</div>
     </div>
-    
   </div>
-
-  
-
 
   <!-- Barre de recherche -->
   <div class="absolute top-4 left-1/2 transform -translate-x-1/2 z-10 w-11/12 md:w-1/2 lg:w-1/3 max-w-lg">
     <div class="bg-white rounded-lg shadow-lg overflow-hidden flex flex-col">
-      <!-- Barre de recherche départ -->
+      <!-- Départ -->
       <div class="flex items-center p-3 border-b border-gray-200">
         <div class="flex-shrink-0 mr-3">
           <div class="h-2 w-2 rounded-full bg-green-500 ring-4 ring-green-100"></div>
@@ -73,8 +75,8 @@
           <option *ngFor="let place of places" [ngValue]="place">{{ place.name }}</option>
         </select>
       </div>
-      
-      <!-- Barre de recherche destination -->
+
+      <!-- Destination -->
       <div class="flex items-center p-3">
         <div class="flex-shrink-0 mr-3">
           <div class="h-2 w-2 rounded-full bg-red-500 ring-4 ring-red-100"></div>
@@ -91,26 +93,25 @@
     </div>
   </div>
 
-  <!-- Panneau flottant pour les contrôles de carte -->
+  <!-- Contrôles de carte -->
   <div class="absolute top-24 right-4 z-10 flex flex-col space-y-3">
     <div class="bg-white rounded-lg shadow-md overflow-hidden">
-      <!-- Boutons de zoom -->
+      <!-- Zoom avant -->
       <div class="border-b border-gray-200">
-        <!-- Bouton Zoom In -->
         <button
           class="p-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all"
-          aria-label="Zoom in"
+          aria-label="Zoomer"
           (click)="zoomIn()"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
         </button>
-      
-        <!-- Bouton Zoom Out -->
+
+        <!-- Zoom arrière -->
         <button
           class="p-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all"
-          aria-label="Zoom out"
+          aria-label="Dézoomer"
           (click)="zoomOut()"
         >
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -119,7 +120,7 @@
         </button>
       </div>
 
-      <!-- Bouton de géolocalisation -->
+      <!-- Géolocalisation -->
       <button 
         (click)="centerToCurrentLocation()" 
         class="p-2 w-10 h-10 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all" 
@@ -135,53 +136,51 @@
 
   <!-- Bouton pour voir l'historique -->
   <button
-  class="bg-white rounded-full shadow-lg p-3 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all absolute top-4 right-20 z-20"
-  (click)="isHistoryVisible = !isHistoryVisible"
-  aria-label="Voir l'historique"
+    class="bg-white rounded-full shadow-lg p-3 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all absolute top-4 right-20 z-20"
+    (click)="isHistoryVisible = !isHistoryVisible"
+    aria-label="Voir l'historique"
   >
-  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-  </svg>
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
   </button>
 
-  <!-- Panneau d'historique -->
+  <!-- Panneau historique -->
   <div
-  *ngIf="isHistoryVisible"
-  class="absolute bottom-24 right-4 bg-white shadow-lg rounded-lg p-4 w-72 max-h-64 overflow-y-auto z-30"
+    *ngIf="isHistoryVisible"
+    class="absolute bottom-24 right-4 bg-white shadow-lg rounded-lg p-4 w-72 max-h-64 overflow-y-auto z-30"
   >
-  <h3 class="text-gray-800 font-semibold mb-2">Historique des trajets</h3>
-  <ul class="space-y-2">
-    <li *ngFor="let item of routeHistory" class="text-sm text-gray-700 border-b pb-1">
-      {{ item.start.name }} → {{ item.end.name }}  {{item.timestamp}} 
-    </li>
-  </ul>
-  <button class="mt-2 text-sm text-red-500 hover:underline" (click)="clearHistory()">Effacer l'historique</button>
+    <h3 class="text-gray-800 font-semibold mb-2">Historique des trajets</h3>
+    <ul class="space-y-2">
+      <li *ngFor="let item of routeHistory" class="text-sm text-gray-700 border-b pb-1">
+        {{ item.start.name }} → {{ item.end.name }}  {{item.timestamp}} 
+      </li>
+    </ul>
+    <button class="mt-2 text-sm text-red-500 hover:underline" (click)="clearHistory()">Effacer l'historique</button>
   </div>
 
-<!-- Traffic Legend -->
-<div class="absolute bottom-4 right-4 z-30 bg-white bg-opacity-90 p-3 rounded-lg shadow-lg text-sm space-y-1">
-  <div class="flex items-center space-x-2">
-    <div class="w-8 h-1.5 rounded-full bg-green-500"></div>
-    <span class="text-gray-700">Low Traffic</span>
+  <!-- Légende du trafic -->
+  <div class="absolute bottom-4 right-4 z-30 bg-white bg-opacity-90 p-3 rounded-lg shadow-lg text-sm space-y-1">
+    <div class="flex items-center space-x-2">
+      <div class="w-8 h-1.5 rounded-full bg-green-500"></div>
+      <span class="text-gray-700">Trafic faible</span>
+    </div>
+    <div class="flex items-center space-x-2">
+      <div class="w-8 h-1.5 rounded-full bg-orange-400"></div>
+      <span class="text-gray-700">Trafic moyen</span>
+    </div>
+    <div class="flex items-center space-x-2">
+      <div class="w-8 h-1.5 rounded-full bg-red-500"></div>
+      <span class="text-gray-700">Trafic élevé</span>
+    </div>
   </div>
-  <div class="flex items-center space-x-2">
-    <div class="w-8 h-1.5 rounded-full bg-orange-400"></div>
-    <span class="text-gray-700">Medium Traffic</span>
-  </div>
-  <div class="flex items-center space-x-2">
-    <div class="w-8 h-1.5 rounded-full bg-red-500"></div>
-    <span class="text-gray-700">High Traffic</span>
-  </div>
-</div>
 
-  <!-- Map container -->
+  <!-- Conteneur de la carte -->
   <div id="map" class="absolute inset-0 w-full h-full z-0"></div>
-   
-  
 
-  <!-- Attributions -->
+  <!-- Mentions -->
   <div class="absolute bottom-1 left-1 z-10 text-xs text-gray-600 bg-white bg-opacity-75 px-1 rounded">
-    © OpenStreetMap contributors
+    © Contributeurs OpenStreetMap
   </div>
 </div>
