@@ -59,7 +59,7 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
         shortest_path = nx.astar_path(G, source=origin_node, target=destination_node, weight='length')
         #print("shortest_path is :",shortest_path)
         # Tracer le graphe 
-        fig, ax = ox.plot_graph_route(G, shortest_path, route_linewidth=3, node_size=10, edge_linewidth=0.5)
+        fig, ax = ox.plot_graph_route(G, shortest_path, route_linewidth=3, node_size=5, edge_linewidth=0.1)
 
     route_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
     distance = nx.astar_path_length(G, origin_node, destination_node)
