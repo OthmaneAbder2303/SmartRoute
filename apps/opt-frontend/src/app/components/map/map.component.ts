@@ -36,7 +36,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   startMarker: any;
   endMarker: any;
   routeLine: any;
-  customIcon: any;
+  endIcon: any;
+  startIcon:any;
+  selectedPoint=true;
 
   mapStyle: string = 'standard';
   mapLayers: any = {};
@@ -93,58 +95,63 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   }
 
-  private initMap(): void {
-
-    import('leaflet').then((L) => {
-      this.L = L;
-
-      this.map = L.map('map', {
-        zoomControl: false,
-        attributionControl: false
-      }).setView([31.63, -7.99], 13);
-
-      this.currentZoom = this.map.getZoom();
-
-      this.mapLayers = {
-        standard: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: 'Map data © OpenStreetMap contributors',
-          maxZoom: 19
-        }),
-        satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-          attribution: 'Tiles &copy; Esri',
-          maxZoom: 19
-        }),
-        terrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
-          attribution: 'Tiles &copy; Esri',
-          maxZoom: 19
-        }),
-        night: L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
-          attribution: '&copy; OpenStreetMap & CartoDB',
-          maxZoom: 19
-        })
-      };
-
-      this.mapLayers.standard.addTo(this.map);
-
-      this.customIcon = L.icon({
-        iconUrl: '/assets/map-marker-end.png',
-        iconSize: [40, 40],
-        iconAnchor: [16, 32],
-        popupAnchor: [0, -32],
-      });
-
-      this.map.on('click', (e: any) => this.handleMapClick(e));
-      this.map.on('zoomend', () => {
-        this.currentZoom = this.map.getZoom();
-      });
-
-      setTimeout(() => this.map.invalidateSize(), 200);
-    }).catch(error => {
-      console.error('Error loading Leaflet:', error);
-      this.showError('Oops something got wrong try again...');
+private initMap(): void {
+  import('leaflet').then((L) => {
+    this.L = L;
+    this.map = L.map('map', {
+      zoomControl: false,
+      attributionControl: false
+    }).setView([31.63, -7.99], 13);
+    
+    this.currentZoom = this.map.getZoom();
+    
+    this.mapLayers = {
+      standard: L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: 'Map data © OpenStreetMap contributors',
+        maxZoom: 19
+      }),
+      satellite: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri',
+        maxZoom: 19
+      }),
+      terrain: L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}', {
+        attribution: 'Tiles &copy; Esri',
+        maxZoom: 19
+      }),
+      night: L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap & CartoDB',
+        maxZoom: 19
+      })
+    };
+    
+    this.mapLayers.standard.addTo(this.map);
+    
+    // Define both start and end icons
+    this.startIcon = L.icon({
+      iconUrl: '/assets/map-marker-start.png',
+      iconSize: [30, 30],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32],
     });
-
-  }
+    
+    this.endIcon = L.icon({
+      iconUrl: '/assets/map-marker-end.png',
+      iconSize: [40, 40],
+      iconAnchor: [16, 32],
+      popupAnchor: [0, -32],
+    });
+    
+    this.map.on('click', (e: any) => this.handleMapClick(e));
+    this.map.on('zoomend', () => {
+      this.currentZoom = this.map.getZoom();
+    });
+    
+    setTimeout(() => this.map.invalidateSize(), 200);
+  }).catch(error => {
+    console.error('Error loading Leaflet:', error);
+    this.showError('Oops something got wrong try again...');
+  });
+}
 
   ngOnDestroy(): void {
     if (this.isBrowser && this.map) {
@@ -156,9 +163,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (!this.map || !this.L || !this.isBrowser) return;
 
     if (!this.startMarker) {
-      this.startMarker = this.L.marker(e.latlng, { icon: this.customIcon }).addTo(this.map);
+      this.selectedPoint=false;
+      this.startMarker = this.L.marker(e.latlng, { icon: this.startIcon }).addTo(this.map);
     } else if (!this.endMarker) {
-      this.endMarker = this.L.marker(e.latlng, { icon: this.customIcon }).addTo(this.map);
+      this.endMarker = this.L.marker(e.latlng, { icon: this.endIcon }).addTo(this.map);
       this.requestRoute();
     } else {
       this.map.removeLayer(this.startMarker);
@@ -209,7 +217,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this.startMarker) {
       this.map.removeLayer(this.startMarker);
     }
-    this.startMarker = this.L.marker(position, { icon: this.customIcon }).addTo(this.map);
+    this.startMarker = this.L.marker(position, { icon: this.startIcon }).addTo(this.map);
 
     this.startMarker.bindPopup(`Départ: ${place.name}`).openPopup();
     this.map.setView(position, 15);
@@ -221,8 +229,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (this.startMarker) this.map.removeLayer(this.startMarker);
     if (this.endMarker) this.map.removeLayer(this.endMarker);
 
-    this.startMarker = this.L.marker([start.lat, start.lng], { icon: this.customIcon }).addTo(this.map);
-    this.endMarker = this.L.marker([end.lat, end.lng], { icon: this.customIcon }).addTo(this.map);
+    this.startMarker = this.L.marker([start.lat, start.lng], { icon: this.startIcon }).addTo(this.map);
+    this.endMarker = this.L.marker([end.lat, end.lng], { icon: this.endIcon }).addTo(this.map);
 
     this.saveRouteToHistory(start, end); // 3la 9ibal historique
     this.requestRoute();
@@ -295,7 +303,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         weight: 5,
         opacity: 0.8,
         lineJoin: 'round'
-      }).addTo(this.map);
+       }).addTo(this.map);
+
 
       // Quand l'utilisateur clique sur le chemin
       this.routeLine.on('mouseover', () => {
@@ -305,7 +314,15 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         this.showRouteInfo = false;
       });
 
-      this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
+      this.animateRouteDrawing(this.routeCoords, trafficColor);
+
+      // After animation ends, fit bounds — delay based on animation time
+      setTimeout(() => {
+        if (this.routeLine) {
+          this.map.fitBounds(this.routeLine.getBounds(), { padding: [50, 50] });
+        }
+      }, this.routeCoords.length * 100); // 100ms = your stepDelay
+
     },
     error: (error) => {
       this.isLoading = false;
@@ -314,6 +331,102 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     }
   });
 }
+animateRouteDrawing(
+  coords: [number, number][], 
+  trafficColor: string,
+  options: {
+    stepDelay?: number,
+    smoothFactor?: number,
+    pulseEffect?: boolean,
+    onComplete?: () => void
+  } = {}
+) {
+  if (!this.map || !this.L) return;
+
+  // Default options with fallbacks
+  const stepDelay = options.stepDelay || 100; // Faster animation (was 100ms)
+  const smoothFactor = options.smoothFactor || 3;
+  const pulseEffect = options.pulseEffect !== undefined ? options.pulseEffect : true;
+  
+  // Clear any existing route animation
+  if (this.routeLine) {
+    this.map.removeLayer(this.routeLine);
+  }
+
+  // Create the animated polyline
+  const animatedLine = this.L.polyline([], {
+    color: trafficColor,
+    weight: 5,
+    opacity: 0.8,
+    lineJoin: 'round',
+    smoothFactor: smoothFactor // Lower values = smoother lines
+  }).addTo(this.map);
+
+  let index = 0;
+  const totalPoints = coords.length;
+  
+  // Create a pulsing effect for the moving point (optional)
+  let pulsingMarker: any = null;
+  
+  if (pulseEffect) {
+    const pulseIcon = this.L.divIcon({
+      className: 'route-pulse-icon',
+      html: `<div class="pulse-circle" style="background-color:${trafficColor}"></div>`,
+      iconSize: [15, 15],
+      iconAnchor: [7, 7]
+    });
+    
+    pulsingMarker = this.L.marker([coords[0][0], coords[0][1]], { 
+      icon: pulseIcon,
+      zIndexOffset: 1000
+    }).addTo(this.map);
+  }
+
+  // Animation interval
+  const interval = setInterval(() => {
+    if (index >= totalPoints) {
+      clearInterval(interval);
+      
+      // Optional pulse cleanup
+      if (pulsingMarker) {
+        setTimeout(() => {
+          this.map.removeLayer(pulsingMarker);
+        }, 300);
+      }
+      
+      // Execute completion callback if provided
+      if (options.onComplete) {
+        options.onComplete();
+      }
+      
+      return;
+    }
+
+    // Add the next point to the line
+    animatedLine.addLatLng(this.L.latLng(coords[index][0], coords[index][1]));
+    
+    // Update the pulsing marker position
+    if (pulsingMarker) {
+      pulsingMarker.setLatLng([coords[index][0], coords[index][1]]);
+    }
+    
+    index++;
+  }, stepDelay);
+
+  this.routeLine = animatedLine;
+
+  // Event listeners for showing route info
+  this.routeLine.on('mouseover', () => {
+    this.showRouteInfo = true;
+  });
+  
+  this.routeLine.on('mouseout', () => {
+    this.showRouteInfo = false;
+  });
+  
+  return animatedLine;
+}
+
   showError(message: string) {
   this.isErrorVisible = false;
   this.errorMessage = '';
@@ -475,5 +588,59 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     return km.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' km';
   }
 
+
+getBusStations() {
+  const start = this.startMarker.getLatLng();
+  console.log("start:"+start);
+  if (!start) {
+    console.warn("No start place selected");
+    this.showError('Please select a start location first');
+    return;
+  }
+  
+  console.log("Getting bus stations near:",start);
+  this.isLoading = true;
+  
+  this.mapService.getNearestBusStations(start).then(stations => {
+    this.isLoading = false;
+    console.log("Found bus stations:", stations);
+    
+    if (stations.length === 0) {
+      this.showError('No bus stations found nearby');
+      return;
+    }
+    
+    // Display the bus stations on the map
+    this.displayBusStationsOnMap(stations);
+  }).catch(error => {
+    this.isLoading = false;
+    console.error("Error getting bus stations:", error);
+    this.showError('Failed to get bus stations');
+  });
+}
+
+// New method to display bus stations on the map
+displayBusStationsOnMap(stations: any[]) {
+  if (!this.map || !this.L) return;
+  
+  // Create a bus station icon
+  const busIcon = this.L.icon({
+    iconUrl: '/assets/bus-station.png', // Make sure this asset exists
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+    popupAnchor: [0, -12]
+  });
+  
+  // Add markers for each bus station
+  stations.forEach(station => {
+    const marker = this.L.marker([station.lat, station.lon], { 
+      icon: busIcon 
+    }).addTo(this.map);
+    
+    // Add popup with station information
+    const name = station.tags.name || 'Unnamed Bus Station';
+    marker.bindPopup(`<b>${name}</b><br>Bus Station`);
+  });
+}
 
 }

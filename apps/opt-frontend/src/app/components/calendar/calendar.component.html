@@ -1,15 +1,14 @@
 <!-- Conteneur principal -->
-<div class="min-h-screen bg-gray-100 flex items-center justify-center py-16 px-4">
+<div class="min-h-screen flex items-center justify-center py-16 px-4">
   <!-- Carte du calendrier -->
   <div
-    class="w-full max-w-5xl bg-white rounded-lg shadow-md p-6 opacity-0 transform translate-y-10 transition-all duration-500"
-    [ngClass]="{ 'opacity-100 translate-y-0': isVisible }"
+    class="w-full max-w-5xl bg-white/80 backdrop-blur-md rounded-lg shadow-md p-6 opacity-0 transform translate-y-10 transition-all duration-500"
+    [ngClass]="{ 'opacity-80 translate-y-0': isVisible }"
   >
     <!-- En-tête avec titre et contrôles -->
     <div class="flex justify-between items-center mb-6">
       <h2 class="text-2xl font-semibold text-primary">Calendrier des événements</h2>
       <div class="flex space-x-2">
-        <!-- Boutons de changement de vue -->
         <button
           (click)="changeView('dayGridMonth')"
           class="px-3 py-1 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-50 hover:text-orange-500 transition duration-300"
@@ -31,7 +30,6 @@
         >
           Jour
         </button>
-        <!-- Bouton de rafraîchissement -->
         <button
           (click)="loadEvents()"
           class="px-3 py-1 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-50 hover:text-orange-500 transition duration-300"
@@ -41,12 +39,10 @@
       </div>
     </div>
 
-    <!-- État de chargement -->
     <div *ngIf="loading" class="text-center">
       <p class="text-primary animate-pulse">Chargement des événements...</p>
     </div>
 
-    <!-- État d'erreur -->
     <div *ngIf="error" class="text-center">
       <p class="text-red-500">{{ error }}</p>
       <button
@@ -57,7 +53,6 @@
       </button>
     </div>
 
-    <!-- Calendrier -->
     <div *ngIf="!loading && !error">
       <full-calendar
         [options]="calendarOptions"
@@ -66,7 +61,6 @@
       ></full-calendar>
     </div>
 
-    <!-- Modale des détails de l'événement -->
     <div
       *ngIf="selectedEvent"
       class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -89,24 +83,3 @@
           {{ selectedEvent?.end | date: 'medium' : 'fr-FR' }}
         </p>
         <p class="text-gray-600 mb-1" *ngIf="selectedEvent?.extendedProps?.description">
-          <span class="font-semibold">Description :</span>
-          {{ selectedEvent?.extendedProps?.description }}
-        </p>
-        <p class="text-gray-600 mb-1" *ngIf="selectedEvent?.extendedProps?.location">
-          <span class="font-semibold">Lieu :</span>
-          {{ selectedEvent?.extendedProps?.location }}
-        </p>
-        <p class="text-gray-600 mb-4" *ngIf="selectedEvent?.extendedProps?.type">
-          <span class="font-semibold">Type :</span>
-          {{ selectedEvent?.extendedProps?.type }}
-        </p>
-        <button
-          (click)="closeModal()"
-          class="w-full px-3 py-1 bg-white border border-gray-300 text-gray-700 font-semibold rounded-md hover:bg-gray-50 hover:text-orange-500 transition duration-300"
-        >
-          Fermer
-        </button>
-      </div>
-    </div>
-  </div>
-</div>

@@ -15,12 +15,24 @@ from dotenv import load_dotenv
 import os
 import osmnx as ox
 from datetime import datetime
-load_dotenv()
-app=Flask(__name__)
-CORS(app, supports_credentials=True, allow_headers=['Content-Type', 'Authorization', 'X-XSRF-TOKEN'])
-import joblib
-max_volume=7280
+import googlemaps
+from googlemaps.convert import decode_polyline
 from pathlib import Path
+import joblib
+
+app=Flask(__name__)
+
+dotenv_path="../../.env"
+def load_api_key(dotenv_path):
+    load_dotenv(dotenv_path)
+    return os.getenv("Gm_api_key")
+
+
+
+
+load_dotenv()
+CORS(app, supports_credentials=True, allow_headers=['Content-Type', 'Authorization', 'X-XSRF-TOKEN'])
+max_volume=7280
 model_path = hf_hub_download(repo_id="zzzzakaria/traffic-volume-predictor", filename="traffic_volume_model.joblib")
 model = joblib.load(model_path)
 G = ox.graph_from_place("Marrakech, Morocco", network_type="all")
@@ -52,6 +64,8 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
     if not nx.has_path(G, origin_node, destination_node):
         print("Les deux nœuds ne sont pas connectés !")
         #here we gonna use Map API
+        api_key=load_api_key()
+        get_route_coords(origin_point, destination_point, api_key)
 
     else:
         print(f'les deux points sont accessible')
@@ -59,7 +73,7 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
         shortest_path = nx.astar_path(G, source=origin_node, target=destination_node, weight='length')
         #print("shortest_path is :",shortest_path)
         # Tracer le graphe 
-        fig, ax = ox.plot_graph_route(G, shortest_path, route_linewidth=3, node_size=5, edge_linewidth=0.1)
+        #fig, ax = ox.plot_graph_route(G, shortest_path, route_linewidth=3, node_size=5, edge_linewidth=0.1)
 
     route_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
     distance = nx.astar_path_length(G, origin_node, destination_node)
@@ -70,6 +84,26 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
         {"distance":distance/10} #km
     ]
     return response
+
+
+# retourner la route par google map:
+def get_route_coords(origin, destination, api_key):
+    gmaps = googlemaps.Client(key=api_key)
+
+    directions_result = gmaps.directions(origin, destination, mode="driving")
+
+    if not directions_result:
+        return []
+
+    # On extrait le polyline (chemin global)
+    polyline = directions_result[0]['overview_polyline']['points']
+
+    # On décode le polyline pour obtenir toutes les coordonnées GPS
+    route_coords = decode_polyline(polyline)
+
+    # Résultat : une liste de tuples (lat, lng)
+    return route_coords
+
 def predictVolumefile(distance, data):
     response = fetchweather()
     now = datetime.now()
@@ -288,5 +322,5 @@ def get_weather():
     return jsonify(response)
 
 if __name__=='__main__':
-    app.run(host='0.0.0.0',port=5000,debug=True)
+    app.run(host='0.0.0.0',port=5000)
     # Il tra Un probleme f chi model ola nkhedmo b API mea map :)
