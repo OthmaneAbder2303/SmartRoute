@@ -14,6 +14,22 @@
   (closed)="handleErrorPopupClosed()">
 </app-error-popup>
 
+
+<button
+  [disabled]="selectedPoint"
+  (click)="getBusStations()"
+  class="bg-white rounded-full shadow-lg px-3 py-2 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all absolute top-2 z-30 disabled:opacity-50 disabled:cursor-not-allowed"
+  style="right: 3cm;"
+  aria-label="Afficher les stations de bus"
+>
+  <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 13h18M5 17h14a2 2 0 002-2v-3a4 4 0 00-4-4H7a4 4 0 00-4 4v3a2 2 0 002 2z" />
+    <circle cx="7" cy="20" r="2" />
+    <circle cx="17" cy="20" r="2" />
+  </svg>
+  Les stations de bus
+</button>
+
 <div class="relative w-screen h-screen overflow-hidden bg-gray-50">
   <!-- Bouton pour changer de couche -->
   <button class="bg-white rounded-full shadow-lg p-3 flex items-center justify-center hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all absolute top-4 right-4 z-20" 

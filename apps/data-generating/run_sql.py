@@ -10,6 +10,18 @@ conn = psycopg2.connect(
 )
 
 cursor = conn.cursor()
+# CREATE TABLE if it doesn't exist
+create_table_sql = """
+CREATE TABLE IF NOT EXISTS famous_places (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    description TEXT,
+    latitude DOUBLE PRECISION NOT NULL,
+    longitude DOUBLE PRECISION NOT NULL
+);
+"""
+cursor.execute(create_table_sql)
+conn.commit()
 
 # SQL INSERT query
 sql = """

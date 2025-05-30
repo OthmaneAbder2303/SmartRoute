@@ -12,3 +12,5 @@ networkx
 geopandas
 shapely
 huggingface_hub
+python-dotenv
+googlemaps

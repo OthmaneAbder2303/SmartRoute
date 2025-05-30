@@ -5,7 +5,7 @@
   </div>
 </div>
 
-<div id="explanations" class="bg-white flex flex-col justify-center items-center p-5 gap-10 w-full">
+<div id="explanations" class="flex flex-col justify-center items-center p-5 gap-10 w-full">
   <div class="flex justify-center items-center p-5 w-full">
     <div class="mt-5 hover:scale-105 rounded-lg"
          style="background-image: url('/assets/side-image1.png'); background-size: cover; background-position: center; width: 400px; height: 270px;">
@@ -24,7 +24,7 @@
 
   <div class="flex flex-wrap justify-center items-center gap-5 w-full">
     <div *ngFor="let feature of features" class="flex flex-col items-center text-center max-w-md">
-      <div class="mt-1 hover:scale-105 rounded-lg w-[70px] h-[70px] bg-cover bg-center"
+      <div class="mt-1 hover:scale-105 rounded-lg w-[70px] h-[70px] "
            [style.backgroundImage]="'url(' + feature.icon + ')'" >
       </div>
       <div class="text-orange-500 font-semibold text-xl mb-2 min-h-[50px] flex items-center justify-center">

@@ -8,7 +8,7 @@ import { FuncionalitiesComponent } from './components/functionalities/funcionali
 import { AuthService } from './shared/services/authService/auth2.service';
 import { FormsModule } from '@angular/forms';
 import { CalendarComponent } from './components/calendar/calendar.component';
-import { NgIf } from '@angular/common';
+import { NgIf, NgStyle } from '@angular/common';
 import { ErrorPopupComponent } from './components/Error-Popup/error-popup.component';
 
 
@@ -21,7 +21,8 @@ import { ErrorPopupComponent } from './components/Error-Popup/error-popup.compon
     FuncionalitiesComponent,
     CalendarComponent,
     NgIf,
-    ErrorPopupComponent
+    ErrorPopupComponent,
+    NgStyle
   ],
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -30,6 +31,7 @@ import { ErrorPopupComponent } from './components/Error-Popup/error-popup.compon
 })
 export class AppComponent implements OnInit {
   title = 'opt-frontend';
+  bg= '/assets/map_back.jpg';
   private faIconLibrary = inject(FaIconLibrary);
   private faConfig = inject(FaConfig);
   constructor(public auth: AuthService, public router: Router) {} // Make router public for template access

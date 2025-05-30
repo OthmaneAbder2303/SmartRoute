@@ -15,15 +15,32 @@ from dotenv import load_dotenv
 import os
 import osmnx as ox
 from datetime import datetime
-load_dotenv()
-app=Flask(__name__)
-CORS(app, supports_credentials=True, allow_headers=['Content-Type', 'Authorization', 'X-XSRF-TOKEN'])
-import joblib
-max_volume=7280
+import googlemaps
+from googlemaps.convert import decode_polyline
 from pathlib import Path
+import joblib
+
+app=Flask(__name__)
+
+dotenv_path="../../.env"
+def load_api_key(dotenv_path):
+    load_dotenv(dotenv_path)
+    return os.getenv("Gm_api_key")
+
+
+
+
+load_dotenv()
+CORS(app, supports_credentials=True, allow_headers=['Content-Type', 'Authorization', 'X-XSRF-TOKEN'])
+max_volume=7280
 model_path = hf_hub_download(repo_id="zzzzakaria/traffic-volume-predictor", filename="traffic_volume_model.joblib")
 model = joblib.load(model_path)
 G = ox.graph_from_place("Marrakech, Morocco", network_type="all")
+print("loading graph edges and nodes ......")
+    # Load   (streets)
+edges = gpd.read_file("marrakech_streets.gpkg", layer="edges")
+    # Load   (intersections)
+nodes = gpd.read_file("marrakech_streets.gpkg", layer="nodes")
 
 
 
@@ -35,12 +52,6 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
 
     print(os.path.exists('marrakech_streets.gpkg'))
     # graph
-    print("loading graph......")
-    # Load   (streets)
-    edges = gpd.read_file("marrakech_streets.gpkg", layer="edges")
-
-    # Load   (intersections)
-    nodes = gpd.read_file("marrakech_streets.gpkg", layer="nodes")
     print("here we go")
     #  first rows
     # print(edges.head())
@@ -52,17 +63,20 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
     print(f'start: {origin_node} /n the destination: {destination_node}')
     if not nx.has_path(G, origin_node, destination_node):
         print("Les deux nœuds ne sont pas connectés !")
+        #here we gonna use Map API
+        api_key=load_api_key()
+        get_route_coords(origin_point, destination_point, api_key)
 
     else:
         print(f'les deux points sont accessible')
         #  plus court chemin  de la distance
-        shortest_path = nx.shortest_path(G, source=origin_node, target=destination_node, weight='length')
+        shortest_path = nx.astar_path(G, source=origin_node, target=destination_node, weight='length')
         #print("shortest_path is :",shortest_path)
         # Tracer le graphe 
-        # fig, ax = ox.plot_graph_route(G, shortest_path, route_linewidth=3, node_size=10, edge_linewidth=0.5)
+        #fig, ax = ox.plot_graph_route(G, shortest_path, route_linewidth=3, node_size=5, edge_linewidth=0.1)
 
     route_coords = [(G.nodes[node]['y'], G.nodes[node]['x']) for node in shortest_path]
-    distance = nx.dijkstra_path_length(G, origin_node, destination_node)
+    distance = nx.astar_path_length(G, origin_node, destination_node)
     # print("distance tfooo:",distance/10)
 
     response=[
@@ -70,6 +84,26 @@ def Find_Shortest_Path_Distance(origin_point,destination_point):
         {"distance":distance/10} #km
     ]
     return response
+
+
+# retourner la route par google map:
+def get_route_coords(origin, destination, api_key):
+    gmaps = googlemaps.Client(key=api_key)
+
+    directions_result = gmaps.directions(origin, destination, mode="driving")
+
+    if not directions_result:
+        return []
+
+    # On extrait le polyline (chemin global)
+    polyline = directions_result[0]['overview_polyline']['points']
+
+    # On décode le polyline pour obtenir toutes les coordonnées GPS
+    route_coords = decode_polyline(polyline)
+
+    # Résultat : une liste de tuples (lat, lng)
+    return route_coords
+
 def predictVolumefile(distance, data):
     response = fetchweather()
     now = datetime.now()
@@ -192,6 +226,7 @@ with open("xgboost_model.pkl","rb") as f:
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    print("hello I am calling the weather ..... I will wait for :")
     response = fetchweather()
     
     data=request.json 
@@ -234,6 +269,8 @@ def predictVolume():
     print(prediction.tolist())
     return jsonify({'prediction':prediction.tolist()})
 
+
+    
 def fetchweather():
     city = "Marrakech"
     country = "ma"
@@ -285,5 +322,5 @@ def get_weather():
     return jsonify(response)
 
 if __name__=='__main__':
-    app.run(port=5000,debug=True)
+    app.run(host='0.0.0.0',port=5000)
     # Il tra Un probleme f chi model ola nkhedmo b API mea map :)
