@@ -5,9 +5,9 @@ import {
   faMapMarkerAlt, faRoute, faMap, faEnvelope, faPhoneAlt, faHeadset,
   faLock, faShieldAlt, faSun, faMoon,
   faPlus,
-  faMinus
+  faMinus,faBars
 } from '@fortawesome/free-solid-svg-icons';
-
+import { faUserTie,faPen } from '@fortawesome/free-solid-svg-icons';
 import {
   faFacebook, faGoogle, faInstagram, faLinkedin, faTwitter, faXTwitter, faYoutube
 } from '@fortawesome/free-brands-svg-icons';
@@ -16,6 +16,7 @@ export const fontAwesomeIcons: IconDefinition[] = [
   // User & Authentication
   faUser, faSignInAlt, faSignOutAlt, faUserPlus, faCog,
 
+  faUserTie,faPen,
   // Payment
   faCreditCard,
 
@@ -30,7 +31,7 @@ export const fontAwesomeIcons: IconDefinition[] = [
 
   // Sun & Moon
   faSun, faMoon,
-  
-  faRoute, faMapMarkerAlt, faMap, faPlus, faMinus
+
+  faRoute, faMapMarkerAlt, faMap, faPlus, faMinus,faBars
 ];
 

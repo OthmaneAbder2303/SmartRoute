@@ -1,0 +1,70 @@
+<!-- Conteneur principal -->
+<div class="flex justify-center items-center min-h-screen bg-white">
+  <!-- Logo en haut à gauche -->
+  <div class="absolute top-4 left-8">
+    <a href="/">
+      <img src="assets/logo_zoomed.png" alt="Logo" class="h-16" />
+    </a>
+  </div>
+
+  <!-- Conteneur principal -->
+  <div class="p-6 w-full max-w-2xl">
+    <!-- Titre -->
+    <div class="flex flex-col items-center mb-6">
+      <h2 class="text-3xl font-extrabold text-center text-black uppercase mb-2">Mon Profil</h2>
+      <p class="text-gray-600 text-sm text-center">Gérez vos informations personnelles</p>
+    </div>
+
+    <!-- Conteneur profil -->
+    <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+      <div class="flex items-center justify-between mb-6">
+        <div class="flex items-center gap-4">
+          <fa-icon [icon]="['fas', 'user-tie']" class="text-orange-500 text-3xl"></fa-icon>
+          <div>
+            <h3 class="text-xl font-semibold text-black">{{ user.fullName }}</h3>
+            <p class="text-gray-500 text-sm">{{ user.email }}</p>
+          </div>
+        </div>
+        <button
+          class="flex items-center gap-2 text-orange-500 border border-orange-500 px-4 py-1 rounded-full hover:bg-orange-500 hover:text-white transition duration-300"
+          (click)="editProfile()"
+        >
+          <fa-icon [icon]="['fas', 'pen']"></fa-icon>
+          Modifier
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700">
+        <div>
+          <p class="font-semibold">Nom complet</p>
+          <p>{{ user.fullName }}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Adresse e-mail</p>
+          <p>{{ user.email }}</p>
+        </div>
+        <div>
+          <p class="font-semibold">ROLE</p>
+          <p>{{ user.role }}</p>
+        </div>
+        <div>
+          <p class="font-semibold">Provider</p>
+          <p>{{ user.provider }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Mention légale -->
+    <div class="mt-10 text-center text-gray-500 text-xs">
+      <p>
+        <a href="/terms" class="text-orange-500 hover:text-orange-600 hover:underline">Conditions d'utilisation</a>
+        <a href="/privacy" class="text-orange-500 hover:text-orange-600 hover:underline"> Politique de confidentialité</a>.<br>
+        Ce site est protégé par reCAPTCHA Enterprise. La
+        <a href="https://policies.google.com/privacy" target="_blank" class="text-orange-500 hover:text-orange-600 hover:underline">Politique de confidentialité</a>
+        et les
+        <a href="https://policies.google.com/terms" target="_blank" class="text-orange-500 hover:text-orange-600 hover:underline">Conditions d'utilisation</a>
+        de Google s'appliquent.
+      </p>
+    </div>
+  </div>
+</div>

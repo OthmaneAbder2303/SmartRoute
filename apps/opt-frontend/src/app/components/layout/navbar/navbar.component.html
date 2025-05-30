@@ -125,6 +125,12 @@
     <!-- User is not authenticated -->
     <div *ngIf="!isAuthenticated" class="flex items-center space-x-4">
       <a
+        routerLink="/Profile"
+        class="p-2 transition-all duration-200 hover:-translate-y-1"
+      >
+        <fa-icon [icon]="['fas', 'user-tie']" class="text-textBlack hover:text-orange-500 text-lg"></fa-icon>
+      </a>
+      <a
         routerLink="/login"
         class="p-2 transition-all duration-200 hover:-translate-y-1"
         aria-label="Se connecter"

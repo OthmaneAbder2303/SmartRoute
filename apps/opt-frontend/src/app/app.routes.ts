@@ -10,6 +10,7 @@ import { FaqComponent } from './components/faq/faq.component';
 import {SignupComponent} from "./components/signup/signup.component";
 import { LoginComponent } from './components/login/login.component';
 import { OAuthRedirectComponent } from './components/OAuthRedirectComponent/oauth-redirect.component';
+import {ProfileComponent} from "./components/Profile/Profile.component";
 
 export const appRoutes: Route[] = [
   {
@@ -21,16 +22,16 @@ export const appRoutes: Route[] = [
     component: CallbackComponent
   },
 
-  { 
+  {
     path: 'signup',
     component: SignupComponent
   },
-  { 
+  {
     path: 'login',
     component: LoginComponent
   },
-  { 
-    path: 'oauth2/redirect', 
+  {
+    path: 'oauth2/redirect',
     component: OAuthRedirectComponent
   },
 
@@ -48,5 +49,9 @@ export const appRoutes: Route[] = [
   },
   { path: 'faq',
     component: FaqComponent
+  },
+  {
+    path: 'Profile',
+    component: ProfileComponent,
   },
 ];
