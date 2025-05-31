@@ -1,22 +1,19 @@
-<!-- Conteneur principal -->
+<div class="absolute top-4 left-8">
+  <a href="/">
+    <img src="assets/logo_zoomed.png" alt="Logo" class="h-16" />
+  </a>
+</div>
+<!-- Conteneur principal centré -->
 <div class="flex justify-center items-center min-h-screen bg-white">
-  <!-- Logo en haut à gauche -->
-  <div class="absolute top-4 left-8">
-    <a href="/">
-      <img src="assets/logo_zoomed.png" alt="Logo" class="h-16" />
-    </a>
-  </div>
-
-  <!-- Conteneur principal -->
-  <div class="p-6 w-full max-w-2xl">
+  <div class="p-6 w-full flex flex-col items-center">
     <!-- Titre -->
     <div class="flex flex-col items-center mb-6">
       <h2 class="text-3xl font-extrabold text-center text-black uppercase mb-2">Mon Profil</h2>
       <p class="text-gray-600 text-sm text-center">Gérez vos informations personnelles</p>
     </div>
 
-    <!-- Conteneur profil -->
-    <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200">
+    <!-- Conteneur profil CENTRÉ -->
+    <div class="bg-white shadow-md rounded-lg p-6 border border-gray-200 w-[900px] h-[500px]">
       <div class="flex items-center justify-between mb-6">
         <div class="flex items-center gap-4">
           <fa-icon [icon]="['fas', 'user-tie']" class="text-orange-500 text-3xl"></fa-icon>
