@@ -79,11 +79,11 @@ The project is organized into three main layers:
 
 4. **Database Configuration**:
   Create a PostgreSQL database named smartroute.
-  Update the application.properties file in the backend directory with your database credentials:
+  Update the application.properties file in the backend directory with your database credentials, for example:
    ```properties
    spring.datasource.url=jdbc:postgresql://localhost:5432/smartroute
-   spring.datasource.username=your-username
-   spring.datasource.password=your-password
+   spring.datasource.username=postgres
+   spring.datasource.password=postgres
    ```
 
 5. **Environment Variables**:
@@ -97,7 +97,7 @@ The project is organized into three main layers:
 
 
 ### Future Improvements
-Public Transport Integration: Include bus and taxi routes with schedules.
-Collaborative Features: Allow users to report real-time incidents (e.g., accidents, roadworks).
-Advanced AI: Explore deep learning models (e.g., RNNs) for long-term traffic predictions.
-Accessibility: Add support for users with disabilities, such as wheelchair-friendly routes or voice navigation.
+- **Public Transport Integration**: Include bus and taxi routes with schedules.
+- **Collaborative Features**: Allow users to report real-time incidents (e.g., accidents, roadworks).
+- **Advanced AI**: Explore deep learning models (e.g., RNNs) for long-term traffic predictions.
+- **Accessibility**: Add support for users with disabilities, such as wheelchair-friendly routes or voice navigation.
