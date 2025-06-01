@@ -7,7 +7,7 @@
 </p>
 
 
-Welcome to **SmartRoute** ! A smarter way to plan your transportation routes and optimize travel efficiency using advanced AI algorithms. This project uses modern technologies such as Angular, Spring Boot, Firebase, and machine learning techniques like Genetic Algorithms and Reinforcement Learning to create optimal routes for users.
+Welcome to **SmartRoute** — your smarter way to plan transportation routes and optimize travel efficiency using cutting-edge AI algorithms. This project combines advanced machine learning techniques with a modern full-stack architecture to deliver real-time, optimized routes for users.
 
 ## Features
 
