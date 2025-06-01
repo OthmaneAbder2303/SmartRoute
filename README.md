@@ -1,4 +1,4 @@
-# SmartRoute - Route Optimization & Intelligence
+# SmartRoute - Real-Time Intelligent Route Optimization Platform for Marrakech
 
 <p align="center">
   <a href="https://SmartRoute.com" target="_blank" rel="noreferrer">
@@ -7,132 +7,97 @@
 </p>
 
 
-Welcome to **SmartRoute** — your smarter way to plan transportation routes and optimize travel efficiency using cutting-edge AI algorithms. This project combines advanced machine learning techniques with a modern full-stack architecture to deliver real-time, optimized routes for users.
+## Overview
+SmartRoute is a web-based application designed to optimize urban mobility in Marrakech by providing real-time route planning using artificial intelligence. The platform leverages advanced machine learning models (XGBoost and Random Forest) and graph algorithms (Dijkstra and A*) to deliver efficient, traffic-aware routes tailored to user preferences. Built with a modular architecture, it integrates a frontend (Angular), backend (Spring Boot + PostgreSQL), and an AI module (Flask + Python), ensuring scalability, security, and an intuitive user experience.
+
+This project was developed as part of the Computer Engineering program at the École Nationale des Sciences Appliquées (ENSA) Marrakech during the 2024/2025 academic year.
 
 ## Features
+- **Real-Time Route Optimization**: Calculates optimal routes using Dijkstra and A* algorithms, factoring in real-time traffic and weather conditions.
+- **Traffic and Travel Time Prediction**: Utilizes XGBoost for travel time estimation and Random Forest for traffic volume prediction, based on data such as distance, weather, and historical traffic patterns.
+- **Interactive User Interface**: Built with Angular and Leaflet for a responsive, map-based experience with features like geolocation, route visualization, and user profile management.
+- **Secure Authentication**: Implements JWT and OAuth2 (Google, GitHub) for secure user authentication and data protection, compliant with GDPR standards.
+- **Real-Time Notifications**: Alerts users to sudden changes in traffic conditions, such as accidents or roadworks.
+- **Trip History and Preferences**: Allows users to save preferences and view past trips for personalized navigation.
 
-- **Real-time route optimization**: Get the best routes in real-time using AI-based algorithms.
-- **Interactive UI**: Built with Angular for a seamless and user-friendly experience.
-- **Scalable backend**: Powered by Spring Boot, Firebase/MySQL for a robust and scalable system.
-- **Smart Planning**: Integration of machine learning for smart transport planning.
+## Project Structure
+The project is organized into three main layers:
+1. **Frontend (Angular)**:
+   - Built with Angular 17, Angular Material, Leaflet, and RxJS.
+   - Handles user interactions, map visualization, and API communication.
+   - Key components: `NavbarComponent`, `MapComponent`, `RouteFormComponent`, `RouteDetailsComponent`.
+2. **Backend (Spring Boot + PostgreSQL)**:
+   - Developed with Spring Boot, Spring Security, and Spring Data JPA.
+   - Manages user authentication (JWT, OAuth2), API endpoints, and data persistence.
+   - Uses PostgreSQL for reliable and scalable data storage.
+3. **AI Module (Flask + Python)**:
+   - Powered by Flask, XGBoost, Random Forest, and OSMnx.
+   - Handles route calculations and traffic predictions using data from OpenStreetMap and OpenWeatherAPI.
+   - Hosted models on Hugging Face for dynamic retrieval.
 
-## Table of Contents
+## Installation
+### Prerequisites
+- Node.js (v16 or higher) for Angular
+- Java 17 and Maven for Spring Boot
+- Python 3.8+ for Flask
+- PostgreSQL 13+
+- Git for version control
+- Docker (optional, for containerized deployment)
 
-- [Getting Started](#getting-started)
-- [Features](#features)
-- [Run the Project](#run-the-project)
-- [Tasks](#tasks)
-- [Add New Projects](#add-new-projects)
-- [Nx Console](#nx-console)
-- [Useful Links](#useful-links)
+### Setup
+1. **Clone the Repository**:
+   ```bash
+   git clone https://github.com/OthmaneAbder2303/SmartRoute.git
+   cd smartroute
 
-## Getting Started
-
-To get started with Optiroute, clone the repository and follow the setup instructions below.
-
-```sh
-git clone https://github.com/OthmaneAbder2303/SmartRoute.git
-cd SmartRoute
-```
-
-## Install Dependencies
-
-Make sure you have Node.js and Java installed, then install dependencies for both frontend and backend.
-
-For the frontend (Angular):
-```sh
-cd opt-frontend
-npm install
-```
-
-For the backend (Spring Boot):
-```sh
-cd opt-backend
-./mvnw clean install
-```
-
-## Run the Project
-
-To run the development server for the frontend, use the following command:
-```sh
-npx nx serve opt-frontend
-```
-
-To run the backend (Spring Boot):
-```sh
-cd opt-backend
-./mvnw spring-boot:run
-```
-
-The frontend will be available at http://localhost:4200 and the backend API will be running on http://localhost:8080.
+2. **Frontend Setup**:
+   ```bash
+   cd frontend
+   npm install
+   npm start
+   ```
+   The Angular app will run on http://localhost:4200.
 
 
-## Run tasks
-
-To run the dev server for your app, use:
-
-```sh
-npx nx serve opt-frontend
-```
-
-To create a production bundle:
-
-```sh
-npx nx build opt-frontend
-```
-
-To see all available targets to run for a project, run:
-
-```sh
-npx nx show project opt-frontend
-```
-
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
-
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Add new projects
-
-While you could add new projects to your workspace manually, you might want to leverage [Nx plugins](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) and their [code generation](https://nx.dev/features/generate-code?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) feature.
-
-Use the plugin's generator to create new projects.
-
-To generate a new application, use:
-
-```sh
-npx nx g @nx/angular:app demo
-```
-
-To generate a new library, use:
-
-```sh
-npx nx g @nx/angular:lib mylib
-```
-
-You can use `npx nx list` to get a list of installed plugins. Then, run `npx nx list <plugin-name>` to learn about more specific capabilities of a particular plugin. Alternatively, [install Nx Console](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) to browse plugins and generators in your IDE.
-
-[Learn more about Nx plugins &raquo;](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) | [Browse the plugin registry &raquo;](https://nx.dev/plugin-registry?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+3. **Backend Setup**:
+   ```bash
+   cd backend
+   mvn clean install
+   mvn spring-boot:run
+   ```
+  The Spring Boot server will run on http://localhost:8080.
 
 
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+4. **AI Module Setup**:
+   ```bash
+   cd ai-module
+   pip install -r requirements.txt
+   python app.py
+   ```
+  The Flask server will run on http://localhost:5000.
 
-## Install Nx Console
 
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
+4. **Database Configuration**:
+  Create a PostgreSQL database named smartroute.
+  Update the application.properties file in the backend directory with your database credentials:
+   ```properties
+   spring.datasource.url=jdbc:postgresql://localhost:5432/smartroute
+   spring.datasource.username=your-username
+   spring.datasource.password=your-password
+   ```
 
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+5. **Environment Variables**:
+  For the AI module, set up environment variables for OpenWeatherAPI and Hugging Face API keys.
+  For the OAuth2, set up environment variables for google client id and github.
 
-## Useful links
 
-Learn more:
+6. **Run the Application**:
+  Ensure all three components (frontend, backend, AI module) are running.
+  Access the application at http://localhost:4200.
 
-- [Learn more about this workspace setup](https://nx.dev/getting-started/tutorials/angular-monorepo-tutorial?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
 
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+### Future Improvements
+Public Transport Integration: Include bus and taxi routes with schedules.
+Collaborative Features: Allow users to report real-time incidents (e.g., accidents, roadworks).
+Advanced AI: Explore deep learning models (e.g., RNNs) for long-term traffic predictions.
+Accessibility: Add support for users with disabilities, such as wheelchair-friendly routes or voice navigation.
