@@ -28,7 +28,7 @@
     "@fullcalendar/daygrid": "^6.1.17",
     "@fullcalendar/interaction": "^6.1.17",
     "@fullcalendar/timegrid": "^6.1.17",
-    "express": "^4.21.2",
+    "express": "^4.22.1",
     "leaflet": "^1.9.4",
     "punycode": "^2.3.1",
     "rxjs": "^7.8.2",
